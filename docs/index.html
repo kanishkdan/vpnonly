@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VPNonly — per-app VPN split tunneling for macOS</title>
+<meta name="description" content="Route only the apps you choose through your VPN on macOS. Works with NordVPN and any WireGuard provider. Free open-source CLI, $19 menu bar app.">
+<style>
+  :root {
+    --bg: #0b0e14; --fg: #e6e9ef; --dim: #9aa3b2; --card: #141926;
+    --accent: #4f8cff; --border: #232b3d; --good: #3fb970;
+  }
+  @media (prefers-color-scheme: light) {
+    :root { --bg:#fafbfd; --fg:#16181d; --dim:#5b6472; --card:#ffffff; --accent:#2563eb; --border:#e3e7ee; --good:#188a4c; }
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--fg); font:16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .wrap { max-width: 880px; margin:0 auto; padding: 0 24px; }
+  header { padding: 72px 0 40px; text-align:center; }
+  h1 { font-size: 2.4rem; line-height:1.2; letter-spacing:-0.02em; }
+  .sub { color:var(--dim); font-size:1.15rem; max-width:600px; margin:16px auto 0; }
+  .cta-row { display:flex; gap:12px; justify-content:center; margin-top:28px; flex-wrap:wrap; }
+  .btn { display:inline-block; padding:12px 22px; border-radius:10px; text-decoration:none; font-weight:600; }
+  .btn-primary { background:var(--accent); color:#fff; }
+  .btn-ghost { border:1px solid var(--border); color:var(--fg); }
+  .term { background:#0d1117; color:#c9d1d9; border:1px solid var(--border); border-radius:12px; padding:20px 24px; font:14px/1.7 ui-monospace, "SF Mono", Menlo, monospace; overflow-x:auto; margin: 40px auto; max-width:660px; text-align:left; }
+  .term .c { color:#7ee787; } .term .d { color:#8b949e; }
+  section { padding: 40px 0; border-top:1px solid var(--border); }
+  h2 { font-size:1.5rem; margin-bottom:16px; letter-spacing:-0.01em; }
+  p + p { margin-top: 12px; }
+  .dim { color:var(--dim); }
+  .cols { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:24px; }
+  @media (max-width:640px){ .cols{ grid-template-columns:1fr; } }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:26px; }
+  .card h3 { font-size:1.15rem; margin-bottom:4px; }
+  .price { font-size:1.9rem; font-weight:700; margin:10px 0 2px; }
+  .card ul { list-style:none; margin:14px 0 20px; }
+  .card li { padding:4px 0 4px 26px; position:relative; color:var(--dim); }
+  .card li::before { content:"✓"; color:var(--good); position:absolute; left:2px; }
+  .card .btn { width:100%; text-align:center; }
+  .fine { font-size:0.85rem; color:var(--dim); margin-top:10px; text-align:center; }
+  details { border:1px solid var(--border); border-radius:10px; padding:14px 18px; margin-top:10px; background:var(--card); }
+  summary { cursor:pointer; font-weight:600; }
+  details p { margin-top:10px; color:var(--dim); }
+  footer { padding: 40px 0 60px; color:var(--dim); font-size:0.9rem; text-align:center; border-top:1px solid var(--border); }
+  a { color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Put <em>one</em> app in the VPN.<br>Leave the rest of your Mac alone.</h1>
+  <p class="sub">Per-app VPN split tunneling for macOS — the thing NordVPN, ExpressVPN and friends never shipped. Works with NordVPN out of the box, and any WireGuard provider.</p>
+  <div class="cta-row">
+    <a class="btn btn-primary" href="https://dodo.pe/vpnonly">Get VPNonly Pro — $19</a>
+    <a class="btn btn-ghost" href="https://github.com/kanishkdan/vpnonly">Free CLI on GitHub</a>
+  </div>
+</header>
+
+<div class="term">
+<span class="d"># everything on your Mac → normal connection</span><br>
+$ curl api.ipify.org<br>
+<span class="c">223.181.32.40</span> <span class="d">← your ISP</span><br>
+<br>
+<span class="d"># just the app you chose → VPN</span><br>
+$ vpnonly run /Applications/CapCut.app<br>
+<span class="c">187.15.101.235</span> <span class="d">← Singapore, via WireGuard</span>
+</div>
+
+<section>
+  <h2>Why this exists</h2>
+  <p>Commercial VPN apps on macOS are all-or-nothing: connect, and your whole machine goes through the tunnel — video calls get slower, banking sites get suspicious, everything routes through another country. Split tunneling fixes that, but no major provider ships it on macOS.</p>
+  <p>VPNonly flips the model: <strong>your Mac stays on your normal connection, and only the apps you pick go through the VPN.</strong> It never touches your default route, so the worst-case failure mode is "that one app is offline" — never "my Mac lost internet." A built-in kill switch blocks a chosen app's traffic if the tunnel drops, instead of leaking it.</p>
+</section>
+
+<section>
+  <h2>Two ways to use it</h2>
+  <div class="cols">
+    <div class="card">
+      <h3>Open-source CLI</h3>
+      <div class="price">Free</div>
+      <ul>
+        <li>Full split-tunneling engine (~300 lines, auditable)</li>
+        <li>NordVPN adapter + any WireGuard provider</li>
+        <li>Kill switch included</li>
+        <li>MIT licensed, forever</li>
+      </ul>
+      <a class="btn btn-ghost" href="https://github.com/kanishkdan/vpnonly">View on GitHub</a>
+    </div>
+    <div class="card">
+      <h3>VPNonly Pro — menu bar app</h3>
+      <div class="price">$19 <span class="dim" style="font-size:0.9rem">one-time</span></div>
+      <ul>
+        <li>One-click connect, pick exit country from the menu bar</li>
+        <li>"Launch App in VPN…" — no terminal needed</li>
+        <li>Check your VPN exit IP anytime</li>
+        <li>WireGuard bundled — no Homebrew required</li>
+        <li>License covers 2 Macs · free updates for v1.x</li>
+      </ul>
+      <a class="btn btn-primary" href="https://dodo.pe/vpnonly">Buy VPNonly Pro</a>
+      <p class="fine">Apple Silicon · macOS 13+ · secure checkout by Dodo Payments</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>FAQ</h2>
+  <details><summary>How does it work?</summary>
+    <p>A userspace WireGuard tunnel is brought up with no default route, so nothing uses it by default. macOS's built-in PF firewall then steers traffic from the apps you choose into the tunnel. The engine is open source — you can read every line that runs with elevated privileges.</p>
+  </details>
+  <details><summary>Which VPN providers work?</summary>
+    <p>NordVPN works out of the box (it fetches your WireGuard credentials with an access token from your Nord account). Any provider that gives you a WireGuard config also works: Mullvad, Proton, IVPN, or your own server.</p>
+  </details>
+  <details><summary>Is my traffic safe if the VPN drops?</summary>
+    <p>Yes — a kill switch blocks the chosen apps' traffic entirely if the tunnel goes down. It never silently falls back to your normal connection.</p>
+  </details>
+  <details><summary>Known limitations?</summary>
+    <p>v1 is Apple Silicon only. DNS queries for tunneled apps currently use the system resolver (connections themselves are tunneled) — fine for changing your exit IP, and a fix is on the roadmap. Apps must be launched via VPNonly to be inside the tunnel.</p>
+  </details>
+  <details><summary>Refunds?</summary>
+    <p>If it doesn't work on your setup, email <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a> within 14 days for a full refund.</p>
+  </details>
+</section>
+
+<footer>
+  <p>Built by <a href="https://github.com/kanishkdan">Kanishk Razdan</a> · <a href="https://github.com/kanishkdan/vpnonly">GitHub</a> · <a href="mailto:kanishk@armoury.in">Contact</a></p>
+</footer>
+
+</div>
+</body>
+</html>
