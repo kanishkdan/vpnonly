@@ -42,8 +42,8 @@
   </div>
 
   <div class="qa">
-    <h3>Why does an app restart when I toggle it?</h3>
-    <p>macOS assigns network identity when a process starts, so an app must relaunch to change sides. VPNonly handles the restart for you and warns you first so you can save your work. Removing the restart entirely requires Apple's Network Extension framework — that's the plan for v2.</p>
+    <h3>Does my app restart every time I toggle it?</h3>
+    <p>No — only the first time it joins the VPN. macOS fixes an app's network identity when it starts, so VPNonly relaunches it once to tag it. After that, switching that app in and out of the VPN is instant: the tag stays, and only the firewall rule changes. Existing connections drop when the exit IP changes (unavoidable — most apps reconnect on their own), but the app itself keeps running.</p>
   </div>
 
   <div class="qa">
