@@ -3,34 +3,40 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VPNonly — your VPN, one app at a time</title>
-<meta name="description" content="Per-app VPN for macOS. Put only the apps you choose behind your VPN — everything else stays on your normal connection. $19, once.">
-<meta property="og:title" content="VPNonly — your VPN, one app at a time">
-<meta property="og:description" content="Per-app VPN for macOS. Flip a switch, that app is in the tunnel. $19, once.">
-<link rel="stylesheet" href="style.css?v=3">
+<title>VPNonly — put one app on the VPN, not your whole Mac</title>
+<meta name="description" content="Per-app VPN for macOS. Toggle an app into a WireGuard tunnel — everything else stays on your normal connection. Works with NordVPN and any WireGuard provider. $19, once.">
+<meta property="og:title" content="VPNonly — put one app on the VPN, not your whole Mac">
+<meta property="og:description" content="Per-app VPN for macOS. Flip a switch, that app gets a new country. $19, once.">
+<meta property="og:image" content="og-icon.png">
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
 <div class="wrap">
 
 <nav>
-  <a class="brand" href="./"><span class="bug">V</span>VPNonly</a>
+  <a class="brand" href="./">
+    <svg viewBox="0 0 26 30"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4f8cff"/><stop offset="1" stop-color="#7c5cff"/></linearGradient></defs><path d="M13 1l11 4v9c0 7.5-4.8 13.6-11 15C6.8 27.6 2 21.5 2 14V5z" fill="none" stroke="url(#g)" stroke-width="2.2" stroke-linejoin="round"/><path d="M13 1l-11 4v9c0 7.5 4.8 13.6 11 15z" fill="url(#g)"/></svg>
+    VPNonly
+  </a>
   <div class="links">
     <a class="txt" href="how-it-works.html">How it works</a>
-    <a class="txt" href="faq.html">FAQs</a>
-    <a class="chip" href="https://dodo.pe/vpnonly"> Purchase for Mac</a>
+    <a class="txt" href="faq.html">FAQ</a>
+    <a class="txt" href="https://github.com/kanishkdan/vpnonly">GitHub</a>
+    <a class="chip" href="https://dodo.pe/vpnonly">Get for Mac <span class="tag">$19</span></a>
   </div>
 </nav>
 
 <header class="hero">
-  <h1 class="mega">Your VPN, <span class="hl">one app</span> at a time</h1>
-  <p class="sub">Flip a switch and that app lives on the VPN. Everything else on your Mac stays fast, local, and untouched.</p>
+  <h1 class="mega">Put <span class="grad">one app</span> on the VPN. Not your whole Mac.</h1>
+  <p class="sub">VPNonly keeps a WireGuard tunnel ready that nothing uses — until you flip a switch. Toggle an app in, it gets a new country. Everything else never notices.</p>
   <div class="cta-row">
-    <a class="pill" href="https://dodo.pe/vpnonly"> Purchase for Mac</a>
-    <a class="chip" href="https://dodo.pe/vpnonly">One-time <span class="tag">$19</span></a>
-    <div class="badges">
-      <div class="badge"><div class="t">No subscription</div><div class="b">Yours forever</div></div>
-      <div class="badge"><div class="t">Open-source engine</div><div class="b">On GitHub</div></div>
-    </div>
+    <a class="pill" href="https://dodo.pe/vpnonly">Get VPNonly for Mac</a>
+    <a class="chip" href="https://github.com/kanishkdan/vpnonly">Free CLI on GitHub</a>
+  </div>
+  <div class="status">
+    <div><span class="dot on"></span><b>CapCut</b> — <span class="loc">Singapore · 187.15.101.235</span></div>
+    <div><span class="dot off"></span>everything else — your connection, untouched</div>
   </div>
 </header>
 
@@ -39,58 +45,87 @@
      (drop demo.mp4 into /docs) -->
 <div class="showcase">
   <div class="playmark">▶</div>
-  <p>Demo video</p>
+  <p>demo — toggle an app, watch its exit IP flip</p>
 </div>
-<p class="psst">Psst… toggle CapCut on, watch the exit IP flip</p>
 
-<div class="grid8">
+<div class="features">
   <div class="feat">
-    <svg viewBox="0 0 48 48"><rect x="6" y="16" width="36" height="16" rx="8"/><circle cx="34" cy="24" r="5"/></svg>
-    <h3>Flip a switch,<br>app's in the VPN</h3>
+    <svg viewBox="0 0 32 32"><rect x="3" y="10" width="26" height="12" rx="6"/><circle cx="22" cy="16" r="4"/></svg>
+    <h3>A switch per app</h3>
+    <p>Every app on your Mac, searchable in the menu bar. Flip one on — it relaunches inside the tunnel with a new exit IP. Flip it off — it's back home.</p>
   </div>
   <div class="feat">
-    <svg viewBox="0 0 48 48"><path d="M24 6l14 5v10c0 9-6 17-14 21C16 38 10 30 10 21V11z"/><path d="M24 6v36"/></svg>
-    <h3>Kill switch<br>built in</h3>
+    <svg viewBox="0 0 32 32"><path d="M16 3l10 3.5V14c0 6.5-4.3 12-10 13.5C10.3 26 6 20.5 6 14V6.5z"/><path d="M11 15.5l3.5 3.5 6.5-7"/></svg>
+    <h3>Kill switch, always</h3>
+    <p>Tunnel drops? That app's traffic is blocked, not quietly leaked to your ISP. Reconnect and it's back — no surprises in between.</p>
   </div>
   <div class="feat">
-    <svg viewBox="0 0 48 48"><circle cx="21" cy="21" r="12"/><path d="M30 30l10 10"/></svg>
-    <h3>Every app,<br>searchable</h3>
+    <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M4 16h24M16 4c-3.5 3.5-5 7.5-5 12s1.5 8.5 5 12c3.5-3.5 5-7.5 5-12s-1.5-8.5-5-12z"/></svg>
+    <h3>Bring any VPN</h3>
+    <p>NordVPN works out of the box — paste a token once. Or drop in a WireGuard key from Mullvad, Proton, IVPN, or your own server.</p>
   </div>
   <div class="feat">
-    <svg viewBox="0 0 48 48"><rect x="10" y="20" width="28" height="20" rx="4"/><path d="M16 20v-6a8 8 0 0 1 16 0v6"/></svg>
-    <h3>Password asked<br>once, ever</h3>
+    <svg viewBox="0 0 32 32"><rect x="7" y="14" width="18" height="13" rx="3"/><path d="M11 14v-4a5 5 0 0 1 10 0v4"/></svg>
+    <h3>One password, once</h3>
+    <p>Admin rights are needed to make firewall rules — that's macOS. VPNonly asks a single time, installs a root-owned engine, and never asks again.</p>
   </div>
   <div class="feat">
-    <svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="17"/><path d="M7 24h34M24 7c-5 5-7 11-7 17s2 12 7 17c5-5 7-11 7-17s-2-12-7-17z"/></svg>
-    <h3>NordVPN or any<br>WireGuard server</h3>
+    <svg viewBox="0 0 32 32"><path d="M12 9l-7 7 7 7M20 9l7 7-7 7"/></svg>
+    <h3>Auditable core</h3>
+    <p>Every privileged line — tunnel, firewall, launcher — is ~300 lines of open-source shell and C on GitHub. No opaque binary gets root.</p>
   </div>
   <div class="feat">
-    <svg viewBox="0 0 48 48"><path d="M18 14l-10 10 10 10M30 14l10 10-10 10"/></svg>
-    <h3>Open-source<br>engine</h3>
+    <svg viewBox="0 0 32 32"><rect x="3" y="6" width="26" height="20" rx="3"/><path d="M3 11h26"/><circle cx="7" cy="8.5" r="1"/><circle cx="11" cy="8.5" r="1"/></svg>
+    <h3>Native and tiny</h3>
+    <p>A real Mac menu bar app — no Electron, no accounts, no analytics. Your WireGuard key never leaves your machine.</p>
   </div>
-  <div class="feat">
-    <svg viewBox="0 0 48 48"><rect x="6" y="10" width="36" height="28" rx="4"/><path d="M6 18h36"/><circle cx="12" cy="14" r="1.5"/><circle cx="18" cy="14" r="1.5"/></svg>
-    <h3>Menubar<br>application</h3>
-  </div>
-  <div class="feat">
-    <svg viewBox="0 0 48 48"><path d="M26 6L12 28h10l-2 14 16-24H26z"/></svg>
-    <h3>Blazing fast<br><span class="scrib">native app<svg class="ring" viewBox="0 0 120 40" preserveAspectRatio="none"><ellipse cx="60" cy="20" rx="56" ry="16"/></svg></span></h3>
+</div>
+
+<div class="pricing">
+  <h2>One price. Zero subscription.</h2>
+  <p class="note">The other split-tunneling apps want $49 a year. VPNonly is $19, once, forever.</p>
+  <div class="plans">
+    <div class="plan">
+      <h3>Command line</h3>
+      <div class="amount">Free</div>
+      <ul>
+        <li>The full split-tunneling engine</li>
+        <li>NordVPN + any WireGuard provider</li>
+        <li>Kill switch included</li>
+        <li>MIT licensed, yours to audit</li>
+      </ul>
+      <a class="chip" href="https://github.com/kanishkdan/vpnonly">View on GitHub</a>
+    </div>
+    <div class="plan hot">
+      <h3>VPNonly for Mac</h3>
+      <div class="amount">$19 <small>one-time</small></div>
+      <ul>
+        <li>Menu bar app — search, toggle, done</li>
+        <li>Exit country picker, live status</li>
+        <li>Password asked once, ever</li>
+        <li>2 Macs · free 1.x updates · 14-day refund</li>
+      </ul>
+      <a class="pill" href="https://dodo.pe/vpnonly">Get VPNonly</a>
+    </div>
   </div>
 </div>
 
 <div class="fin">
-  <a class="pill" href="https://dodo.pe/vpnonly"> Purchase for Mac</a>
-  <p class="sub">$19 once · 2 Macs · 14-day refund</p>
+  <h2>Your Mac shouldn't move countries<br>because one app had to.</h2>
+  <p class="sub">Thirty seconds from download to your first app in the tunnel.</p>
+  <a class="pill" href="https://dodo.pe/vpnonly">Get VPNonly for Mac</a>
 </div>
 
-<div class="socials">
-  <a href="https://github.com/kanishkdan/vpnonly" title="GitHub">⌥</a>
-  <a href="https://x.com/kanishkdan" title="X">𝕏</a>
-  <a href="mailto:kanishk@armoury.in" title="Email">✉︎</a>
-</div>
-<p class="legal">© 2026 Kanishk Razdan · <a href="how-it-works.html">How it works</a> · <a href="faq.html">FAQ</a></p>
+<footer>
+  <span>© 2026 Kanishk Razdan</span>
+  <div class="fl">
+    <a href="how-it-works.html">How it works</a>
+    <a href="faq.html">FAQ</a>
+    <a href="https://github.com/kanishkdan/vpnonly">GitHub</a>
+    <a href="mailto:kanishk@armoury.in">Contact</a>
+  </div>
+</footer>
 
 </div>
-<div class="ghost">VPNonly</div>
 </body>
 </html>
