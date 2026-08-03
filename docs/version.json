@@ -1,5 +1,5 @@
 {
-  "version": "1.3.0",
+  "version": "1.3.1",
   "url": "https://kanishkdan.github.io/vpnonly/",
-  "notes": "Instant toggling \u2014 apps switch in and out of the VPN without restarting."
+  "notes": "Clean failure handling when the VPN provider is unreachable, firewall safety guards, and a Reset Network Rules escape hatch."
 }
