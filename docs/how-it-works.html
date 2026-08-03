@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How VPNonly works</title>
+<meta name="description" content="The architecture behind per-app VPN on macOS: a WireGuard tunnel with no default route, PF steering, and an auditable open-source engine.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+<nav>
+  <a class="mark" href="./">VPN<b>only</b></a>
+  <div class="links">
+    <a class="here" href="how-it-works.html">How it works</a>
+    <a href="faq.html">FAQ</a>
+    <a href="https://github.com/kanishkdan/vpnonly">GitHub</a>
+  </div>
+</nav>
+
+<div class="narrow prose">
+  <h1>How it works</h1>
+  <p class="sub">Most VPN apps take over your whole machine. VPNonly inverts that: your Mac never joins the VPN — individual apps do.</p>
+
+  <h2>The inversion</h2>
+  <p>When a normal VPN app connects, it replaces your Mac's default network route. Every packet from every app — video calls, backups, banking — detours through a server in another country, whether it benefits or not.</p>
+  <p>VPNonly brings up a <strong>WireGuard tunnel with no default route at all</strong>. The tunnel exists, but nothing uses it. Then, for exactly the apps you choose, traffic is steered into it. Your Mac's own connection is never modified — which is why the worst possible failure is "one app is offline," and never "my internet broke."</p>
+
+  <h2>The mechanism</h2>
+  <ol>
+    <li><strong>A userspace WireGuard interface</strong> (<code>wireguard-go</code>) connects to your VPN provider's server. No kernel extensions — it's an ordinary tunnel interface, visible in <code>ifconfig</code>.</li>
+    <li><strong>macOS's built-in PF firewall</strong> steers traffic into it. PF can't match packets by app, but it can match by unix group — so VPNonly runs your chosen apps under a dedicated group, <code>vpnonly</code>, and two rules do the rest:
+      <pre><code>pass out quick route-to (utun9 10.5.0.2) inet proto { tcp udp } \
+    from any to any group vpnonly keep state
+block return out proto { tcp udp } from any to any group vpnonly</code></pre>
+      The first rule routes the group into the tunnel. The second is the kill switch: if the tunnel is down, that traffic is refused — never silently leaked to your ISP.</li>
+    <li><strong>A 30-line launcher</strong> starts your app under that group and immediately drops privileges. Every helper process the app spawns inherits the group, so multi-process apps (Chromium-based ones included) are covered.</li>
+  </ol>
+
+  <h2>Why the one-time password prompt</h2>
+  <p>Creating network interfaces and firewall rules requires admin rights on macOS — for every app, always. VPNonly asks once: it installs a small engine, owned by <code>root</code> and writable by no one, plus a narrowly-scoped rule that permits <em>only those exact scripts</em> to run privileged. The scripts refuse to operate as root for launching apps, and the whole chain is short enough to read in five minutes.</p>
+
+  <h2>Open source where it matters</h2>
+  <p>Everything that ever runs with elevated privileges — the tunnel scripts, the firewall rules, the launcher — is the open-source engine, <a href="https://github.com/kanishkdan/vpnonly">MIT-licensed on GitHub</a>. The paid app is a native menu bar interface on top of that engine. You're never asked to trust an opaque binary with root.</p>
+
+  <h2>Providers</h2>
+  <p><strong>NordVPN</strong> works out of the box: paste an access token once and VPNonly fetches your WireGuard credentials directly from Nord's API. The Nord app itself stays closed — VPNonly speaks to Nord's servers, not its software.</p>
+  <p><strong>Any WireGuard provider</strong> works too: Mullvad, Proton, IVPN, or a server you run yourself. If you can get a WireGuard key, VPNonly can tunnel through it.</p>
+
+  <h2>Honest limitations</h2>
+  <ul>
+    <li>Apps must relaunch to enter or leave the tunnel — VPNonly does this for you, with a warning first. (Removing even that requires Apple's Network Extension framework; it's on the roadmap.)</li>
+    <li>DNS queries for tunneled apps currently resolve via the system resolver. Connections themselves are fully tunneled; a scoped-DNS fix is planned.</li>
+    <li>Apple Silicon only for now. IPv6 for tunneled apps is blocked rather than routed — no leaks, but no v6.</li>
+  </ul>
+
+  <div class="fin" style="padding-top:70px;">
+    <div class="cta">
+      <a class="pill" href="https://dodo.pe/vpnonly">Buy VPNonly&nbsp;&nbsp;$19</a>
+      <a class="quiet" href="faq.html">Questions? Read the FAQ →</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>© 2026 Kanishk Razdan</span>
+  <div class="fl">
+    <a href="./">Home</a>
+    <a href="faq.html">FAQ</a>
+    <a href="https://github.com/kanishkdan/vpnonly">GitHub</a>
+    <a href="mailto:kanishk@armoury.in">Contact</a>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>

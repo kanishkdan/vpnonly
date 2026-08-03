@@ -3,216 +3,108 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VPNonly — per-app VPN split tunneling for macOS</title>
-<meta name="description" content="Route only the apps you choose through your VPN on macOS. Toggle apps in and out of the tunnel from the menu bar. Works with NordVPN and any WireGuard provider.">
-<style>
-  :root {
-    --bg:#0a0d13; --fg:#eef1f6; --dim:#8b94a7; --card:#11161f; --card2:#151b27;
-    --accent:#4f8cff; --accent2:#7c5cff; --border:#1f2735; --good:#34c759;
-    --shadow: 0 20px 60px rgba(0,0,0,.45);
-  }
-  @media (prefers-color-scheme: light) {
-    :root { --bg:#f6f8fb; --fg:#14171c; --dim:#5c6575; --card:#ffffff; --card2:#ffffff;
-            --accent:#2563eb; --accent2:#6d4aff; --border:#e4e8f0; --good:#1f9d4d;
-            --shadow: 0 20px 60px rgba(30,50,90,.12); }
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  html { scroll-behavior:smooth; }
-  body { background:var(--bg); color:var(--fg);
-         font:16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-         -webkit-font-smoothing:antialiased; }
-  .wrap { max-width:960px; margin:0 auto; padding:0 24px; }
-  a { color:var(--accent); text-decoration:none; }
-
-  nav { display:flex; justify-content:space-between; align-items:center; padding:20px 0; }
-  .logo { font-weight:800; font-size:1.05rem; letter-spacing:-.01em; color:var(--fg); }
-  .logo span { color:var(--accent); }
-  nav .links a { color:var(--dim); margin-left:22px; font-size:.95rem; }
-
-  header { padding:56px 0 28px; text-align:center; }
-  h1 { font-size:clamp(2rem, 5vw, 3rem); line-height:1.12; letter-spacing:-.025em; font-weight:800; }
-  h1 em { font-style:normal; background:linear-gradient(90deg, var(--accent), var(--accent2));
-          -webkit-background-clip:text; background-clip:text; color:transparent; }
-  .sub { color:var(--dim); font-size:1.15rem; max-width:620px; margin:18px auto 0; }
-  .cta-row { display:flex; gap:12px; justify-content:center; margin-top:30px; flex-wrap:wrap; }
-  .btn { display:inline-block; padding:13px 24px; border-radius:12px; font-weight:650; font-size:1rem; }
-  .btn-primary { background:linear-gradient(90deg, var(--accent), var(--accent2)); color:#fff;
-                 box-shadow:0 8px 24px rgba(79,140,255,.35); }
-  .btn-primary:hover { filter:brightness(1.08); }
-  .btn-ghost { border:1.5px solid var(--border); color:var(--fg); background:var(--card); }
-  .note { color:var(--dim); font-size:.85rem; margin-top:12px; }
-
-  /* menu bar mockup */
-  .mock { max-width:340px; margin:52px auto 8px; background:var(--card2); border:1px solid var(--border);
-          border-radius:14px; box-shadow:var(--shadow); overflow:hidden; text-align:left;
-          font-size:.95rem; }
-  .mock .bar { display:flex; align-items:center; gap:8px; padding:12px 16px;
-               border-bottom:1px solid var(--border); color:var(--dim); font-size:.88rem; }
-  .dot { width:9px; height:9px; border-radius:50%; background:var(--good);
-         box-shadow:0 0 8px var(--good); }
-  .row { display:flex; align-items:center; gap:12px; padding:11px 16px; }
-  .row + .row { border-top:1px solid var(--border); }
-  .appicon { width:30px; height:30px; border-radius:8px; display:flex; align-items:center;
-             justify-content:center; font-size:15px; color:#fff; font-weight:700; flex:none; }
-  .row .name { flex:1; font-weight:550; }
-  .row .where { font-size:.78rem; color:var(--dim); display:block; margin-top:1px; }
-  .sw { width:42px; height:25px; border-radius:13px; background:#3a4356; position:relative; flex:none;
-        transition:background .2s; }
-  .sw::after { content:""; position:absolute; top:2.5px; left:3px; width:20px; height:20px;
-               border-radius:50%; background:#fff; transition:left .2s; box-shadow:0 1px 3px rgba(0,0,0,.35); }
-  .sw.on { background:var(--good); }
-  .sw.on::after { left:19px; }
-  @media (prefers-color-scheme: light) { .sw { background:#d3d9e3; } }
-  .mock .foot { padding:10px 16px; color:var(--dim); font-size:.85rem; border-top:1px solid var(--border); }
-  .caption { text-align:center; color:var(--dim); font-size:.9rem; margin-bottom:8px; }
-
-  section { padding:56px 0 8px; }
-  h2 { font-size:1.6rem; letter-spacing:-.015em; margin-bottom:8px; }
-  .lede { color:var(--dim); max-width:640px; }
-
-  .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:28px; }
-  @media (max-width:700px){ .steps{ grid-template-columns:1fr; } }
-  .step { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:22px; }
-  .step .n { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-             background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; font-weight:700;
-             font-size:.9rem; margin-bottom:12px; }
-  .step h3 { font-size:1.02rem; margin-bottom:6px; }
-  .step p { color:var(--dim); font-size:.93rem; }
-
-  .cols { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:28px; }
-  @media (max-width:700px){ .cols{ grid-template-columns:1fr; } }
-  .card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:28px; display:flex; flex-direction:column; }
-  .card.hot { border-color:var(--accent); position:relative; }
-  .card.hot::before { content:"MOST POPULAR"; position:absolute; top:-10px; left:24px; font-size:.68rem;
-                      letter-spacing:.08em; font-weight:700; color:#fff; padding:3px 10px; border-radius:20px;
-                      background:linear-gradient(90deg,var(--accent),var(--accent2)); }
-  .card h3 { font-size:1.15rem; }
-  .price { font-size:2rem; font-weight:800; margin:10px 0 2px; }
-  .price small { font-size:.9rem; color:var(--dim); font-weight:500; }
-  .card ul { list-style:none; margin:16px 0 22px; flex:1; }
-  .card li { padding:5px 0 5px 26px; position:relative; color:var(--dim); font-size:.95rem; }
-  .card li::before { content:"✓"; color:var(--good); position:absolute; left:2px; font-weight:700; }
-  .card .btn { text-align:center; }
-
-  details { border:1px solid var(--border); border-radius:12px; padding:16px 20px; margin-top:10px; background:var(--card); }
-  summary { cursor:pointer; font-weight:600; }
-  details p { margin-top:10px; color:var(--dim); }
-
-  footer { margin-top:64px; padding:36px 0 56px; color:var(--dim); font-size:.9rem;
-           text-align:center; border-top:1px solid var(--border); }
-</style>
+<title>VPNonly — your VPN, one app at a time</title>
+<meta name="description" content="Per-app VPN for macOS. Put only the apps you choose behind your VPN — everything else stays on your normal connection. $19, once.">
+<meta property="og:title" content="VPNonly — your VPN, one app at a time">
+<meta property="og:description" content="Per-app VPN for macOS. Flip a switch, that app is in the tunnel. $19, once.">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="wrap">
 
 <nav>
-  <div class="logo">VPN<span>only</span></div>
+  <a class="mark" href="./">VPN<b>only</b></a>
   <div class="links">
-    <a href="#how">How it works</a>
-    <a href="#pricing">Pricing</a>
+    <a href="how-it-works.html">How it works</a>
+    <a href="faq.html">FAQ</a>
     <a href="https://github.com/kanishkdan/vpnonly">GitHub</a>
   </div>
 </nav>
 
-<header>
-  <h1>Put <em>one app</em> in the VPN.<br>Leave the rest of your Mac alone.</h1>
-  <p class="sub">Per-app split tunneling for macOS — the feature NordVPN, ExpressVPN and friends never shipped. Flip a toggle, and that app lives in the tunnel. Everything else stays fast, local, and untouched.</p>
-  <div class="cta-row">
-    <a class="btn btn-primary" href="https://dodo.pe/vpnonly">Get VPNonly Pro — $19</a>
-    <a class="btn btn-ghost" href="https://github.com/kanishkdan/vpnonly">Free CLI on GitHub</a>
+<header class="hero">
+  <span class="eyebrow">For macOS</span>
+  <h1>Your VPN.<br>One app at a time.</h1>
+  <p class="sub">Put only the apps you choose behind your VPN. Everything else on your Mac stays fast, local, and untouched.</p>
+  <div class="cta">
+    <a class="pill" href="https://dodo.pe/vpnonly">Buy VPNonly&nbsp;&nbsp;$19</a>
+    <a class="quiet" href="https://github.com/kanishkdan/vpnonly">Free CLI on GitHub →</a>
   </div>
-  <p class="note">One-time purchase · 2 Macs · 14-day refund · Apple Silicon, macOS 13+</p>
+  <p class="under">One-time purchase · 2 Macs · 14-day refund</p>
 
-  <div class="mock" aria-hidden="true">
-    <div class="bar"><span class="dot"></span> VPN tunnel: on — Singapore</div>
-    <div class="row">
-      <div class="appicon" style="background:linear-gradient(135deg,#0ff,#0a84ff)">C</div>
-      <div><span class="name">CapCut</span><span class="where">in VPN · exit 187.15.101.235</span></div>
-      <div class="sw on"></div>
-    </div>
-    <div class="row">
-      <div class="appicon" style="background:linear-gradient(135deg,#2aabee,#229ed9)">T</div>
-      <div><span class="name">Telegram</span><span class="where">in VPN</span></div>
-      <div class="sw on"></div>
-    </div>
-    <div class="row">
-      <div class="appicon" style="background:linear-gradient(135deg,#5ac8fa,#007aff)">S</div>
-      <div><span class="name">Safari</span><span class="where">normal connection</span></div>
-      <div class="sw"></div>
-    </div>
-    <div class="foot">+ Add App…</div>
+  <!-- HERO VIDEO — replace this placeholder with:
+       <div class="video"><video src="demo.mp4" autoplay loop muted playsinline></video></div>
+       (drop demo.mp4 into /docs) -->
+  <div class="video">
+    <div class="playmark">▶</div>
+    <p class="dim small">Demo video</p>
   </div>
-  <p class="caption">Lives in your menu bar. Toggle any app in or out.</p>
 </header>
 
-<section id="how">
-  <h2>Three clicks, honestly</h2>
-  <p class="lede">No config files, no terminal, no rerouting your whole machine. Your Mac's default connection is never touched — the worst-case failure mode is "that one app is offline," never "my internet broke."</p>
-  <div class="steps">
-    <div class="step"><div class="n">1</div><h3>Connect your VPN</h3><p>Paste a NordVPN access token once — or drop in a WireGuard key from Mullvad, Proton, or your own server.</p></div>
-    <div class="step"><div class="n">2</div><h3>Add your apps</h3><p>Pick any apps from /Applications. They show up in your menu bar list with their icons.</p></div>
-    <div class="step"><div class="n">3</div><h3>Flip the toggle</h3><p>The app relaunches inside the tunnel with a new exit IP. Flip it off, it comes right back on your normal connection.</p></div>
-  </div>
-</section>
-
 <section>
-  <h2>Built on an open-source engine</h2>
-  <p class="lede">The split-tunneling core is ~300 lines of auditable shell + C, MIT-licensed on GitHub. It uses macOS's built-in PF firewall and userspace WireGuard — no kernel extensions. A kill switch blocks a tunneled app's traffic if the VPN drops, instead of leaking it to your ISP. You can read every line that ever runs with elevated privileges.</p>
+  <div class="three">
+    <div>
+      <h3>Flip a switch</h3>
+      <p>Every app on your Mac, listed and searchable in the menu bar. Toggle one on — it relaunches inside the VPN with a new exit IP. Toggle it off — it's back on your normal connection.</p>
+    </div>
+    <div>
+      <h3>Your Mac stays yours</h3>
+      <p>VPNonly never routes your whole machine. Video calls stay sharp, banking stays local, downloads stay fast. The worst case is one app offline — never your Mac.</p>
+    </div>
+    <div>
+      <h3>Nothing ever leaks</h3>
+      <p>If the tunnel drops, a built-in kill switch blocks that app's traffic instead of quietly exposing it. And the engine is open source — read every privileged line.</p>
+    </div>
+  </div>
+  <p class="dim" style="margin-top:44px; text-align:center;">Works with NordVPN out of the box — and Mullvad, Proton, IVPN, or any WireGuard server you own.</p>
 </section>
 
 <section id="pricing">
-  <h2>Pricing</h2>
-  <div class="cols">
-    <div class="card">
-      <h3>Open-source CLI</h3>
-      <div class="price">Free</div>
+  <h2 style="text-align:center;">One price. No subscription.</h2>
+  <p class="dim" style="text-align:center; margin-top:8px;">Other split-tunneling apps charge $49 every year. VPNonly is yours forever.</p>
+  <div class="plans">
+    <div class="plan">
+      <h3>Command line</h3>
+      <div class="amount">Free</div>
+      <p class="dim small">Open source, MIT</p>
       <ul>
-        <li>Full split-tunneling engine, auditable</li>
-        <li>NordVPN adapter + any WireGuard provider</li>
+        <li>The full split-tunneling engine</li>
+        <li>NordVPN + any WireGuard provider</li>
         <li>Kill switch included</li>
-        <li>MIT licensed, forever</li>
+        <li>Yours to read, fork, and audit</li>
       </ul>
-      <a class="btn btn-ghost" href="https://github.com/kanishkdan/vpnonly">View on GitHub</a>
+      <a class="ghost" href="https://github.com/kanishkdan/vpnonly">View on GitHub</a>
     </div>
-    <div class="card hot">
-      <h3>VPNonly Pro</h3>
-      <div class="price">$19 <small>one-time</small></div>
+    <div class="plan">
+      <h3>VPNonly for Mac</h3>
+      <div class="amount">$19 <small>once</small></div>
+      <p class="dim small">Apple Silicon · macOS 13+</p>
       <ul>
-        <li>Menu bar app — toggle apps in/out of the VPN</li>
-        <li>Password asked once, ever — then it's one click</li>
-        <li>In-app NordVPN setup, pick exit country</li>
-        <li>WireGuard bundled — no Homebrew, no terminal</li>
+        <li>Menu bar app — search, toggle, done</li>
+        <li>Password asked once, ever</li>
+        <li>Exit country picker, live status</li>
         <li>License covers 2 Macs · free 1.x updates</li>
       </ul>
-      <a class="btn btn-primary" href="https://dodo.pe/vpnonly">Buy VPNonly Pro</a>
+      <a class="pill" href="https://dodo.pe/vpnonly">Buy VPNonly</a>
     </div>
   </div>
 </section>
 
-<section>
-  <h2>FAQ</h2>
-  <details><summary>How does it work?</summary>
-    <p>A userspace WireGuard tunnel comes up with no default route, so nothing uses it by default. macOS's built-in PF firewall steers traffic from your chosen apps into the tunnel. The engine is open source — inspect every privileged line on GitHub.</p>
-  </details>
-  <details><summary>Which VPN providers work?</summary>
-    <p>NordVPN works out of the box (paste an access token from your Nord account, once). Any provider that gives you a WireGuard config also works: Mullvad, Proton, IVPN, or your own server.</p>
-  </details>
-  <details><summary>What happens if the VPN drops?</summary>
-    <p>A kill switch blocks the tunneled apps' traffic entirely. It never silently falls back to your normal connection.</p>
-  </details>
-  <details><summary>Why does it need my password at setup?</summary>
-    <p>Creating a network interface and firewall rules requires admin rights on macOS — there's no legitimate way around that. VPNonly asks exactly once, installs a root-owned engine you can audit on GitHub, and never prompts again.</p>
-  </details>
-  <details><summary>Known limitations?</summary>
-    <p>v1 is Apple Silicon (M-series) only. DNS queries for tunneled apps currently use the system resolver — connections themselves are tunneled; a full DNS fix is on the roadmap. Apps need to be relaunched via the toggle to enter or leave the tunnel (VPNonly does this for you).</p>
-  </details>
-  <details><summary>Refunds?</summary>
-    <p>If it doesn't work on your setup, email <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a> within 14 days for a full refund, no questions.</p>
-  </details>
-</section>
+<div class="fin">
+  <h2>Stop VPN-ing your whole Mac.</h2>
+  <p class="sub">Thirty seconds from download to your first app in the tunnel.</p>
+  <div class="cta">
+    <a class="pill" href="https://dodo.pe/vpnonly">Buy VPNonly&nbsp;&nbsp;$19</a>
+  </div>
+</div>
 
 <footer>
-  <p>Built by <a href="https://github.com/kanishkdan">Kanishk Razdan</a> · <a href="https://github.com/kanishkdan/vpnonly">GitHub</a> · <a href="mailto:kanishk@armoury.in">Contact</a></p>
+  <span>© 2026 Kanishk Razdan</span>
+  <div class="fl">
+    <a href="how-it-works.html">How it works</a>
+    <a href="faq.html">FAQ</a>
+    <a href="https://github.com/kanishkdan/vpnonly">GitHub</a>
+    <a href="mailto:kanishk@armoury.in">Contact</a>
+  </div>
 </footer>
 
 </div>

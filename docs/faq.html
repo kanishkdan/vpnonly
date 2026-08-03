@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VPNonly — FAQ</title>
+<meta name="description" content="Frequently asked questions about VPNonly: providers, security, kill switch, refunds, and limitations.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+<nav>
+  <a class="mark" href="./">VPN<b>only</b></a>
+  <div class="links">
+    <a href="how-it-works.html">How it works</a>
+    <a class="here" href="faq.html">FAQ</a>
+    <a href="https://github.com/kanishkdan/vpnonly">GitHub</a>
+  </div>
+</nav>
+
+<div class="narrow prose">
+  <h1>FAQ</h1>
+
+  <div class="qa" style="margin-top:40px;">
+    <h3>Which VPN providers work?</h3>
+    <p>NordVPN out of the box — paste an access token from your Nord account once, and VPNonly fetches your WireGuard key itself. Beyond Nord: Mullvad, ProtonVPN, IVPN, AirVPN, or any WireGuard server you run. If your provider can hand you a WireGuard config, it works.</p>
+  </div>
+
+  <div class="qa">
+    <h3>Do I need my VPN provider's app running?</h3>
+    <p>No — keep it closed. VPNonly connects directly to your provider's servers with its own WireGuard tunnel. (Running both at once would make their firewall rules fight; VPNonly will remind you.)</p>
+  </div>
+
+  <div class="qa">
+    <h3>What happens if the VPN connection drops?</h3>
+    <p>A kill switch blocks the tunneled apps' traffic entirely until the tunnel is back. Their traffic is never silently moved to your normal connection.</p>
+  </div>
+
+  <div class="qa">
+    <h3>Why does an app restart when I toggle it?</h3>
+    <p>macOS assigns network identity when a process starts, so an app must relaunch to change sides. VPNonly handles the restart for you and warns you first so you can save your work. Removing the restart entirely requires Apple's Network Extension framework — that's the plan for v2.</p>
+  </div>
+
+  <div class="qa">
+    <h3>Why does it ask for my password at setup?</h3>
+    <p>Creating a network interface and firewall rules requires admin rights — for any software, always. VPNonly asks exactly once, installs a root-owned engine that nothing can tamper with, and never prompts again. The entire privileged code path is <a href="https://github.com/kanishkdan/vpnonly">open source</a> and about 300 lines.</p>
+  </div>
+
+  <div class="qa">
+    <h3>Is my traffic or data collected?</h3>
+    <p>No. There's no account, no analytics, no server of ours in the path. Your WireGuard key stays on your Mac with owner-only permissions. Traffic goes from your apps to your VPN provider — VPNonly just decides which apps.</p>
+  </div>
+
+  <div class="qa">
+    <h3>What are the current limitations?</h3>
+    <p>Apple Silicon (M-series) only. DNS queries for tunneled apps use the system resolver for now — connections themselves are tunneled. IPv6 for tunneled apps is blocked rather than routed. Chromium-based apps with "keep running in background" enabled may need that setting off for clean toggles.</p>
+  </div>
+
+  <div class="qa">
+    <h3>How is this different from SplitTunnel and similar apps?</h3>
+    <p>Two ways. Architecture: those tools route your <em>whole Mac</em> through the VPN and then exclude apps; VPNonly never puts your Mac on the VPN at all — chosen apps opt in. Pricing: they're subscriptions (typically ~$49/year); VPNonly is $19 once, with the engine open source.</p>
+  </div>
+
+  <div class="qa">
+    <h3>What does $19 get me?</h3>
+    <p>The menu bar app, a license for 2 Macs, and free updates for all 1.x versions. The command-line engine is free and MIT-licensed regardless.</p>
+  </div>
+
+  <div class="qa">
+    <h3>Refunds?</h3>
+    <p>If VPNonly doesn't work on your setup, email <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a> within 14 days for a full refund. No questions, no forms.</p>
+  </div>
+
+  <div class="fin" style="padding-top:70px;">
+    <div class="cta">
+      <a class="pill" href="https://dodo.pe/vpnonly">Buy VPNonly&nbsp;&nbsp;$19</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>© 2026 Kanishk Razdan</span>
+  <div class="fl">
+    <a href="./">Home</a>
+    <a href="how-it-works.html">How it works</a>
+    <a href="https://github.com/kanishkdan/vpnonly">GitHub</a>
+    <a href="mailto:kanishk@armoury.in">Contact</a>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>
