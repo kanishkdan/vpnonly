@@ -3,101 +3,62 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VPNonly — FAQ</title>
-<meta name="description" content="Frequently asked questions about VPNonly: providers, security, kill switch, refunds, and limitations.">
+<title>vpnonly — faq</title>
+<meta name="description" content="questions about providers, restarts, the password prompt, refunds and limitations.">
 <link rel="icon" type="image/png" href="icon.png">
-<link rel="stylesheet" href="style.css?v=5">
+<link rel="stylesheet" href="style.css?v=6">
 <script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
-<div class="wrap">
+<div class="page">
 
-<nav>
-  <a class="brand" href="./">
-    <svg viewBox="0 0 26 30"><path d="M13 1l11 4v9c0 7.5-4.8 13.6-11 15C6.8 27.6 2 21.5 2 14V5z" fill="none" stroke="#e8637c" stroke-width="2.2" stroke-linejoin="round"/><path d="M13 1l-11 4v9c0 7.5 4.8 13.6 11 15z" fill="#e8637c"/></svg>
-    VPNonly
-  </a>
-  <div class="links">
-    <a class="txt" href="how-it-works.html">How it works</a>
-    <a class="chip" href="https://dodo.pe/vpnonly-mac"> Purchase for Mac</a>
-  </div>
-</nav>
-
-<div class="narrow prose">
-  <h1>FAQ</h1>
-
-  <div class="qa" style="margin-top:40px;">
-    <h3>Which VPN providers work?</h3>
-    <p>NordVPN out of the box — paste an access token from your Nord account once, and VPNonly fetches your WireGuard key itself. Beyond Nord: Mullvad, ProtonVPN, IVPN, AirVPN, or any WireGuard server you run. If your provider can hand you a WireGuard config, it works.</p>
-  </div>
-
-  <div class="qa">
-    <h3>Do I need my VPN provider's app running?</h3>
-    <p>No — keep it closed. VPNonly connects directly to your provider's servers with its own WireGuard tunnel. (Running both at once would make their firewall rules fight; VPNonly will remind you.)</p>
-  </div>
-
-  <div class="qa">
-    <h3>What happens if the VPN connection drops?</h3>
-    <p>A kill switch blocks the tunneled apps' traffic entirely until the tunnel is back. Their traffic is never silently moved to your normal connection.</p>
-  </div>
-
-  <div class="qa">
-    <h3>Does my app restart every time I toggle it?</h3>
-    <p>No — only the first time it joins the VPN. macOS fixes an app's network identity when it starts, so VPNonly relaunches it once to tag it. After that, switching that app in and out of the VPN is instant: the tag stays, and only the firewall rule changes. Existing connections drop when the exit IP changes (unavoidable — most apps reconnect on their own), but the app itself keeps running.</p>
-  </div>
-
-  <div class="qa">
-    <h3>Why does it ask for my password at setup?</h3>
-    <p>Creating a network interface and firewall rules requires admin rights — for any software, always. VPNonly asks exactly once, installs a root-owned engine that nothing can tamper with, and never prompts again. The entire privileged code path is <a href="https://github.com/kanishkdan/vpnonly">open source</a> and about 300 lines.</p>
-  </div>
-
-  <div class="qa">
-    <h3>Is my traffic or data collected?</h3>
-    <p>No. There's no account, no analytics, no server of ours in the path. Your WireGuard key stays on your Mac with owner-only permissions. Traffic goes from your apps to your VPN provider — VPNonly just decides which apps.</p>
-  </div>
-
-  <div class="qa">
-    <h3>What are the current limitations?</h3>
-    <p>Apple Silicon (M-series) only. DNS queries for tunneled apps use the system resolver for now — connections themselves are tunneled. IPv6 for tunneled apps is blocked rather than routed. Chromium-based apps with "keep running in background" enabled may need that setting off for clean toggles.</p>
-  </div>
-
-  <div class="qa">
-    <h3>How is this different from SplitTunnel and similar apps?</h3>
-    <p>Two ways. Architecture: those tools route your <em>whole Mac</em> through the VPN and then exclude apps; VPNonly never puts your Mac on the VPN at all — chosen apps opt in. Pricing: they're subscriptions (typically ~$49/year); VPNonly is $19 once, with the engine open source.</p>
-  </div>
-
-  <div class="qa">
-    <h3>What does $19 get me?</h3>
-    <p>The menu bar app, a license for 2 Macs, and free updates for all 1.x versions. The command-line engine is free and MIT-licensed regardless.</p>
-  </div>
-
-  <div class="qa">
-    <h3>I launched it but there's no icon in my menu bar</h3>
-    <p>Your menu bar is full — on MacBooks with a notch, macOS silently hides menu bar icons that don't fit, newest first. Quit a menu bar app you're not using, or ⌘-drag icons to rearrange, and the VPNonly shield will appear. The app is running the whole time.</p>
-  </div>
-
-  <div class="qa">
-    <h3>Refunds?</h3>
-    <p>If VPNonly doesn't work on your setup, email <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a> within 14 days for a full refund. No questions, no forms.</p>
-  </div>
-
-  <div class="fin" style="padding-top:70px;">
-    <div class="cta-row center">
-      <a class="pill" href="https://dodo.pe/vpnonly-mac">Buy VPNonly&nbsp;&nbsp;$19</a>
-    </div>
-  </div>
+<div class="top">
+  <a href="./">home</a>
+  <a href="https://github.com/kanishkdan/vpnonly">repo</a>
+  <a href="how-it-works.html">how it works</a>
 </div>
 
-<footer>
-  <span>© 2026 Kanishk Razdan</span>
-  <div class="fl">
-    <a href="./">Home</a>
-    <a href="how-it-works.html">How it works</a>
-    <a href="https://github.com/kanishkdan/vpnonly">GitHub</a>
-    <a href="terms.html">Terms &amp; privacy</a>
-    <a href="mailto:kanishk@armoury.in">Contact</a>
-  </div>
-</footer>
+<h1>faq</h1>
+
+<h2>which vpns work?</h2>
+<p>nordvpn works out of the box — you paste an access token once and vpnonly gets your wireguard key from them. anything else that gives you a wireguard config works too: mullvad, proton, ivpn, or a server you run yourself.</p>
+
+<h2>do i need my vpn's own app running?</h2>
+<p>no, keep it closed. vpnonly talks to your provider's servers directly. running both at once makes their firewall rules fight each other.</p>
+
+<h2>does my app restart every time i toggle it?</h2>
+<p>only the first time it joins the vpn. macos fixes an app's network identity when it launches, so it has to be relaunched once. after that, switching it in and out is instant and the app keeps running. its open connections do drop when the exit ip changes — most apps reconnect by themselves.</p>
+
+<h2>what happens if the vpn drops?</h2>
+<p>those apps get blocked until it's back. they never silently fall back to your normal connection.</p>
+
+<h2>why does it want my password?</h2>
+<p>creating a network interface and firewall rules needs admin rights. it asks once, installs a root-owned engine, and doesn't ask again. that engine is <a href="https://github.com/kanishkdan/vpnonly">open source</a> — you can read every privileged line before you trust it.</p>
+
+<h2>do you collect anything?</h2>
+<p>no. no account, no analytics in the app, no server of mine in the path. your wireguard key stays on your mac. the app talks to my side exactly twice: once to activate your license, and occasionally to check if there's a new version.</p>
+
+<h2>i can't see the icon in my menu bar</h2>
+<p>your menu bar is full — macs with a notch quietly hide icons that don't fit, newest first. quit a menu bar app you're not using and the shield shows up. it was running the whole time.</p>
+
+<h2>how is this different from splittunnel.app?</h2>
+<p>they route your whole mac through the vpn and then exclude apps; vpnonly never puts your mac on the vpn at all — apps opt in. and they're ~$49 a year, this is $19 once. their network extension approach does avoid the one-time relaunch, which is fair — that's on my list.</p>
+
+<h2>what do i get for $19?</h2>
+<p>the mac app, a license for 2 macs, and all 1.x updates. the command-line engine is free and mit licensed either way.</p>
+
+<h2>refunds?</h2>
+<p>email <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a> within 14 days and i'll refund you. no forms, no reasons needed.</p>
+
+<div class="buy">
+  <a class="btn primary" href="https://dodo.pe/vpnonly-mac">get it for mac — $19</a>
+</div>
+
+<div class="foot">
+  made by <a href="https://github.com/kanishkdan">kanishk</a> ·
+  <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a> ·
+  <a href="terms.html">terms &amp; privacy</a>
+</div>
 
 </div>
 </body>

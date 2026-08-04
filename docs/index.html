@@ -3,130 +3,81 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VPNonly — put one app on the VPN, not your whole Mac</title>
-<meta name="description" content="Per-app VPN for macOS. Toggle an app into a WireGuard tunnel — everything else stays on your normal connection. Works with NordVPN and any WireGuard provider. $19, once.">
-<meta property="og:title" content="VPNonly — put one app on the VPN, not your whole Mac">
-<meta property="og:description" content="Per-app VPN for macOS. Flip a switch, that app gets a new country. $19, once.">
+<title>vpnonly — one app on the vpn, not your whole mac</title>
+<meta name="description" content="a mac app that puts only the apps you pick on your vpn. works with nordvpn, mullvad, proton, or your own wireguard server. $19 once, open-source engine.">
+<meta property="og:title" content="vpnonly — one app on the vpn, not your whole mac">
+<meta property="og:description" content="pick an app, flip a switch, that app is on the vpn. nothing else changes.">
 <meta property="og:image" content="og-icon.png">
 <link rel="icon" type="image/png" href="icon.png">
-<link rel="stylesheet" href="style.css?v=5">
+<link rel="stylesheet" href="style.css?v=6">
 <script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
-<div class="wrap">
+<div class="page">
 
-<nav>
-  <a class="brand" href="./">
-    <svg viewBox="0 0 26 30"><path d="M13 1l11 4v9c0 7.5-4.8 13.6-11 15C6.8 27.6 2 21.5 2 14V5z" fill="none" stroke="#e8637c" stroke-width="2.2" stroke-linejoin="round"/><path d="M13 1l-11 4v9c0 7.5 4.8 13.6 11 15z" fill="#e8637c"/></svg>
-    VPNonly
-  </a>
-  <div class="links">
-    <a class="txt" href="how-it-works.html">How it works</a>
-    <a class="txt" href="faq.html">FAQ</a>
-    <a class="txt" href="https://github.com/kanishkdan/vpnonly">GitHub</a>
-    <a class="chip" href="https://dodo.pe/vpnonly-mac">Get for Mac <span class="tag">$19</span></a>
-  </div>
-</nav>
-
-<header class="hero">
-  <h1 class="mega">Put <span class="accent">one app</span> on the VPN. Not your whole Mac.</h1>
-  <p class="sub">VPNonly keeps a WireGuard tunnel ready that nothing uses — until you flip a switch. Toggle an app in, it gets a new country. Everything else never notices.</p>
-  <div class="cta-row">
-    <a class="pill" href="https://dodo.pe/vpnonly-mac">Get VPNonly for Mac</a>
-    <a class="chip" href="https://github.com/kanishkdan/vpnonly">Free CLI on GitHub</a>
-  </div>
-  <div class="status">
-    <div><span class="dot on"></span><b>CapCut</b> — <span class="loc">Singapore · 187.15.101.235</span></div>
-    <div><span class="dot off"></span>everything else — your connection, untouched</div>
-  </div>
-</header>
-
-<!-- HERO VIDEO — replace the placeholder with:
-     <div class="showcase"><video src="demo.mp4" autoplay loop muted playsinline></video></div>
-     (drop demo.mp4 into /docs) -->
-<div class="showcase">
-  <div class="playmark">▶</div>
-  <p>demo — toggle an app, watch its exit IP flip</p>
+<div class="top">
+  <a href="https://github.com/kanishkdan/vpnonly">repo</a>
+  <a href="how-it-works.html">how it works</a>
+  <a href="faq.html">faq</a>
 </div>
 
-<div class="features">
-  <div class="feat">
-    <svg viewBox="0 0 32 32"><rect x="3" y="10" width="26" height="12" rx="6"/><circle cx="22" cy="16" r="4"/></svg>
-    <h3>A switch per app</h3>
-    <p>Every app on your Mac, searchable in the menu bar. Flip one on — it relaunches inside the tunnel with a new exit IP. Flip it off — it's back home.</p>
-  </div>
-  <div class="feat">
-    <svg viewBox="0 0 32 32"><path d="M16 3l10 3.5V14c0 6.5-4.3 12-10 13.5C10.3 26 6 20.5 6 14V6.5z"/><path d="M11 15.5l3.5 3.5 6.5-7"/></svg>
-    <h3>Kill switch, always</h3>
-    <p>Tunnel drops? That app's traffic is blocked, not quietly leaked to your ISP. Reconnect and it's back — no surprises in between.</p>
-  </div>
-  <div class="feat">
-    <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M4 16h24M16 4c-3.5 3.5-5 7.5-5 12s1.5 8.5 5 12c3.5-3.5 5-7.5 5-12s-1.5-8.5-5-12z"/></svg>
-    <h3>Bring any VPN</h3>
-    <p>NordVPN works out of the box — paste a token once. Or drop in a WireGuard key from Mullvad, Proton, IVPN, or your own server.</p>
-  </div>
-  <div class="feat">
-    <svg viewBox="0 0 32 32"><rect x="7" y="14" width="18" height="13" rx="3"/><path d="M11 14v-4a5 5 0 0 1 10 0v4"/></svg>
-    <h3>One password, once</h3>
-    <p>Admin rights are needed to make firewall rules — that's macOS. VPNonly asks a single time, installs a root-owned engine, and never asks again.</p>
-  </div>
-  <div class="feat">
-    <svg viewBox="0 0 32 32"><path d="M12 9l-7 7 7 7M20 9l7 7-7 7"/></svg>
-    <h3>Auditable core</h3>
-    <p>Every privileged line — tunnel, firewall, launcher — is ~300 lines of open-source shell and C on GitHub. No opaque binary gets root.</p>
-  </div>
-  <div class="feat">
-    <svg viewBox="0 0 32 32"><rect x="3" y="6" width="26" height="20" rx="3"/><path d="M3 11h26"/><circle cx="7" cy="8.5" r="1"/><circle cx="11" cy="8.5" r="1"/></svg>
-    <h3>Native and tiny</h3>
-    <p>A real Mac menu bar app — no Electron, no accounts, no analytics. Your WireGuard key never leaves your machine.</p>
-  </div>
+<h1>hi, this is vpnonly.</h1>
+
+<p>it's a mac app i made for myself.</p>
+
+<p>nordvpn — like basically every big vpn — has no split tunneling on mac. it's all or nothing: connect, and your entire machine moves to another country. video calls get worse, your bank gets suspicious, downloads slow down. i just wanted capcut on a singapore ip while everything else stayed exactly where it was.</p>
+
+<p>so: pick an app, flip a switch, that app is on the vpn. everything else on your mac never notices. flip it back whenever you want.</p>
+
+<p class="tight">works with nordvpn out of the box.</p>
+<p class="tight">also mullvad, proton, ivpn, or your own wireguard server.</p>
+<p class="tight">the engine is open-source.</p>
+<p class="tight">the mac app is $19, once. no subscription.</p>
+
+<div class="buy">
+  <a class="btn primary" href="https://dodo.pe/vpnonly-mac">get it for mac — $19</a>
+  <a class="btn" href="https://github.com/kanishkdan/vpnonly">or build it yourself, free</a>
 </div>
 
-<div class="pricing">
-  <h2>One price. Zero subscription.</h2>
-  <p class="note">The other split-tunneling apps want $49 a year. VPNonly is $19, once, forever.</p>
-  <div class="plans">
-    <div class="plan">
-      <h3>Command line</h3>
-      <div class="amount">Free</div>
-      <ul>
-        <li>The full split-tunneling engine</li>
-        <li>NordVPN + any WireGuard provider</li>
-        <li>Kill switch included</li>
-        <li>MIT licensed, yours to audit</li>
-      </ul>
-      <a class="chip" href="https://github.com/kanishkdan/vpnonly">View on GitHub</a>
-    </div>
-    <div class="plan hot">
-      <h3>VPNonly for Mac</h3>
-      <div class="amount">$19 <small>one-time</small></div>
-      <ul>
-        <li>Menu bar app — search, toggle, done</li>
-        <li>Exit country picker, live status</li>
-        <li>Password asked once, ever</li>
-        <li>2 Macs · free 1.x updates · 14-day refund</li>
-      </ul>
-      <a class="pill" href="https://dodo.pe/vpnonly-mac">Get VPNonly</a>
-    </div>
-  </div>
+<!-- when demo.mp4 exists, swap the inner div for:
+     <video src="demo.mp4" autoplay loop muted playsinline></video> -->
+<div class="shot">
+  <span class="ph">demo</span>
 </div>
 
-<div class="fin">
-  <h2>Your Mac shouldn't move countries<br>because one app had to.</h2>
-  <p class="sub">Thirty seconds from download to your first app in the tunnel.</p>
-  <a class="pill" href="https://dodo.pe/vpnonly-mac">Get VPNonly for Mac</a>
+<h2>what it actually does</h2>
+
+<p>it opens a wireguard tunnel that nothing uses by default — your normal internet is untouched, your default route is never changed. then it uses the firewall that's already in macos to send just the apps you picked through that tunnel.</p>
+
+<p>the first time an app joins, it gets relaunched once (macos decides an app's network identity when it starts, so there's no way around that). after that, switching it in and out is instant.</p>
+
+<p>if the tunnel ever drops, those apps get blocked rather than quietly falling back to your normal connection. the worst thing that can happen is one app loses internet — never your mac.</p>
+
+<h2>things i should be honest about</h2>
+
+<ul>
+  <li>apple silicon only for now.</li>
+  <li>dns lookups for tunneled apps still go through your normal resolver. the connections themselves are tunneled. if you need to hide <em>which</em> sites you visit from your isp, this isn't the tool yet.</li>
+  <li>switching an app's route drops its open connections — most apps reconnect on their own, but a big upload would restart.</li>
+  <li>it's one person maintaining this. if it doesn't work for you, email me and i'll refund you.</li>
+</ul>
+
+<h2>why it's paid but also open</h2>
+
+<p>the split-tunneling engine is ~300 lines of shell and c, mit licensed, on <a href="https://github.com/kanishkdan/vpnonly">github</a>. it runs as root on your machine, so you should be able to read every line of it — that's not a favor, it's the minimum.</p>
+
+<p>the $19 is for the mac app on top: the menu bar thing, the app list, one-click setup, updates. if you'd rather use the terminal, do that, it's free and always will be.</p>
+
+<div class="buy">
+  <a class="btn primary" href="https://dodo.pe/vpnonly-mac">get it for mac — $19</a>
+  <span class="aside">2 macs · 14-day refund, no questions</span>
 </div>
 
-<footer>
-  <span>© 2026 Kanishk Razdan</span>
-  <div class="fl">
-    <a href="how-it-works.html">How it works</a>
-    <a href="faq.html">FAQ</a>
-    <a href="https://github.com/kanishkdan/vpnonly">GitHub</a>
-    <a href="terms.html">Terms &amp; privacy</a>
-    <a href="mailto:kanishk@armoury.in">Contact</a>
-  </div>
-</footer>
+<div class="foot">
+  made by <a href="https://github.com/kanishkdan">kanishk</a> ·
+  <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a> ·
+  <a href="terms.html">terms &amp; privacy</a>
+</div>
 
 </div>
 </body>
