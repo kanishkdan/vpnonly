@@ -6,7 +6,7 @@
 <title>vpnonly — faq</title>
 <meta name="description" content="questions about providers, restarts, the password prompt, refunds and limitations.">
 <link rel="icon" type="image/png" href="icon.png">
-<link rel="stylesheet" href="style.css?v=9">
+<link rel="stylesheet" href="style.css?v=10">
 <script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
@@ -26,8 +26,8 @@
 <h1>FAQ</h1>
 
 <h2>Which VPNs work?</h2>
-<p><strong>The Mac app supports NordVPN today.</strong> You paste an access token once and it fetches your WireGuard key from them.</p>
-<p>Other WireGuard providers — Mullvad, Proton, IVPN, AirVPN, or a server you run yourself — work with the <a href="https://github.com/kanishkdan/vpnonly">free command-line version</a>, where you supply the endpoint and key yourself. Importing a WireGuard config straight into the Mac app is the next thing I'm building; if that's what you need, email me before buying and I'll tell you honestly where it stands.</p>
+<p><strong>NordVPN</strong> is the easiest: paste an access token once and the app fetches your WireGuard key and picks servers for you, with a country menu.</p>
+<p><strong>Everyone else</strong> — Mullvad, Proton, IVPN, AirVPN, or a server you run yourself — works by importing a WireGuard config. Download the <code>.conf</code> from your provider (one per server), import as many as you want, and switch between them from the same menu. If your provider can give you a WireGuard config, it works here.</p>
 
 <h2>Do I need my VPN's own app running?</h2>
 <p>No, keep it closed. VPNonly talks to your provider's servers directly. Running both at once makes their firewall rules fight each other.</p>

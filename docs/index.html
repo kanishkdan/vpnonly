@@ -9,7 +9,7 @@
 <meta property="og:description" content="Pick an app, flip a switch, that app is on the VPN. Nothing else changes.">
 <meta property="og:image" content="og-icon.png">
 <link rel="icon" type="image/png" href="icon.png">
-<link rel="stylesheet" href="style.css?v=9">
+<link rel="stylesheet" href="style.css?v=10">
 <script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
@@ -29,7 +29,7 @@
 
   <!-- ─── left: me, the pitch, the button ─── -->
   <div class="left">
-    <p class="hello">Hi, I'm <b>Kanishk</b> and I built VPNonly.</p>
+    <p class="hello">Hi, I'm <a class="who" href="https://x.com/kanishkrazdan"><b>Kanishk</b></a> and I built VPNonly.</p>
 
     <h1>One app on the VPN. Not your whole Mac.</h1>
 
@@ -39,6 +39,8 @@
       <div><span class="dot in"></span><b>CapCut</b> — Singapore</div>
       <div><span class="dot out"></span>everything else — untouched</div>
     </div>
+
+    <p class="works"><span>Works with</span> NordVPN · Mullvad · Proton · IVPN · AirVPN · your own WireGuard server</p>
 
     <div class="actions">
       <a class="btn" href="https://dodo.pe/vpnonly-mac">Get it for Mac — $19</a>
@@ -94,7 +96,7 @@ pass out quick route-to (utun9 …) … group vpn_a1b2c3</code></pre>
       </div>
       <div class="qa">
         <div class="q">Which providers work?</div>
-        <p>The Mac app is NordVPN-only today — paste an access token once and it does the rest. Other WireGuard providers (Mullvad, Proton, IVPN, your own server) work through the free command-line version, and I'm building config import into the app next.</p>
+        <p>NordVPN needs nothing but an access token — the app fetches your key and picks servers itself. For Mullvad, Proton, IVPN, AirVPN or your own server, download their WireGuard config and drop it in; import as many as you like and switch between them from the menu.</p>
       </div>
       <div class="qa">
         <div class="q">Why does it want my password?</div>

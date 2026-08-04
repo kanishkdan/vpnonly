@@ -146,3 +146,13 @@ pre code { line-height: 1.65; }
   content: ""; position: absolute; left: 0; top: 12px;
   width: 6px; height: 1.5px; background: #c2c5cc;
 }
+
+/* who + what it works with */
+.who { text-decoration: none; }
+.who b { border-bottom: 1px solid transparent; transition: border-color .15s; }
+.who:hover b { border-bottom-color: #b9bcc3; }
+.works {
+  font-size: 13.5px; line-height: 1.6; color: var(--faint);
+  margin: 22px 0 26px; max-width: 34ch;
+}
+.works span { color: #a2a6ad; }

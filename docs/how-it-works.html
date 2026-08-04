@@ -6,7 +6,7 @@
 <title>how vpnonly works</title>
 <meta name="description" content="the wireguard tunnel with no default route, the pf group trick, and why an app restarts once.">
 <link rel="icon" type="image/png" href="icon.png">
-<link rel="stylesheet" href="style.css?v=9">
+<link rel="stylesheet" href="style.css?v=10">
 <script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
@@ -49,7 +49,6 @@ pass out quick route-to (utun9 10.5.0.2) inet proto { tcp udp } \
 
 <h2>What I haven't solved</h2>
 <ul>
-  <li>The Mac app only speaks to NordVPN so far. The engine itself is provider-agnostic — the free CLI takes any WireGuard endpoint — but config import isn't in the app yet.</li>
   <li>DNS for tunneled apps goes through the system resolver, which isn't in any group. Connections are tunneled, lookups aren't. Fixing it properly needs a scoped resolver.</li>
   <li>IPv6 for tunneled apps is blocked rather than routed. No leak, but no v6.</li>
   <li>An app launched from the Dock isn't in a group, so it needs one relaunch through VPNonly.</li>
