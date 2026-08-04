@@ -6,18 +6,23 @@
 <title>how vpnonly works</title>
 <meta name="description" content="the wireguard tunnel with no default route, the pf group trick, and why an app restarts once.">
 <link rel="icon" type="image/png" href="icon.png">
-<link rel="stylesheet" href="style.css?v=6">
+<link rel="stylesheet" href="style.css?v=7">
 <script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
-<div class="page">
+<div class="shell">
 
 <div class="top">
+  <a class="me" href="./">
+    <svg viewBox="0 0 26 30"><path d="M13 1l11 4v9c0 7.5-4.8 13.6-11 15C6.8 27.6 2 21.5 2 14V5z" fill="none" stroke="#d4415f" stroke-width="2.4" stroke-linejoin="round"/><path d="M13 1l-11 4v9c0 7.5 4.8 13.6 11 15z" fill="#d4415f"/></svg>
+    <b>VPNonly</b>
+  </a>
   <a href="./">home</a>
-  <a href="https://github.com/kanishkdan/vpnonly">repo</a>
   <a href="faq.html">faq</a>
+  <a href="https://github.com/kanishkdan/vpnonly">repo</a>
 </div>
 
+<div class="solo">
 <h1>how it works</h1>
 
 <p>most vpn apps take over your whole machine: they replace your default route, and every packet from every app detours through another country whether it helps or not. vpnonly does the opposite — your mac never joins the vpn, individual apps do.</p>
@@ -56,15 +61,13 @@ pass out quick route-to (utun9 10.5.0.2) inet proto { tcp udp } \
 
 <p>the version of this with no restarts at all needs apple's network extension framework — a system extension that sees every connection with the app's signature attached. that's the plan, it's just a much bigger build.</p>
 
-<div class="buy">
-  <a class="btn primary" href="https://dodo.pe/vpnonly-mac">get it for mac — $19</a>
-  <a class="btn" href="https://github.com/kanishkdan/vpnonly">read the code</a>
-</div>
+<p style="margin-top:34px;"><a class="btn" href="https://dodo.pe/vpnonly-mac">Get it for Mac — $19</a></p>
 
 <div class="foot">
-  made by <a href="https://github.com/kanishkdan">kanishk</a> ·
-  <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a> ·
+  <span>Made by <a href="https://x.com/kanishkrazdan">@kanishkrazdan</a></span>
+  <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a>
   <a href="terms.html">terms &amp; privacy</a>
+</div>
 </div>
 
 </div>

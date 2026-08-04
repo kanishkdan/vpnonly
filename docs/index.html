@@ -3,79 +3,116 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>vpnonly — one app on the vpn, not your whole mac</title>
-<meta name="description" content="a mac app that puts only the apps you pick on your vpn. works with nordvpn, mullvad, proton, or your own wireguard server. $19 once, open-source engine.">
-<meta property="og:title" content="vpnonly — one app on the vpn, not your whole mac">
-<meta property="og:description" content="pick an app, flip a switch, that app is on the vpn. nothing else changes.">
+<title>VPNonly — one app on the VPN, not your whole Mac</title>
+<meta name="description" content="A Mac app that puts only the apps you pick on your VPN. Works with NordVPN, Mullvad, Proton, or your own WireGuard server. $19 once, open-source engine.">
+<meta property="og:title" content="VPNonly — one app on the VPN, not your whole Mac">
+<meta property="og:description" content="Pick an app, flip a switch, that app is on the VPN. Nothing else changes.">
 <meta property="og:image" content="og-icon.png">
 <link rel="icon" type="image/png" href="icon.png">
-<link rel="stylesheet" href="style.css?v=6">
+<link rel="stylesheet" href="style.css?v=7">
 <script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
-<div class="page">
+<div class="shell">
 
 <div class="top">
-  <a href="https://github.com/kanishkdan/vpnonly">repo</a>
+  <a class="me" href="./">
+    <svg viewBox="0 0 26 30"><path d="M13 1l11 4v9c0 7.5-4.8 13.6-11 15C6.8 27.6 2 21.5 2 14V5z" fill="none" stroke="#d4415f" stroke-width="2.4" stroke-linejoin="round"/><path d="M13 1l-11 4v9c0 7.5 4.8 13.6 11 15z" fill="#d4415f"/></svg>
+    <b>VPNonly</b>
+  </a>
   <a href="how-it-works.html">how it works</a>
   <a href="faq.html">faq</a>
+  <a href="https://github.com/kanishkdan/vpnonly">repo</a>
 </div>
 
-<h1>hi, this is vpnonly.</h1>
+<div class="lanes">
 
-<p>it's a mac app i made for myself.</p>
+  <!-- ─── left: me, the pitch, the button ─── -->
+  <div class="left">
+    <p class="hello">Hi, I'm <b>Kanishk</b> and I built VPNonly.</p>
 
-<p>nordvpn — like basically every big vpn — has no split tunneling on mac. it's all or nothing: connect, and your entire machine moves to another country. video calls get worse, your bank gets suspicious, downloads slow down. i just wanted capcut on a singapore ip while everything else stayed exactly where it was.</p>
+    <h1>It puts <em>one app</em> on your VPN. Not your whole Mac.</h1>
 
-<p>so: pick an app, flip a switch, that app is on the vpn. everything else on your mac never notices. flip it back whenever you want.</p>
+    <p>NordVPN — like basically every big VPN — has no split tunneling on Mac. It's all or nothing: connect, and your entire machine moves to another country.</p>
 
-<p class="tight">works with nordvpn out of the box.</p>
-<p class="tight">also mullvad, proton, ivpn, or your own wireguard server.</p>
-<p class="tight">the engine is open-source.</p>
-<p class="tight">the mac app is $19, once. no subscription.</p>
+    <p>I just wanted CapCut on a Singapore IP while everything else stayed exactly where it was. So I built this.</p>
 
-<div class="buy">
-  <a class="btn primary" href="https://dodo.pe/vpnonly-mac">get it for mac — $19</a>
-  <a class="btn" href="https://github.com/kanishkdan/vpnonly">or build it yourself, free</a>
-</div>
+    <div class="state">
+      <div><span class="dot in"></span><b>CapCut</b> — Singapore</div>
+      <div><span class="dot out"></span>everything else — untouched</div>
+    </div>
 
-<!-- when demo.mp4 exists, swap the inner div for:
-     <video src="demo.mp4" autoplay loop muted playsinline></video> -->
-<div class="shot">
-  <span class="ph">demo</span>
-</div>
+    <div class="actions">
+      <a class="btn" href="https://dodo.pe/vpnonly-mac">Get it for Mac — $19</a>
+      <span class="alt">or <a href="https://github.com/kanishkdan/vpnonly">build it yourself, free</a></span>
+      <span class="terms">one-time · 2 Macs · 14-day refund · Apple Silicon</span>
+    </div>
+  </div>
 
-<h2>what it actually does</h2>
+  <!-- ─── right: everything worth knowing ─── -->
+  <div class="right">
 
-<p>it opens a wireguard tunnel that nothing uses by default — your normal internet is untouched, your default route is never changed. then it uses the firewall that's already in macos to send just the apps you picked through that tunnel.</p>
+    <!-- when demo.mp4 exists, swap the inner span for:
+         <video src="demo.mp4" autoplay loop muted playsinline></video> -->
+    <div class="shot"><span class="ph">demo</span></div>
 
-<p>the first time an app joins, it gets relaunched once (macos decides an app's network identity when it starts, so there's no way around that). after that, switching it in and out is instant.</p>
+    <section>
+      <h2>what it does</h2>
+      <p>Every app on your Mac shows up in a menu bar list. Flip a switch and that app moves onto the VPN with a new exit IP. Flip it back and it's home again. Everything else — your browser, your calls, your bank — never leaves your normal connection.</p>
+      <p>The first time an app joins, it gets relaunched once. macOS decides an app's network identity when it starts, so there's no way around that. After that, switching is instant and the app keeps running.</p>
+    </section>
 
-<p>if the tunnel ever drops, those apps get blocked rather than quietly falling back to your normal connection. the worst thing that can happen is one app loses internet — never your mac.</p>
+    <section>
+      <h2>how it works</h2>
+      <p>It opens a WireGuard tunnel that <strong>nothing uses by default</strong> — your default route is never touched. Then it uses PF, the firewall already built into macOS, to send just the apps you picked through that tunnel.</p>
+      <p>PF can't match traffic by application, but it can match by unix group. So each app gets its own private group, and two rules do the work:</p>
+      <pre><code>block return out … from any to any group vpn_a1b2c3
+pass out quick route-to (utun9 …) … group vpn_a1b2c3</code></pre>
+      <p>The second sends that app into the tunnel. The first is the kill switch — when the tunnel is down, the pass rule isn't there, so that traffic is refused instead of quietly leaking to your ISP. <a href="how-it-works.html">Longer version here.</a></p>
+    </section>
 
-<h2>things i should be honest about</h2>
+    <section>
+      <h2>things I should be honest about</h2>
+      <ul>
+        <li>Apple Silicon only for now.</li>
+        <li>DNS lookups for tunneled apps still go through your normal resolver. The connections themselves are tunneled. If you need to hide <em>which</em> sites you visit from your ISP, this isn't the tool yet.</li>
+        <li>Switching an app's route drops its open connections. Most reconnect on their own, but a big upload would restart.</li>
+        <li>It's one person maintaining this. If it doesn't work for you, email me and I'll refund you.</li>
+      </ul>
+    </section>
 
-<ul>
-  <li>apple silicon only for now.</li>
-  <li>dns lookups for tunneled apps still go through your normal resolver. the connections themselves are tunneled. if you need to hide <em>which</em> sites you visit from your isp, this isn't the tool yet.</li>
-  <li>switching an app's route drops its open connections — most apps reconnect on their own, but a big upload would restart.</li>
-  <li>it's one person maintaining this. if it doesn't work for you, email me and i'll refund you.</li>
-</ul>
+    <section>
+      <h2>why it's paid but also open</h2>
+      <p>The split-tunneling engine is about 300 lines of shell and C, MIT licensed, on <a href="https://github.com/kanishkdan/vpnonly">GitHub</a>. It runs as root on your machine, so you should be able to read every line of it. That's not generosity, it's the minimum.</p>
+      <p>The $19 is for the Mac app on top: the menu bar list, one-click setup, the country picker, updates. If you'd rather use the terminal, do that — it's free and always will be.</p>
+    </section>
 
-<h2>why it's paid but also open</h2>
+    <section>
+      <h2>quick answers</h2>
+      <div class="qa">
+        <div class="q">Do I need my VPN's own app running?</div>
+        <p>No — keep it closed. VPNonly talks to your provider's servers directly.</p>
+      </div>
+      <div class="qa">
+        <div class="q">Which providers work?</div>
+        <p>NordVPN out of the box. Also Mullvad, Proton, IVPN, or your own WireGuard server.</p>
+      </div>
+      <div class="qa">
+        <div class="q">Why does it want my password?</div>
+        <p>Firewall rules need admin rights. It asks once, installs a root-owned engine you can read on GitHub, and never asks again.</p>
+      </div>
+      <div class="qa">
+        <div class="q">How is this different from SplitTunnel.app?</div>
+        <p>They put your whole Mac on the VPN and exclude apps; here your Mac never joins at all. They're ~$49/year, this is $19 once. Their approach does avoid the one-time relaunch, which is fair — it's on my list. <a href="faq.html">More questions →</a></p>
+      </div>
+    </section>
 
-<p>the split-tunneling engine is ~300 lines of shell and c, mit licensed, on <a href="https://github.com/kanishkdan/vpnonly">github</a>. it runs as root on your machine, so you should be able to read every line of it — that's not a favor, it's the minimum.</p>
-
-<p>the $19 is for the mac app on top: the menu bar thing, the app list, one-click setup, updates. if you'd rather use the terminal, do that, it's free and always will be.</p>
-
-<div class="buy">
-  <a class="btn primary" href="https://dodo.pe/vpnonly-mac">get it for mac — $19</a>
-  <span class="aside">2 macs · 14-day refund, no questions</span>
+  </div>
 </div>
 
 <div class="foot">
-  made by <a href="https://github.com/kanishkdan">kanishk</a> ·
-  <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a> ·
+  <span>Made by <a href="https://x.com/kanishkrazdan">@kanishkrazdan</a></span>
+  <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a>
   <a href="terms.html">terms &amp; privacy</a>
 </div>
 
