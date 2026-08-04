@@ -5,7 +5,7 @@
   --body: #5d6068;
   --faint: #9a9ea7;
   --line: #e6e7ea;
-  --rose: #d4415f;
+  --accent: #15161a;      /* the accent is just ink — no colour competing with the UI */
   --mono: ui-monospace, "SF Mono", Menlo, monospace;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -16,7 +16,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #cfd2d8; }
-a:hover { text-decoration-color: var(--rose); }
+a:hover { text-decoration-color: var(--ink); }
 
 .shell { max-width: 1120px; margin: 0 auto; padding: 0 34px; }
 
@@ -58,7 +58,7 @@ h1 {
   margin-bottom: 20px;
   text-wrap: balance;
 }
-h1 em { font-style: normal; color: var(--rose); }
+h1 em { font-style: normal; }
 
 .left p { margin-bottom: 17px; font-size: 16.5px; }
 
@@ -71,7 +71,7 @@ h1 em { font-style: normal; color: var(--rose); }
   color: var(--faint);
 }
 .state .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 9px; vertical-align: 1px; }
-.state .in { background: var(--rose); }
+.state .in { background: var(--ink); }
 .state .out { border: 1.5px solid #c9ccd3; }
 .state b { color: var(--ink); font-weight: 600; }
 
@@ -95,7 +95,7 @@ h2 {
   letter-spacing: 0.02em; text-transform: lowercase;
   margin-bottom: 14px;
 }
-h2::before { content: "— "; color: var(--rose); }
+h2::before { content: ""; display: inline-block; width: 14px; height: 1.5px; background: #c9ccd3; vertical-align: 4px; margin-right: 9px; }
 .right p { margin-bottom: 16px; max-width: 62ch; }
 .right p:last-child { margin-bottom: 0; }
 .right strong { color: var(--ink); font-weight: 640; }
@@ -113,7 +113,7 @@ h2::before { content: "— "; color: var(--rose); }
 .right li { position: relative; padding-left: 20px; margin-bottom: 11px; }
 .right li::before {
   content: ""; position: absolute; left: 0; top: 11px;
-  width: 6px; height: 1.5px; background: var(--rose);
+  width: 6px; height: 1.5px; background: #c2c5cc;
 }
 
 .qa { margin-bottom: 20px; max-width: 62ch; }
@@ -144,5 +144,5 @@ pre code { line-height: 1.65; }
 .solo li { position: relative; padding-left: 20px; margin-bottom: 10px; }
 .solo li::before {
   content: ""; position: absolute; left: 0; top: 12px;
-  width: 6px; height: 1.5px; background: var(--rose);
+  width: 6px; height: 1.5px; background: #c2c5cc;
 }

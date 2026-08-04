@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VPNonly — one app on the VPN, not your whole Mac</title>
-<meta name="description" content="A Mac app that puts only the apps you pick on your VPN. Works with NordVPN, Mullvad, Proton, or your own WireGuard server. $19 once, open-source engine.">
+<meta name="description" content="A Mac app that puts only the apps you pick on your VPN — everything else stays on your normal connection. $19 once, open-source engine.">
 <meta property="og:title" content="VPNonly — one app on the VPN, not your whole Mac">
 <meta property="og:description" content="Pick an app, flip a switch, that app is on the VPN. Nothing else changes.">
 <meta property="og:image" content="og-icon.png">
 <link rel="icon" type="image/png" href="icon.png">
-<link rel="stylesheet" href="style.css?v=7">
+<link rel="stylesheet" href="style.css?v=8">
 <script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
@@ -17,7 +17,7 @@
 
 <div class="top">
   <a class="me" href="./">
-    <svg viewBox="0 0 26 30"><path d="M13 1l11 4v9c0 7.5-4.8 13.6-11 15C6.8 27.6 2 21.5 2 14V5z" fill="none" stroke="#d4415f" stroke-width="2.4" stroke-linejoin="round"/><path d="M13 1l-11 4v9c0 7.5 4.8 13.6 11 15z" fill="#d4415f"/></svg>
+    <svg viewBox="0 0 26 30"><path d="M13 1l11 4v9c0 7.5-4.8 13.6-11 15C6.8 27.6 2 21.5 2 14V5z" fill="none" stroke="#15161a" stroke-width="2.4" stroke-linejoin="round"/><path d="M13 1l-11 4v9c0 7.5 4.8 13.6 11 15z" fill="#15161a"/></svg>
     <b>VPNonly</b>
   </a>
   <a href="how-it-works.html">how it works</a>
@@ -31,11 +31,9 @@
   <div class="left">
     <p class="hello">Hi, I'm <b>Kanishk</b> and I built VPNonly.</p>
 
-    <h1>It puts <em>one app</em> on your VPN. Not your whole Mac.</h1>
+    <h1>One app on the VPN. Not your whole Mac.</h1>
 
-    <p>NordVPN — like basically every big VPN — has no split tunneling on Mac. It's all or nothing: connect, and your entire machine moves to another country.</p>
-
-    <p>I just wanted CapCut on a Singapore IP while everything else stayed exactly where it was. So I built this.</p>
+    <p>I wanted CapCut on a Singapore IP while everything else stayed home. No VPN on Mac does that, so I built it.</p>
 
     <div class="state">
       <div><span class="dot in"></span><b>CapCut</b> — Singapore</div>
@@ -58,6 +56,7 @@
 
     <section>
       <h2>what it does</h2>
+      <p>NordVPN — like basically every big VPN — has no split tunneling on Mac. It's all or nothing: connect, and your entire machine moves to another country. VPNonly inverts that.</p>
       <p>Every app on your Mac shows up in a menu bar list. Flip a switch and that app moves onto the VPN with a new exit IP. Flip it back and it's home again. Everything else — your browser, your calls, your bank — never leaves your normal connection.</p>
       <p>The first time an app joins, it gets relaunched once. macOS decides an app's network identity when it starts, so there's no way around that. After that, switching is instant and the app keeps running.</p>
     </section>
