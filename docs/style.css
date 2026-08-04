@@ -1,9 +1,9 @@
 /* vpnonly — split layout, like the product: two lanes, one of them special. */
 :root {
   --paper: #fcfcfd;
-  --ink: #15161a;
-  --body: #5d6068;
-  --faint: #9a9ea7;
+  --ink: #0e0f13;       /* the only heavy, dark thing on the page */
+  --body: #8b8f97;      /* body recedes — light weight, light tone */
+  --faint: #b0b4bb;
   --line: #e6e7ea;
   --accent: #15161a;      /* the accent is just ink — no colour competing with the UI */
   --mono: ui-monospace, "SF Mono", Menlo, monospace;
@@ -12,10 +12,10 @@
 body {
   background: var(--paper);
   color: var(--body);
-  font: 17px/1.7 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font: 400 17px/1.78 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
 }
-a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #cfd2d8; }
+a { color: #3f434b; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #cfd2d8; }
 a:hover { text-decoration-color: var(--ink); }
 
 .shell { max-width: 1120px; margin: 0 auto; padding: 0 34px; }
@@ -46,15 +46,15 @@ a:hover { text-decoration-color: var(--ink); }
 
 .left { position: sticky; top: 44px; }
 
-.hello { font-size: 17px; color: var(--body); margin-bottom: 18px; }
-.hello b { color: var(--ink); font-weight: 650; }
+.hello { font-size: 16.5px; color: var(--body); margin-bottom: 20px; }
+.hello b { color: var(--ink); font-weight: 620; }
 
 h1 {
   color: var(--ink);
-  font-size: clamp(31px, 3.6vw, 42px);
-  line-height: 1.12;
-  letter-spacing: -0.032em;
-  font-weight: 760;
+  font-size: clamp(32px, 3.7vw, 44px);
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  font-weight: 830;
   margin-bottom: 20px;
   text-wrap: balance;
 }
@@ -71,14 +71,14 @@ h1 em { font-style: normal; }
   color: var(--faint);
 }
 .state .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 9px; vertical-align: 1px; }
-.state .in { background: var(--ink); }
+.state .in { background: #3f434b; }
 .state .out { border: 1.5px solid #c9ccd3; }
-.state b { color: var(--ink); font-weight: 600; }
+.state b { color: #3f434b; font-weight: 560; }
 
 .actions { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
 .btn {
   display: inline-block; border-radius: 10px; padding: 13px 24px;
-  font-size: 16px; font-weight: 620; text-decoration: none;
+  font-size: 16px; font-weight: 580; text-decoration: none;
   background: var(--ink); color: var(--paper);
   transition: transform .12s;
 }
@@ -91,14 +91,14 @@ h1 em { font-style: normal; }
 .right > section { padding-bottom: 42px; }
 .right > section + section { border-top: 1px solid var(--line); padding-top: 38px; }
 h2 {
-  color: var(--ink); font-size: 15px; font-weight: 700;
-  letter-spacing: 0.02em; text-transform: lowercase;
-  margin-bottom: 14px;
+  color: var(--faint); font-size: 13px; font-weight: 500;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  margin-bottom: 15px;
 }
-h2::before { content: ""; display: inline-block; width: 14px; height: 1.5px; background: #c9ccd3; vertical-align: 4px; margin-right: 9px; }
+h2::before { content: ""; display: inline-block; width: 12px; height: 1px; background: #d5d8de; vertical-align: 4px; margin-right: 9px; }
 .right p { margin-bottom: 16px; max-width: 62ch; }
 .right p:last-child { margin-bottom: 0; }
-.right strong { color: var(--ink); font-weight: 640; }
+.right strong { color: #3f434b; font-weight: 560; }
 
 .shot {
   border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
@@ -117,7 +117,7 @@ h2::before { content: ""; display: inline-block; width: 14px; height: 1.5px; bac
 }
 
 .qa { margin-bottom: 20px; max-width: 62ch; }
-.qa .q { color: var(--ink); font-weight: 620; margin-bottom: 3px; }
+.qa .q { color: #3f434b; font-weight: 560; margin-bottom: 3px; }
 .qa p { margin-bottom: 0; }
 
 pre {
