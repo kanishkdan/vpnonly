@@ -1,0 +1,44 @@
+VPNonly — third-party software notices
+======================================
+
+VPNonly bundles two unmodified programs from the WireGuard project. They are
+separate executables that VPNonly runs as child processes; they are not linked
+into the application.
+
+-----------------------------------------------------------------------------
+1. wireguard-tools ("wg")            version 1.0.20260223
+   Copyright (C) 2015-2026 Jason A. Donenfeld <Jason@zx2c4.com>
+   Licence: GNU General Public License, version 2 only (GPL-2.0-only)
+   Full licence text: wireguard-tools-GPLv2.txt (included alongside this file)
+   Upstream source: https://git.zx2c4.com/wireguard-tools/
+   Source for this exact version:
+     https://git.zx2c4.com/wireguard-tools/snapshot/wireguard-tools-1.0.20260223.tar.xz
+
+   WRITTEN OFFER (GPL-2.0 section 3b): for at least three years from the date
+   you received this software, the author of VPNonly will provide, on request
+   and for no more than the cost of physically performing distribution, a
+   complete machine-readable copy of the corresponding source code for the
+   version of wireguard-tools distributed with VPNonly. Email
+   kanishk@armoury.in with the version above.
+
+   The binary distributed with VPNonly is unmodified.
+
+-----------------------------------------------------------------------------
+2. wireguard-go                       version 0.0.20250522
+   Copyright (C) 2017-2025 WireGuard LLC
+   Licence: MIT
+   Full licence text: wireguard-go-MIT.txt (included alongside this file)
+   Upstream source: https://git.zx2c4.com/wireguard-go/
+
+   The binary distributed with VPNonly is unmodified.
+
+-----------------------------------------------------------------------------
+
+"WireGuard" is a registered trademark of Jason A. Donenfeld. VPNonly is not
+affiliated with, endorsed by, or sponsored by the WireGuard project, NordVPN,
+Mullvad, Proton, IVPN, or AirVPN.
+
+VPNonly's own split-tunnelling engine (the shell scripts, the vpnrun launcher
+and the config parser that run with elevated privileges) is MIT licensed and
+published at https://github.com/kanishkdan/vpnonly — you can read every
+privileged line before granting it root.
