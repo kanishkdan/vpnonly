@@ -5,6 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Installing VPNonly</title>
 <meta name="description" content="How to open VPNonly the first time, and why macOS asks.">
+
+<link rel="canonical" href="https://vpnonly.app/install.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VPNonly">
+<meta property="og:url" content="https://vpnonly.app/install.html">
+<meta property="og:title" content="Installing VPNonly">
+<meta property="og:description" content="How to open VPNonly the first time, and why macOS asks.">
+<meta property="og:image" content="https://vpnonly.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@kanishkrazdan">
+<meta name="twitter:creator" content="@kanishkrazdan">
+<meta name="twitter:title" content="Installing VPNonly">
+<meta name="twitter:description" content="How to open VPNonly the first time, and why macOS asks.">
+<meta name="twitter:image" content="https://vpnonly.app/og.png">
 <link rel="icon" type="image/png" href="icon.png">
 <link rel="stylesheet" href="style.css?v=10">
 <script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
@@ -47,6 +63,13 @@
 
 <h2>Why isn't it signed?</h2>
 <p>An Apple developer certificate costs $99/year. VPNonly is a one-person project that just launched, so I'm funding the certificate from the first sales rather than before them. Once it's signed and notarized, this page becomes unnecessary and the app updates itself. No reinstall, no extra cost to you.</p>
+
+<h2>Uninstalling</h2>
+<p>VPNonly installs a small root-owned engine and a passwordless rule so it doesn't have to ask for your password every time. Deleting the app wouldn't remove those, so there's a proper uninstaller: click the <strong>…</strong> button in the app and choose <strong>Uninstall VPNonly</strong>. It disconnects the tunnel, restores macOS's own firewall rules, removes the engine, the sudoers entry and the per-app groups, then quits so you can drag it to the Trash.</p>
+<p>Already deleted the app? Run this in Terminal:</p>
+<pre><code>sudo rm -rf "/Library/Application Support/VPNonly" /etc/sudoers.d/vpnonly
+sudo pfctl -f /etc/pf.conf
+for g in $(dscl . -list /Groups | grep '^vpn_'); do sudo dseditgroup -o delete "$g"; done</code></pre>
 
 <h2>Something went wrong?</h2>
 <p>Email <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a>. If I can't fix it quickly you get a refund — that's the deal. Within 14 days, no forms.</p>
