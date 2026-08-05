@@ -102,11 +102,11 @@ h2::before { content: ""; display: inline-block; width: 12px; height: 1px; backg
 
 .shot {
   border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
-  background: #f1f2f4; aspect-ratio: 16 / 10;
+  background: #f1f2f4; aspect-ratio: 1660 / 1080;
   display: flex; align-items: center; justify-content: center;
   margin-bottom: 42px;
 }
-.shot video, .shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.shot video, .shot img { width: 100%; height: 100%; object-fit: contain; display: block; background: #f1f2f4; }
 .shot .ph { font: 13.5px var(--mono); color: #aeb2ba; }
 
 .right ul { list-style: none; max-width: 62ch; }
@@ -156,3 +156,7 @@ pre code { line-height: 1.65; }
   margin: 22px 0 26px; max-width: 34ch;
 }
 .works span { color: #a2a6ad; }
+
+@media (prefers-reduced-motion: reduce) {
+  .shot video { animation: none; }
+}
