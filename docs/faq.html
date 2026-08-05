@@ -25,6 +25,10 @@
 <div class="solo">
 <h1>FAQ</h1>
 
+<h2>macOS says it can't verify the app. Is it safe?</h2>
+<p>VPNonly isn't signed with an Apple developer certificate yet, so macOS blocks it on first launch. You allow it once in System Settings, and there's a <a href="install.html">short guide here</a>. The certificate costs $99/year and I'm funding it from the first sales rather than before them; once it's signed, the app updates itself and this goes away.</p>
+<p>If that's a dealbreaker, don't buy it yet. The <a href="https://github.com/kanishkdan/vpnonly">command-line version</a> is free, does the same routing, and you can read every line of it.</p>
+
 <h2>Which VPNs work?</h2>
 <p><strong>NordVPN</strong> is the easiest: paste an access token once and the app fetches your WireGuard key and picks servers for you, with a country menu.</p>
 <p><strong>Everyone else</strong> — Mullvad, Proton, IVPN, AirVPN, or a server you run yourself — works by importing a WireGuard config. Download the <code>.conf</code> from your provider (one per server), import as many as you want, and switch between them from the same menu. If your provider can give you a WireGuard config, it works here.</p>

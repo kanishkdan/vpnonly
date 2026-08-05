@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Installing VPNonly</title>
+<meta name="description" content="How to open VPNonly the first time, and why macOS asks.">
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="stylesheet" href="style.css?v=10">
+<script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="shell">
+
+<div class="top">
+  <a class="me" href="./">
+    <svg viewBox="0 0 26 30"><path d="M13 1l11 4v9c0 7.5-4.8 13.6-11 15C6.8 27.6 2 21.5 2 14V5z" fill="none" stroke="#0e0f13" stroke-width="2.4" stroke-linejoin="round"/><path d="M13 1l-11 4v9c0 7.5 4.8 13.6 11 15z" fill="#0e0f13"/></svg>
+    <b>VPNonly</b>
+  </a>
+  <a href="./">home</a>
+  <a href="faq.html">faq</a>
+  <a href="install.html">install</a>
+  <a href="https://github.com/kanishkdan/vpnonly">repo</a>
+</div>
+
+<div class="solo">
+<h1>Installing VPNonly</h1>
+
+<p>VPNonly isn't signed with an Apple developer certificate yet, so macOS blocks it the first time and you have to allow it by hand. It's four steps, you do it once, and I'd rather tell you up front than let you hit it by surprise.</p>
+
+<h2>1. Move it to Applications</h2>
+<p>Unzip the download and drag <strong>VPNonly.app</strong> into your Applications folder.</p>
+
+<h2>2. Try to open it</h2>
+<p>Double-click it. macOS will refuse, with a message like <em>"Apple could not verify VPNonly is free of malware."</em> That's expected. Click <strong>Done</strong>.</p>
+
+<h2>3. Allow it in System Settings</h2>
+<p>Open <strong>System Settings → Privacy &amp; Security</strong>, scroll to the <strong>Security</strong> section near the bottom. You'll see a line saying VPNonly was blocked. Click <strong>Open Anyway</strong> and authenticate.</p>
+<p>(On macOS Sequoia and later, Apple removed the old Control-click shortcut, so System Settings is the only route.)</p>
+
+<h2>4. Open it again</h2>
+<p>Double-click VPNonly once more and click <strong>Open</strong>. The shield appears in your menu bar. You won't see any of this again.</p>
+
+<h2>Then: the admin password</h2>
+<p>The first time you put an app in the VPN, VPNonly asks for your admin password once. Creating a network interface and firewall rules needs root. That's true of every VPN client. It installs a small engine owned by root and never asks again.</p>
+<p>You don't have to take my word for what that engine does: it's <a href="https://github.com/kanishkdan/vpnonly">open source</a>, about 300 lines of shell and C, and it's the same code the free command-line version uses. If you're the sort of person who reads before granting root, please do.</p>
+
+<h2>Why isn't it signed?</h2>
+<p>An Apple developer certificate costs $99/year. VPNonly is a one-person project that just launched, so I'm funding the certificate from the first sales rather than before them. Once it's signed and notarized, this page becomes unnecessary and the app updates itself. No reinstall, no extra cost to you.</p>
+
+<h2>Something went wrong?</h2>
+<p>Email <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a>. If I can't fix it quickly you get a refund — that's the deal. Within 14 days, no forms.</p>
+
+<p style="margin-top:34px;"><a class="btn" href="https://dodo.pe/vpnonly-mac">Get it for Mac — $19</a></p>
+
+<div class="foot">
+  <span>Made by <a href="https://x.com/kanishkrazdan">@kanishkrazdan</a></span>
+  <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a>
+  <a href="terms.html">terms &amp; privacy</a>
+</div>
+</div>
+
+</div>
+</body>
+</html>
