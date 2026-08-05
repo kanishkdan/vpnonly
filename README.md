@@ -1,6 +1,6 @@
 # vpnonly
 
-**[Website](https://kanishkdan.github.io/vpnonly/)** · Prefer a menu bar app over the CLI? [VPNonly Pro — $19](https://dodo.pe/vpnonly-mac)
+**[Website](https://vpnonly.app/)** · Prefer a menu bar app over the CLI? [VPNonly Pro — $19](https://dodo.pe/vpnonly-mac)
 
 **Per-app VPN split tunneling for macOS.** Route *only the apps you choose*
 through a WireGuard VPN while everything else on your Mac uses your normal
