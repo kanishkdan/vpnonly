@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NordVPN split tunneling on Mac: why it's missing and what to do</title>
+<meta name="description" content="NordVPN has split tunneling on Windows, Android and Linux, but not macOS. Here's why, and three ways to get per-app VPN routing on a Mac anyway.">
+<link rel="canonical" href="https://vpnonly.app/guides/nordvpn-split-tunneling-mac.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="VPNonly">
+<meta property="og:url" content="https://vpnonly.app/guides/nordvpn-split-tunneling-mac.html">
+<meta property="og:title" content="NordVPN split tunneling on Mac: why it's missing and what to do">
+<meta property="og:description" content="NordVPN has split tunneling on Windows, Android and Linux, but not macOS. Here's why, and three ways to get per-app VPN routing on a Mac anyway.">
+<meta property="og:image" content="https://vpnonly.app/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@kanishkrazdan">
+<meta name="twitter:title" content="NordVPN split tunneling on Mac: why it's missing and what to do">
+<meta name="twitter:description" content="NordVPN has split tunneling on Windows, Android and Linux, but not macOS. Here's why, and three ways to get per-app VPN routing on a Mac anyway.">
+<meta name="twitter:image" content="https://vpnonly.app/og.png">
+<link rel="icon" type="image/png" href="../icon.png">
+<link rel="stylesheet" href="../style.css?v=12">
+<script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="shell">
+
+<div class="top">
+  <a class="me" href="../">
+    <svg viewBox="0 0 26 30"><path d="M13 1l11 4v9c0 7.5-4.8 13.6-11 15C6.8 27.6 2 21.5 2 14V5z" fill="none" stroke="#0e0f13" stroke-width="2.4" stroke-linejoin="round"/><path d="M13 1l-11 4v9c0 7.5 4.8 13.6 11 15z" fill="#0e0f13"/></svg>
+    <b>VPNonly</b>
+  </a>
+  <a href="../">home</a>
+  <a href="./">guides</a>
+  <a href="../faq.html">faq</a>
+  <a href="https://github.com/kanishkdan/vpnonly">repo</a>
+</div>
+
+<div class="solo">
+<h1>NordVPN split tunneling on Mac</h1>
+
+<p>NordVPN supports split tunneling on Windows, Android and Linux. On macOS it doesn't, and that hasn't changed in years. Neither does ExpressVPN, Surfshark, or most of the big providers. If you searched for this, you probably already found that out the annoying way.</p>
+
+<h2>Why it's missing</h2>
+<p>Doing this properly on modern macOS means shipping a Network Extension system extension that inspects every connection and decides where it goes, per app. It's a significant build, it needs entitlements from Apple, and the App Store versions of these clients have extra sandboxing constraints on top. Providers have consistently prioritised other platforms.</p>
+
+<h2>What actually works</h2>
+
+<h3>Use your NordVPN account without the NordVPN app</h3>
+<p>This is the part most people don't realise: NordVPN gives you WireGuard credentials for your own account. Any WireGuard client can connect to their servers with them, which means a per-app tool on your Mac can use the Nord subscription you're already paying for, while their app stays closed.</p>
+<p><strong>VPNonly</strong> does this in one step: generate an access token at <a href="https://my.nordaccount.com/dashboard/nordvpn/manual-configuration/">my.nordaccount.com → Manual configuration → Access token</a>, paste it in once, and it fetches your key and picks servers for you. Then you flip a switch next to any app.</p>
+
+<h3>Or roll it yourself</h3>
+<p>The same thing with scripts, free:</p>
+<pre><code>brew install wireguard-go wireguard-tools
+git clone https://github.com/kanishkdan/vpnonly &amp;&amp; cd vpnonly
+./fetch-creds.sh            # paste your Nord access token once
+sudo COUNTRY=us ./up.sh
+sudo ./run.sh /Applications/YourApp.app</code></pre>
+
+<h3>Or route everything and exclude apps</h3>
+<p>If you'd rather have the whole Mac tunneled with a few exceptions, SplitTunnel.app takes that approach and works with any VPN including Nord. Different model, subscription pricing.</p>
+
+<h2>Is using Nord outside their app allowed?</h2>
+<p>Yes. NordVPN publishes manual configuration instructions and issues WireGuard credentials for exactly this purpose — routers, Linux boxes, and third-party clients. You're using the subscription you pay for, on your own device.</p>
+
+<h2>Don't run both at once</h2>
+<p>Whatever you choose, keep the NordVPN app disconnected while a per-app tool is running. Their client installs its own firewall and routing rules, and two things fighting over your packet filter is a bad afternoon.</p>
+
+<p style="margin-top:38px;"><a class="btn" href="https://dodo.pe/vpnonly-mac">Get VPNonly for Mac — $19</a></p>
+<p style="font-size:15px;">Or use the <a href="https://github.com/kanishkdan/vpnonly">free command-line version</a>. Same engine, no menu bar app.</p>
+
+<div class="foot">
+  <span>Made by <a href="https://x.com/kanishkrazdan">@kanishkrazdan</a></span>
+  <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a>
+  <a href="../terms.html">terms &amp; privacy</a>
+</div>
+</div>
+
+</div>
+</body>
+</html>

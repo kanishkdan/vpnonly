@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to use a VPN for only one app on Mac</title>
+<meta name="description" content="Three ways to route a single app through a VPN on macOS: per-app VPN tools, a virtual machine, or doing it yourself with PF and WireGuard.">
+<link rel="canonical" href="https://vpnonly.app/guides/vpn-one-app-mac.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="VPNonly">
+<meta property="og:url" content="https://vpnonly.app/guides/vpn-one-app-mac.html">
+<meta property="og:title" content="How to use a VPN for only one app on Mac">
+<meta property="og:description" content="Three ways to route a single app through a VPN on macOS: per-app VPN tools, a virtual machine, or doing it yourself with PF and WireGuard.">
+<meta property="og:image" content="https://vpnonly.app/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@kanishkrazdan">
+<meta name="twitter:title" content="How to use a VPN for only one app on Mac">
+<meta name="twitter:description" content="Three ways to route a single app through a VPN on macOS: per-app VPN tools, a virtual machine, or doing it yourself with PF and WireGuard.">
+<meta name="twitter:image" content="https://vpnonly.app/og.png">
+<link rel="icon" type="image/png" href="../icon.png">
+<link rel="stylesheet" href="../style.css?v=12">
+<script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="shell">
+
+<div class="top">
+  <a class="me" href="../">
+    <svg viewBox="0 0 26 30"><path d="M13 1l11 4v9c0 7.5-4.8 13.6-11 15C6.8 27.6 2 21.5 2 14V5z" fill="none" stroke="#0e0f13" stroke-width="2.4" stroke-linejoin="round"/><path d="M13 1l-11 4v9c0 7.5 4.8 13.6 11 15z" fill="#0e0f13"/></svg>
+    <b>VPNonly</b>
+  </a>
+  <a href="../">home</a>
+  <a href="./">guides</a>
+  <a href="../faq.html">faq</a>
+  <a href="https://github.com/kanishkdan/vpnonly">repo</a>
+</div>
+
+<div class="solo">
+<h1>How to use a VPN for only one app on Mac</h1>
+
+<p>macOS has no built-in way to send one app through a VPN while everything else uses your normal connection. When you connect a VPN app, it replaces your default route, and every process on the machine follows it: your browser, your video calls, your backups, your bank.</p>
+
+<p>There are three ways around that. Here's what each actually involves.</p>
+
+<h2>1. A per-app VPN tool</h2>
+<p>The direct answer. A handful of macOS tools can route traffic per application:</p>
+<ul>
+  <li><strong>VPNonly</strong> (this site) keeps your Mac on its normal connection and moves only the apps you switch on into a WireGuard tunnel. $19 once, and the engine underneath is <a href="https://github.com/kanishkdan/vpnonly">open source</a>.</li>
+  <li><strong>SplitTunnel.app</strong> works the other way round: your whole Mac goes through the VPN and you exclude apps. Subscription, around $49/year. Worth a look if you want everything tunneled by default.</li>
+  <li><strong>Mullvad's own app</strong> has split tunneling built in, but only for Mullvad. If you use Mullvad and nothing else, start there — it's free with your subscription.</li>
+</ul>
+
+<h2>2. A virtual machine</h2>
+<p>Run the app inside a VM (UTM, Parallels, VMware Fusion) and connect the VPN inside the guest. Complete isolation, works with any VPN client, and costs you nothing if you use UTM.</p>
+<p>The downsides are real though: several gigabytes of disk, a second OS to keep updated, no GPU acceleration for video work, and clumsy file sharing. Fine for a browser or a chat client, painful for a video editor.</p>
+
+<h2>3. Do it yourself with PF and WireGuard</h2>
+<p>macOS ships with PF, a packet filter that can't match traffic by application but <em>can</em> match by unix group. So you can create a group, launch an app under it, and write a firewall rule that routes that group into a WireGuard tunnel.</p>
+<p>That's exactly what VPNonly does, and the scripts are free and MIT licensed if you'd rather run it yourself:</p>
+<pre><code>brew install wireguard-go wireguard-tools
+git clone https://github.com/kanishkdan/vpnonly
+sudo ./up.sh                                  # tunnel up, nothing routed yet
+sudo ./run.sh /Applications/YourApp.app       # this app only</code></pre>
+<p>You'll want to understand what you're doing here — it runs as root and edits firewall rules — but it's about 300 lines and readable in one sitting. The <a href="../how-it-works.html">how it works</a> page explains the mechanism.</p>
+
+<h2>Which one to pick</h2>
+<p>If you're comfortable in a terminal and only need this occasionally, use the free scripts. If you want a switch in your menu bar and someone to email when it breaks, that's what the paid app is for. If you need genuine isolation rather than just a different exit IP, use a VM.</p>
+
+<h2>One thing to know either way</h2>
+<p>Moving an app onto a VPN changes its exit IP, not its DNS by default. With VPNonly, connections are tunneled but DNS lookups still go through your system resolver. If your goal is a different exit IP, that's fine. If your goal is hiding which sites you visit from your ISP, you need a tool built for that.</p>
+
+<p style="margin-top:38px;"><a class="btn" href="https://dodo.pe/vpnonly-mac">Get VPNonly for Mac — $19</a></p>
+<p style="font-size:15px;">Or use the <a href="https://github.com/kanishkdan/vpnonly">free command-line version</a>. Same engine, no menu bar app.</p>
+
+<div class="foot">
+  <span>Made by <a href="https://x.com/kanishkrazdan">@kanishkrazdan</a></span>
+  <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a>
+  <a href="../terms.html">terms &amp; privacy</a>
+</div>
+</div>
+
+</div>
+</body>
+</html>

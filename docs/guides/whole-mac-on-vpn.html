@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why does my whole Mac go through the VPN?</title>
+<meta name="description" content="What a VPN client actually changes on macOS, why every app follows it, and how to route only some of them.">
+<link rel="canonical" href="https://vpnonly.app/guides/whole-mac-on-vpn.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="VPNonly">
+<meta property="og:url" content="https://vpnonly.app/guides/whole-mac-on-vpn.html">
+<meta property="og:title" content="Why does my whole Mac go through the VPN?">
+<meta property="og:description" content="What a VPN client actually changes on macOS, why every app follows it, and how to route only some of them.">
+<meta property="og:image" content="https://vpnonly.app/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@kanishkrazdan">
+<meta name="twitter:title" content="Why does my whole Mac go through the VPN?">
+<meta name="twitter:description" content="What a VPN client actually changes on macOS, why every app follows it, and how to route only some of them.">
+<meta name="twitter:image" content="https://vpnonly.app/og.png">
+<link rel="icon" type="image/png" href="../icon.png">
+<link rel="stylesheet" href="../style.css?v=12">
+<script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="shell">
+
+<div class="top">
+  <a class="me" href="../">
+    <svg viewBox="0 0 26 30"><path d="M13 1l11 4v9c0 7.5-4.8 13.6-11 15C6.8 27.6 2 21.5 2 14V5z" fill="none" stroke="#0e0f13" stroke-width="2.4" stroke-linejoin="round"/><path d="M13 1l-11 4v9c0 7.5 4.8 13.6 11 15z" fill="#0e0f13"/></svg>
+    <b>VPNonly</b>
+  </a>
+  <a href="../">home</a>
+  <a href="./">guides</a>
+  <a href="../faq.html">faq</a>
+  <a href="https://github.com/kanishkdan/vpnonly">repo</a>
+</div>
+
+<div class="solo">
+<h1>Why does my whole Mac go through the VPN?</h1>
+
+<p>Because that's what connecting a VPN does, by design. It's not a setting you've missed.</p>
+
+<h2>What's actually happening</h2>
+<p>Your Mac has a routing table with a <em>default route</em>: where packets go when nothing more specific matches. Normally that's your router. When a VPN client connects, it creates a tunnel interface and points the default route at it. From that moment, every process on the machine that opens a connection follows the new default. Nothing needs to know a VPN exists.</p>
+<p>You can watch it happen. Before connecting:</p>
+<pre><code>$ netstat -rn -f inet | head -4
+default            192.168.1.1        UGScg    en0</code></pre>
+<p>After a normal VPN client connects, that line points at a <code>utun</code> interface instead. That single line is the whole story.</p>
+
+<h2>Why it's often not what you want</h2>
+<ul>
+  <li>Video calls route through another country and get worse.</li>
+  <li>Banking and government sites see a foreign IP and start asking questions.</li>
+  <li>Large downloads slow to whatever your VPN server feels like today.</li>
+  <li>Local devices — printers, NAS, dev servers — can become unreachable.</li>
+</ul>
+
+<h2>How to route only some apps</h2>
+<p>Two different models exist, and the difference matters:</p>
+<p><strong>Exclude from a full tunnel.</strong> Your Mac still joins the VPN, and specific apps are punched out of it. This is what "split tunneling" usually means in Windows VPN clients, and what SplitTunnel.app does on macOS.</p>
+<p><strong>Opt in from a normal connection.</strong> Your Mac never joins the VPN at all; individual apps are moved into a tunnel that nothing else uses. This is what <a href="../">VPNonly</a> does. The default route is never touched, so the worst case is one app losing connectivity rather than your whole machine.</p>
+<p>Which is better depends on your goal. If you want privacy by default and exceptions for convenience, exclude from a full tunnel. If your Mac is fine as it is and one app needs to be somewhere else, opt in.</p>
+
+<h2>A note on DNS</h2>
+<p>Routing and name resolution are separate. An app can have its traffic tunneled while its DNS lookups still go through your normal resolver, which is the case with VPNonly today. For changing an app's exit IP that's fine. For hiding which sites you visit from your ISP, it isn't — use a tool designed for that.</p>
+
+<p style="margin-top:38px;"><a class="btn" href="https://dodo.pe/vpnonly-mac">Get VPNonly for Mac — $19</a></p>
+<p style="font-size:15px;">Or use the <a href="https://github.com/kanishkdan/vpnonly">free command-line version</a>. Same engine, no menu bar app.</p>
+
+<div class="foot">
+  <span>Made by <a href="https://x.com/kanishkrazdan">@kanishkrazdan</a></span>
+  <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a>
+  <a href="../terms.html">terms &amp; privacy</a>
+</div>
+</div>
+
+</div>
+</body>
+</html>
