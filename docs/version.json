@@ -1,5 +1,5 @@
 {
-  "version": "1.4.0",
+  "version": "1.5.0",
   "url": "https://vpnonly.app/",
-  "notes": "Works with any WireGuard provider now \u2014 import configs from Mullvad, Proton, IVPN, AirVPN or your own server, alongside the NordVPN token flow."
+  "notes": "Apps stay in the VPN across restarts; window fallback when the menu bar is full; automatic updates."
 }
