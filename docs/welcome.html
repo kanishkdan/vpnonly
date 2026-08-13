@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>You're in — setting up VPNonly</title>
+<meta name="description" content="Thanks for buying VPNonly. Four steps to get set up.">
+
+<link rel="canonical" href="https://vpnonly.app/welcome.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VPNonly">
+<meta property="og:url" content="https://vpnonly.app/welcome.html">
+<meta property="og:title" content="You're in — setting up VPNonly">
+<meta property="og:description" content="Thanks for buying VPNonly. Four steps to get set up.">
+<meta property="og:image" content="https://vpnonly.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@kanishkrazdan">
+<meta name="twitter:creator" content="@kanishkrazdan">
+<meta name="twitter:title" content="You're in — setting up VPNonly">
+<meta name="twitter:description" content="Thanks for buying VPNonly. Four steps to get set up.">
+<meta name="twitter:image" content="https://vpnonly.app/og.png">
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="stylesheet" href="style.css?v=12">
+<script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<meta name="robots" content="noindex">
+</head>
+<body>
+<div class="shell">
+
+<div class="top">
+  <a class="me" href="./">
+    <svg viewBox="0 0 26 30"><path d="M13 1l11 4v9c0 7.5-4.8 13.6-11 15C6.8 27.6 2 21.5 2 14V5z" fill="none" stroke="#0e0f13" stroke-width="2.4" stroke-linejoin="round"/><path d="M13 1l-11 4v9c0 7.5 4.8 13.6 11 15z" fill="#0e0f13"/></svg>
+    <b>VPNonly</b>
+  </a>
+  <a href="./">home</a>
+  <a href="faq.html">faq</a>
+  <a href="mailto:kanishk@armoury.in">email me</a>
+</div>
+
+<div class="solo">
+<h1>You're in. Here's the setup.</h1>
+
+<p>Thanks for buying VPNonly — genuinely, it's an early product and you're one of the first. Four steps, about two minutes. If any of it goes wrong, <a href="mailto:kanishk@armoury.in">email me</a> and I'll either fix it or refund you.</p>
+
+<h2>1. Get the download and your licence key</h2>
+<p>Both are in the email that just landed, from Dodo Payments. The key looks like <code>1a2b3c4d-…</code>. Keep that email; it's also your receipt, and the download link stays valid.</p>
+<p>Nothing arrived? Check spam, then email me — I can resend it manually.</p>
+
+<h2>2. Install it</h2>
+<p>Unzip, drag <strong>VPNonly.app</strong> to your Applications folder.</p>
+<p>Then macOS will block it the first time, because VPNonly isn't signed with an Apple developer certificate yet. This part surprises people, so:</p>
+<ol>
+  <li>Double-click VPNonly. macOS refuses: <em>"Apple could not verify VPNonly is free of malware."</em> Click <strong>Done</strong>.</li>
+  <li>Open <strong>System Settings → Privacy &amp; Security</strong>, scroll to <strong>Security</strong>.</li>
+  <li>Next to the line about VPNonly, click <strong>Open Anyway</strong> and authenticate.</li>
+  <li>Double-click VPNonly again, click <strong>Open</strong>. Done forever.</li>
+</ol>
+<p>Step 1 isn't optional — the "Open Anyway" button only appears after macOS has blocked an attempt. If it still doesn't show, run this in Terminal and open the app normally:</p>
+<pre><code>xattr -dr com.apple.quarantine /Applications/VPNonly.app</code></pre>
+<p><a href="install.html">More detail on this, and why it happens →</a></p>
+
+<h2>3. Paste your licence key</h2>
+<p>The shield appears in your menu bar. Click it, paste the key from your email, hit Activate. Your licence covers 2 Macs, so you can do this again on a second machine later.</p>
+<p>Can't see the shield? Your menu bar is probably full — on Macs with a notch, macOS silently hides icons that don't fit. Quit a menu bar app you're not using and it'll appear.</p>
+
+<h2>4. Connect your VPN</h2>
+<p><strong>NordVPN:</strong> get an access token at <a href="https://my.nordaccount.com/dashboard/nordvpn/manual-configuration/">my.nordaccount.com → Manual configuration → Access token</a>, paste it into VPNonly once. It fetches your key and handles servers from there. Keep the NordVPN app closed while you use VPNonly.</p>
+<p><strong>Mullvad, Proton, IVPN, AirVPN, or your own server:</strong> download a WireGuard <code>.conf</code> from your provider (one per server) and choose <strong>Import WireGuard config…</strong>. Import as many as you like and switch between them from the menu at the bottom.</p>
+
+<h2>That's it — flip a switch</h2>
+<p>Every app on your Mac is listed. Flip one on and it joins the VPN. If it's open, VPNonly relaunches it once (it'll warn you first, so save your work); after that, switching is instant. VPNonly remembers your choice, so next time you open that app it goes into the VPN on its own.</p>
+<p>Everything else on your Mac stays exactly where it was.</p>
+
+<h2>Two things worth knowing</h2>
+<ul>
+  <li>DNS lookups for tunneled apps still go through your normal resolver. Connections are tunneled; lookups aren't. Fine for changing an app's exit IP, not enough if you need to hide which sites you visit from your ISP.</li>
+  <li>To remove everything later: the <strong>…</strong> button → <strong>Uninstall VPNonly</strong>. It takes out the root-owned engine and its permissions properly, not just the app.</li>
+</ul>
+
+<h2>Stuck?</h2>
+<p>Email <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a>. It's just me, so allow a day or two — and if I can't fix it quickly, you get your money back within 14 days, no forms.</p>
+
+<p style="margin-top:34px;"><a class="btn" href="faq.html">Read the FAQ</a></p>
+
+<div class="foot">
+  <span>Made by <a href="https://x.com/kanishkrazdan">@kanishkrazdan</a></span>
+  <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a>
+  <a href="terms.html">terms &amp; privacy</a>
+</div>
+</div>
+
+</div>
+</body>
+</html>
