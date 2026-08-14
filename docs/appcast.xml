@@ -3,7 +3,7 @@
   <channel>
     <title>VPNonly</title>
     <link>https://vpnonly.app/appcast.xml</link>
-    <description>Updates for VPNonly<p><a href="https://vpnonly.app/changelog.html">Full changelog</a></p>]]></description>
+    <description>Updates for VPNonly</description>
     <language>en</language>
 
     <item>
@@ -14,12 +14,13 @@
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[
         <h3>Apps stay in the VPN</h3>
-        <p>VPNonly now remembers which apps belong in the VPN. Quit an app and open it again — from the Dock, Spotlight, anywhere — and it goes back into the tunnel on its own. Before, quitting an app quietly took it out.</p>
-        <h3>Never lost in the menu bar</h3>
-        <p>If your menu bar is full and macOS hides the shield, VPNonly now opens in a window with a Dock icon instead of looking like it failed to launch.</p>
+        <p>Quitting an app used to quietly take it out of the VPN. Now the switch is a lasting choice: open the app again from anywhere and it rejoins the tunnel on its own.</p>
+        <h3>No more vanishing into the menu bar</h3>
+        <p>If your menu bar is full, macOS hides the newest icon without saying so. VPNonly now opens in a window with a Dock icon instead of looking like it failed to launch.</p>
         <h3>Updates install themselves</h3>
-        <p>From this version on, updates download and install in one click, with no re-approving the app.</p>
-      ]]><p><a href="https://vpnonly.app/changelog.html">Full changelog</a></p>]]></description>
+        <p>From here on, updates install with one click and macOS won't ask you to approve the app again.</p>
+        <p><a href="https://vpnonly.app/changelog.html">Full changelog</a></p>
+      ]]></description>
       <enclosure url="https://vpnonly.app/VPNonly-1.5.0.zip"
                  sparkle:edSignature="qnvIPj2V/hV9O/jq7huT8dPAsZyBUEwMV5Q96UEYb4PTpNiMhg0JsrL79TbBD8n3hYCbtHv2dO9trd70rA2uCA=="
                  length="2815250"
