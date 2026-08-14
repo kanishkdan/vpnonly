@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VPNonly — changelog</title>
+<meta name="description" content="What changed in each version of VPNonly.">
+
+<link rel="canonical" href="https://vpnonly.app/changelog.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VPNonly">
+<meta property="og:url" content="https://vpnonly.app/changelog.html">
+<meta property="og:title" content="VPNonly — changelog">
+<meta property="og:description" content="What changed in each version of VPNonly.">
+<meta property="og:image" content="https://vpnonly.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@kanishkrazdan">
+<meta name="twitter:creator" content="@kanishkrazdan">
+<meta name="twitter:title" content="VPNonly — changelog">
+<meta name="twitter:description" content="What changed in each version of VPNonly.">
+<meta name="twitter:image" content="https://vpnonly.app/og.png">
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="stylesheet" href="style.css?v=12">
+<script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="shell">
+
+<div class="top">
+  <a class="me" href="./">
+    <svg viewBox="0 0 26 30"><path d="M13 1l11 4v9c0 7.5-4.8 13.6-11 15C6.8 27.6 2 21.5 2 14V5z" fill="none" stroke="#0e0f13" stroke-width="2.4" stroke-linejoin="round"/><path d="M13 1l-11 4v9c0 7.5 4.8 13.6 11 15z" fill="#0e0f13"/></svg>
+    <b>VPNonly</b>
+  </a>
+  <a href="./">home</a>
+  <a href="guides/">guides</a>
+  <a href="faq.html">faq</a>
+  <a href="download.html">download</a>
+</div>
+
+<div class="solo">
+<h1>Changelog</h1>
+<p class="lead">Everything that's changed, including the things that were broken. VPNonly updates itself from 1.5.0 onwards.</p>
+
+<!-- RELEASES -->
+<h2>1.5.0 <span style="font-weight:400;color:#b0b4bb;font-size:15px;">· 14 August 2026</span></h2>
+<ul>
+  <li><strong>Apps stay in the VPN.</strong> Quitting an app used to quietly take it out of the VPN, so opening it again put it back on your normal connection. Now the switch is a lasting choice: open the app from anywhere and it rejoins the tunnel on its own.</li>
+  <li><strong>No more vanishing into the menu bar.</strong> If the menu bar is full, macOS hides the newest icon without saying so, and VPNonly looked like it had failed to launch. It now opens in a window with a Dock icon instead.</li>
+  <li><strong>Automatic updates.</strong> New versions install with one click, without macOS asking you to approve the app again.</li>
+  <li>Double-clicking VPNonly while it's already running no longer shows "not responding" — it opens the window.</li>
+</ul>
+
+<h2>1.4.0 <span style="font-weight:400;color:#b0b4bb;font-size:15px;">· 4 August 2026</span></h2>
+<ul>
+  <li><strong>Any WireGuard provider.</strong> Import a config from Mullvad, Proton, IVPN, AirVPN or your own server, alongside the existing NordVPN token setup. Import as many servers as you like and switch between them.</li>
+  <li>Licence activation, and a proper uninstaller that removes the root-owned engine and its permissions rather than leaving them behind.</li>
+</ul>
+
+<h2>1.3.0 <span style="font-weight:400;color:#b0b4bb;font-size:15px;">· 3 August 2026</span></h2>
+<ul>
+  <li><strong>Instant switching.</strong> Each app gets its own private group, so moving one in or out of the VPN is a firewall change rather than a restart. An app only restarts the first time it joins.</li>
+  <li>Firewall safety: rules are validated before they load, and can only ever target VPNonly's own groups.</li>
+</ul>
+
+<h2>1.2.0 <span style="font-weight:400;color:#b0b4bb;font-size:15px;">· 3 August 2026</span></h2>
+<ul>
+  <li>The menu bar app: every app on your Mac, searchable, with a switch each.</li>
+  <li>One password prompt ever, instead of one per action.</li>
+</ul>
+
+<div class="foot">
+  <span>Made by <a href="https://x.com/kanishkrazdan">@kanishkrazdan</a></span>
+  <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a>
+  <a href="terms.html">terms &amp; privacy</a>
+</div>
+</div>
+
+</div>
+</body>
+</html>

@@ -3,7 +3,7 @@
   <channel>
     <title>VPNonly</title>
     <link>https://vpnonly.app/appcast.xml</link>
-    <description>Updates for VPNonly</description>
+    <description>Updates for VPNonly<p><a href="https://vpnonly.app/changelog.html">Full changelog</a></p>]]></description>
     <language>en</language>
 
     <item>
@@ -19,7 +19,7 @@
         <p>If your menu bar is full and macOS hides the shield, VPNonly now opens in a window with a Dock icon instead of looking like it failed to launch.</p>
         <h3>Updates install themselves</h3>
         <p>From this version on, updates download and install in one click, with no re-approving the app.</p>
-      ]]></description>
+      ]]><p><a href="https://vpnonly.app/changelog.html">Full changelog</a></p>]]></description>
       <enclosure url="https://vpnonly.app/VPNonly-1.5.0.zip"
                  sparkle:edSignature="qnvIPj2V/hV9O/jq7huT8dPAsZyBUEwMV5Q96UEYb4PTpNiMhg0JsrL79TbBD8n3hYCbtHv2dO9trd70rA2uCA=="
                  length="2815250"
