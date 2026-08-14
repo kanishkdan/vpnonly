@@ -1,5 +1,5 @@
 {
-  "version": "1.5.0",
-  "url": "https://vpnonly.app/download.html",
-  "notes": "Apps stay in the VPN across restarts; window fallback when the menu bar is full; automatic updates from here on."
+  "version": "1.6.0",
+  "url": "https://vpnonly.app/",
+  "notes": "Every country your provider offers (149, not a hardcoded ten), with search and recents. Plus a what's-new note after each update."
 }
