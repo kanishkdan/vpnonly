@@ -89,9 +89,15 @@ h1 em { font-style: normal; }
 .alt a { color: var(--body); }
 .terms { font-size: 13.5px; color: var(--faint); margin-top: 4px; }
 
-/* right lane */
-.right > section { padding-bottom: 42px; }
-.right > section + section { border-top: 1px solid var(--line); padding-top: 38px; }
+/* Sections are <details> so a phone can fold them away; on a wide screen
+   they're always open and read as plain sections. */
+.sec { padding-bottom: 42px; }
+.sec + .sec { border-top: 1px solid var(--line); padding-top: 38px; }
+.sec > summary, .qsec > summary { display: block; list-style: none; }
+.sec > summary::-webkit-details-marker,
+.qsec > summary::-webkit-details-marker { display: none; }
+/* .qsec (the FAQ) has no desktop chrome at all — it reads as plain
+   question-and-answer, and only becomes a fold on a phone. */
 h2 {
   color: var(--faint); font-size: 13px; font-weight: 500;
   letter-spacing: 0.06em; text-transform: uppercase;
@@ -139,7 +145,12 @@ pre code { line-height: 1.65; }
 /* deep pages keep one readable column */
 .solo { max-width: 660px; padding: 54px 0 40px; }
 .solo h1 { margin-bottom: 22px; }
-.solo h2 { font-size: 19px; text-transform: none; letter-spacing: -0.01em; margin: 38px 0 12px; }
+/* on the deep pages the heading is the thing you scan for, so it's the
+   darkest text on the line, not the lightest */
+.solo h2 {
+  font-size: 19px; text-transform: none; letter-spacing: -0.012em;
+  margin: 38px 0 12px; color: #2b2e34; font-weight: 620;
+}
 .solo h2::before { content: none; }
 .solo p, .solo ul { margin-bottom: 16px; max-width: 62ch; }
 .solo ul { list-style: none; }
@@ -197,9 +208,47 @@ pre code { line-height: 1.65; }
   .btn { display: block; text-align: center; padding: 15px 20px; }
   .alt, .terms { text-align: center; }
 
-  .right > section { padding-bottom: 32px; }
-  .right > section + section { padding-top: 30px; }
-  .shot { margin-bottom: 32px; border-radius: 10px; }
+  /* Folded sections: a tappable row per topic, so the page you land on is
+     the pitch and the button rather than six screens of prose. */
+  .sec { padding-bottom: 0; }
+  .sec + .sec { padding-top: 0; border-top: none; }
+  .sec > summary {
+    position: relative; cursor: pointer;
+    padding: 17px 26px 17px 0;
+    border-bottom: 1px solid var(--line);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .sec > summary h2 { margin-bottom: 0; }
+  .sec > summary::after {
+    content: ""; position: absolute; right: 4px; top: 50%;
+    width: 8px; height: 8px; margin-top: -5px;
+    border-right: 1.5px solid #b6bac1; border-bottom: 1.5px solid #b6bac1;
+    transform: rotate(45deg); transition: transform .18s;
+  }
+  .sec[open] > summary::after { transform: rotate(-135deg); margin-top: -2px; }
+  .sec[open] > summary { border-bottom-color: transparent; }
+  .sec > *:not(summary):first-of-type { margin-top: 4px; }
+  .sec[open] { padding-bottom: 24px !important; border-bottom: 1px solid var(--line); }
+
+  .shot { margin-bottom: 26px; border-radius: 10px; }
+
+  /* the FAQ becomes a list of questions you can tap open */
+  .qsec { border-bottom: 1px solid var(--line); }
+  .qsec > summary {
+    position: relative; cursor: pointer; padding: 15px 26px 15px 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .qsec > summary h2 { margin: 0; font-size: 16.5px; }
+  .qsec > summary::after {
+    content: ""; position: absolute; right: 4px; top: 50%;
+    width: 8px; height: 8px; margin-top: -7px;
+    border-right: 1.5px solid #b6bac1; border-bottom: 1.5px solid #b6bac1;
+    transform: rotate(45deg); transition: transform .18s;
+  }
+  .qsec[open] > summary::after { transform: rotate(-135deg); margin-top: -3px; }
+  .qsec[open] { padding-bottom: 18px; }
+  .qsec p:last-child { margin-bottom: 0; }
+  .solo > h1 + p { margin-bottom: 26px; }
 
   .solo { padding: 32px 0 30px; }
   .solo h2 { font-size: 18px; margin: 30px 0 10px; }

@@ -22,7 +22,7 @@
 <meta name="twitter:description" content="Providers, restarts, the password prompt, licences, refunds and limitations.">
 <meta name="twitter:image" content="https://vpnonly.app/og.png">
 <link rel="icon" type="image/png" href="icon.png">
-<link rel="stylesheet" href="style.css?v=13">
+<link rel="stylesheet" href="style.css?v=14">
 <script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
@@ -41,50 +41,78 @@
 <div class="solo">
 <h1>FAQ</h1>
 
-<h2>macOS says it can't verify the app. Is it safe?</h2>
+<details class="qsec" open>
+<summary><h2>macOS says it can't verify the app. Is it safe?</h2></summary>
 <p>VPNonly isn't signed with an Apple developer certificate yet, so macOS blocks it on first launch and you allow it once in System Settings. There's a <a href="install.html">short guide here</a>. The certificate costs $99 a year and I'm paying for it out of the first sales. Once it's signed, the app updates itself and this step goes away.</p>
 <p>If that's a dealbreaker, don't buy it yet. The <a href="https://github.com/kanishkdan/vpnonly">command-line version</a> is free, does the same routing, and you can read every line of it.</p>
+</details>
 
-<h2>Which VPNs work?</h2>
+<details class="qsec" open>
+<summary><h2>Which VPNs work?</h2></summary>
 <p><strong>NordVPN</strong> is the easiest. Paste an access token once, and the app fetches your WireGuard key and picks servers for you, with a country menu.</p>
 <p><strong>Everyone else</strong> (Mullvad, Proton, IVPN, AirVPN, or a server you run yourself) works by importing a WireGuard config. Download the <code>.conf</code> from your provider, one per server, import as many as you want, and switch between them from the same menu. If your provider gives you a WireGuard config, it works here.</p>
+</details>
 
-<h2>Do I need my VPN's own app running?</h2>
+<details class="qsec" open>
+<summary><h2>Do I need my VPN's own app running?</h2></summary>
 <p>No, keep it closed. VPNonly talks to your provider's servers directly. Running both at once makes their firewall rules fight each other.</p>
+</details>
 
-<h2>Does my app restart every time I toggle it?</h2>
+<details class="qsec" open>
+<summary><h2>Does my app restart every time I toggle it?</h2></summary>
 <p>Only the first time it joins the VPN. macOS decides how an app connects at the moment it opens, so it has to be restarted once. After that, switching it in and out is instant and the app keeps running. Its open connections do drop when the exit IP changes, but most apps reconnect by themselves.</p>
+</details>
 
-<h2>What happens if the VPN drops?</h2>
+<details class="qsec" open>
+<summary><h2>What happens if the VPN drops?</h2></summary>
 <p>Those apps get blocked until it's back. They never silently fall back to your normal connection.</p>
+</details>
 
-<h2>Why does it want my password?</h2>
+<details class="qsec" open>
+<summary><h2>Why does it want my password?</h2></summary>
 <p>Creating a network interface and firewall rules needs admin rights. It asks once, installs a root-owned engine, and doesn't ask again. That engine is <a href="https://github.com/kanishkdan/vpnonly">open source</a>, so you can read every privileged line before you trust it.</p>
+</details>
 
-<h2>What's bundled inside, and under what licence?</h2>
+<details class="qsec" open>
+<summary><h2>What's bundled inside, and under what licence?</h2></summary>
 <p>Two unmodified programs from the WireGuard project, run as child processes: <strong>wireguard-go</strong> (MIT) and <strong>wg</strong> from wireguard-tools (GPL-2.0-only). Full notices, versions, upstream source links and a GPL written offer are in <a href="third-party-notices.txt">third-party-notices.txt</a>, also included in the download.</p>
 <p>VPNonly's own privileged code, the part that runs as root, is MIT and <a href="https://github.com/kanishkdan/vpnonly">on GitHub</a>. "WireGuard" is a registered trademark of Jason A. Donenfeld. VPNonly isn't affiliated with the WireGuard project or with any VPN provider.</p>
+</details>
 
-<h2>Do you collect anything?</h2>
+<details class="qsec" open>
+<summary><h2>Do you collect anything?</h2></summary>
 <p>No. No account, no analytics in the app, no server of mine in the path. Your WireGuard key stays on your Mac. The app talks to my side twice: once to activate your license, and occasionally to check for a new version.</p>
+</details>
 
-<h2>I can't see the icon in my menu bar</h2>
+<details class="qsec" open>
+<summary><h2>I can't see the icon in my menu bar</h2></summary>
 <p>Your menu bar is full. Macs with a notch hide icons that don't fit, newest first, so the app is running even though you can't see it. Quit a menu bar app you're not using and the shield appears.</p>
+</details>
 
-<h2>How is this different from SplitTunnel.app?</h2>
+<details class="qsec" open>
+<summary><h2>How is this different from SplitTunnel.app?</h2></summary>
 <p>They route your whole Mac through the VPN and then exclude apps. VPNonly never puts your Mac on the VPN at all, so apps opt in instead. They charge about $49 a year, this is $19 once. Their Network Extension approach does avoid the one-time restart, which is a fair advantage, and it's on my list.</p>
+</details>
 
-<h2>What do I get for $19?</h2>
+<details class="qsec" open>
+<summary><h2>What do I get for $19?</h2></summary>
 <p>The Mac app, a license for 2 Macs, and all 1.x updates. The command-line engine is free and MIT licensed either way.</p>
+</details>
 
-<h2>I lost my download or licence key</h2>
+<details class="qsec" open>
+<summary><h2>I lost my download or licence key</h2></summary>
 <p>Open your <a href="https://customer.dodopayments.com/login/bus_EkfDdU8wRWDYDm3JXaUIZ">purchases page</a> and sign in with the email you bought with. Your download and licence key are both there, and your licence doesn't expire. If that doesn't work, <a href="mailto:kanishk@armoury.in">email me</a>.</p>
+</details>
 
-<h2>How do I uninstall it?</h2>
+<details class="qsec" open>
+<summary><h2>How do I uninstall it?</h2></summary>
 <p>Click the <strong>…</strong> button in the app and choose <strong>Uninstall VPNonly</strong>. That removes the root-owned engine, the passwordless rule and the per-app groups, restores macOS's firewall rules, and quits. Then drag the app to the Trash. Manual commands are on the <a href="install.html">install page</a> if you've already deleted the app.</p>
+</details>
 
-<h2>Refunds?</h2>
+<details class="qsec" open>
+<summary><h2>Refunds?</h2></summary>
 <p>Email <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a> within 14 days and I'll refund you. No forms, no reasons needed.</p>
+</details>
 
 <p style="margin-top:34px;"><a class="btn" href="https://dodo.pe/vpnonly-get">Get it for Mac — $19</a></p>
 
@@ -96,5 +124,10 @@
 </div>
 
 </div>
+<script>
+if (matchMedia("(max-width: 640px)").matches) {
+  document.querySelectorAll("details.qsec").forEach(d => d.open = false);
+}
+</script>
 </body>
 </html>
