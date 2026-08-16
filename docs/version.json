@@ -1,5 +1,5 @@
 {
-  "version": "1.6.0",
+  "version": "1.6.1",
   "url": "https://vpnonly.app/",
-  "notes": "Every country your provider offers (149, not a hardcoded ten), with search and recents. Plus a what's-new note after each update."
+  "notes": "Points the in-app buy link at the new store."
 }
