@@ -32,6 +32,7 @@ a:hover { text-decoration-color: var(--ink); }
 .top .me b { color: var(--ink); font-weight: 700; letter-spacing: -0.01em; }
 .top a { color: var(--faint); text-decoration: none; }
 .top a:hover { color: var(--ink); }
+.top a.here { color: #3f434b; }   /* the page you're on */
 
 /* two lanes */
 .lanes {
