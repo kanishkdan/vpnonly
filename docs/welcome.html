@@ -22,7 +22,7 @@
 <meta name="twitter:description" content="Thanks for buying VPNonly. Four steps to get set up.">
 <meta name="twitter:image" content="https://vpnonly.app/og.png">
 <link rel="icon" type="image/png" href="icon.png">
-<link rel="stylesheet" href="style.css?v=12">
+<link rel="stylesheet" href="style.css?v=13">
 <script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <meta name="robots" content="noindex">
 </head>
@@ -42,45 +42,45 @@
 <div class="solo">
 <h1>You're in. Here's the setup.</h1>
 
-<p>Thanks for buying VPNonly — genuinely, it's an early product and you're one of the first. Four steps, about two minutes. If any of it goes wrong, <a href="mailto:kanishk@armoury.in">email me</a> and I'll either fix it or refund you.</p>
+<p>Thanks for buying VPNonly. It's an early product and you're one of the first. Setup is four steps, about two minutes. If any of it goes wrong, <a href="mailto:kanishk@armoury.in">email me</a> and I'll either fix it or refund you.</p>
 
 <h2>1. Get the download and your licence key</h2>
-<p>Both are in the email that just landed, from Dodo Payments. The key looks like <code>1a2b3c4d-…</code>. Keep that email; it's also your receipt, and the download link stays valid.</p>
-<p>Nothing arrived, or you've lost it? Check spam first, then open your <a href="https://customer.dodopayments.com/login/bus_EkfDdU8wRWDYDm3JXaUIZ">purchases page</a> and sign in with the email you bought with — your download and licence key are both there, any time. Still stuck: <a href="mailto:kanishk@armoury.in">email me</a>.</p>
+<p>Both are in the email from Dodo Payments that just landed. The key looks like <code>1a2b3c4d-…</code>. Keep that email: it's your receipt too, and the download link stays valid.</p>
+<p>Nothing arrived, or you've lost it? Check spam first, then open your <a href="https://customer.dodopayments.com/login/bus_EkfDdU8wRWDYDm3JXaUIZ">purchases page</a> and sign in with the email you bought with. Your download and licence key are both there. Still stuck? <a href="mailto:kanishk@armoury.in">Email me</a>.</p>
 
 <h2>2. Install it</h2>
 <p>Unzip, drag <strong>VPNonly.app</strong> to your Applications folder.</p>
-<p>Then macOS will block it the first time, because VPNonly isn't signed with an Apple developer certificate yet. This part surprises people, so:</p>
+<p>macOS blocks it the first time, because VPNonly isn't signed with an Apple developer certificate yet. To get past that:</p>
 <ol>
   <li>Double-click VPNonly. macOS refuses: <em>"Apple could not verify VPNonly is free of malware."</em> Click <strong>Done</strong>.</li>
   <li>Open <strong>System Settings → Privacy &amp; Security</strong>, scroll to <strong>Security</strong>.</li>
   <li>Next to the line about VPNonly, click <strong>Open Anyway</strong> and authenticate.</li>
   <li>Double-click VPNonly again, click <strong>Open</strong>. Done forever.</li>
 </ol>
-<p>Step 1 isn't optional — the "Open Anyway" button only appears after macOS has blocked an attempt. If it still doesn't show, run this in Terminal and open the app normally:</p>
+<p>Don't skip step 1. The "Open Anyway" button only appears after macOS has blocked an attempt. If it still doesn't show, run this in Terminal and open the app normally:</p>
 <pre><code>xattr -dr com.apple.quarantine /Applications/VPNonly.app</code></pre>
 <p><a href="install.html">More detail on this, and why it happens →</a></p>
 
 <h2>3. Paste your licence key</h2>
 <p>The shield appears in your menu bar. Click it, paste the key from your email, hit Activate. Your licence covers 2 Macs, so you can do this again on a second machine later.</p>
-<p>Can't see the shield? Your menu bar is probably full — on Macs with a notch, macOS silently hides icons that don't fit. Quit a menu bar app you're not using and it'll appear.</p>
+<p>Can't see the shield? Your menu bar is probably full. On Macs with a notch, macOS hides icons that don't fit. Quit a menu bar app you're not using and it'll appear.</p>
 
 <h2>4. Connect your VPN</h2>
 <p><strong>NordVPN:</strong> get an access token at <a href="https://my.nordaccount.com/dashboard/nordvpn/manual-configuration/">my.nordaccount.com → Manual configuration → Access token</a>, paste it into VPNonly once. It fetches your key and handles servers from there. Keep the NordVPN app closed while you use VPNonly.</p>
 <p><strong>Mullvad, Proton, IVPN, AirVPN, or your own server:</strong> download a WireGuard <code>.conf</code> from your provider (one per server) and choose <strong>Import WireGuard config…</strong>. Import as many as you like and switch between them from the menu at the bottom.</p>
 
-<h2>That's it — flip a switch</h2>
-<p>Every app on your Mac is listed. Flip one on and it joins the VPN. If it's open, VPNonly relaunches it once (it'll warn you first, so save your work); after that, switching is instant. VPNonly remembers your choice, so next time you open that app it goes into the VPN on its own.</p>
+<h2>That's it. Flip a switch.</h2>
+<p>Every app on your Mac is in the list. Flip one on and it joins the VPN. If it's already open, VPNonly restarts it once and warns you first, so save your work. After that, switching is instant. Your choice is remembered, so next time you open that app it goes into the VPN on its own.</p>
 <p>Everything else on your Mac stays exactly where it was.</p>
 
 <h2>Two things worth knowing</h2>
 <ul>
-  <li>DNS lookups for tunneled apps still go through your normal resolver. Connections are tunneled; lookups aren't. Fine for changing an app's exit IP, not enough if you need to hide which sites you visit from your ISP.</li>
-  <li>To remove everything later: the <strong>…</strong> button → <strong>Uninstall VPNonly</strong>. It takes out the root-owned engine and its permissions properly, not just the app.</li>
+  <li>Connections are tunneled, but DNS lookups still go through your normal resolver. That's fine for changing an app's exit IP, but not enough if you need to hide which sites you visit from your ISP.</li>
+  <li>To remove everything later, use the <strong>…</strong> button and choose <strong>Uninstall VPNonly</strong>. That removes the root-owned engine and its permissions properly, not just the app.</li>
 </ul>
 
 <h2>Stuck?</h2>
-<p>Email <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a>. It's just me, so allow a day or two — and if I can't fix it quickly, you get your money back within 14 days, no forms.</p>
+<p>Email <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a>. It's just me, so allow a day or two. If I can't fix it quickly, you get your money back within 14 days, no forms.</p>
 
 <p style="margin-top:34px;"><a class="btn" href="faq.html">Read the FAQ</a></p>
 

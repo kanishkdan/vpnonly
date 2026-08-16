@@ -22,7 +22,7 @@
 <meta name="twitter:description" content="Pick an app, flip a switch, that app is on the VPN. Nothing else changes. $19 once, open-source engine.">
 <meta name="twitter:image" content="https://vpnonly.app/og.png">
 <link rel="icon" type="image/png" href="icon.png">
-<link rel="stylesheet" href="style.css?v=12">
+<link rel="stylesheet" href="style.css?v=13">
 <script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
@@ -48,7 +48,7 @@
 
     <h1>One app on the VPN. Not your whole Mac.</h1>
 
-    <p>I wanted CapCut on a Singapore IP while everything else stayed home. No VPN on Mac does that, so I built it.</p>
+    <p>I wanted CapCut on a Singapore IP while the rest of my Mac stayed home. No Mac VPN does that, so I built this.</p>
 
     <div class="state">
       <div><span class="dot in"></span><b>CapCut</b> — Singapore</div>
@@ -74,54 +74,51 @@
 
     <section>
       <h2>what it does</h2>
-      <p>NordVPN, like basically every big VPN, has no split tunneling on Mac. It's all or nothing: connect, and your entire machine moves to another country. VPNonly inverts that.</p>
-      <p>Every app on your Mac shows up in a menu bar list. Flip a switch and that app moves onto the VPN with a new exit IP. Flip it back and it's home again. Everything else stays on your normal connection: your browser, your calls, your bank.</p>
-      <p>The first time an app joins, it gets relaunched once, because macOS decides an app's network identity when it starts. After that, switching is instant and the app keeps running.</p>
+      <p>Most VPNs are all or nothing. You connect, and your whole Mac moves to another country: browser, calls, banking, everything. NordVPN and most of the big names have no split tunneling on Mac at all.</p>
+      <p>VPNonly works the other way round. Your Mac stays where it is. Every app shows up in a list in your menu bar, and you switch them onto the VPN one at a time. Everything you didn't pick carries on as normal.</p>
+      <p>An app restarts once when you first add it, because macOS decides how an app connects at the moment it opens. After that, switching it on and off is instant.</p>
     </section>
 
     <section>
       <h2>how it works</h2>
-      <p>It opens a WireGuard tunnel that <strong>nothing uses by default</strong>. Your default route is never touched. Then it uses PF, the firewall already built into macOS, to send just the apps you picked through that tunnel.</p>
-      <p>PF can't match traffic by application, but it can match by unix group. So each app gets its own private group, and two rules do the work:</p>
-      <pre><code>block return out … from any to any group vpn_a1b2c3
-pass out quick route-to (utun9 …) … group vpn_a1b2c3</code></pre>
-      <p>The second sends that app into the tunnel. The first is the kill switch: when the tunnel is down, the pass rule isn't there, so that traffic is refused instead of quietly leaking to your ISP. <a href="how-it-works.html">Longer version here.</a></p>
+      <p>It opens a WireGuard tunnel that <strong>nothing uses by default</strong>, so your normal connection is never touched. Then it uses the firewall already built into macOS to send just the apps you picked through that tunnel.</p>
+      <p>If the tunnel goes down, those apps are blocked until it's back. They never quietly fall back to your normal connection. <a href="how-it-works.html">The longer version, with the actual rules →</a></p>
     </section>
 
     <section>
-      <h2>things I should be honest about</h2>
+      <h2>what it can't do yet</h2>
       <ul>
-        <li>Apple Silicon only for now.</li>
-        <li>DNS lookups for tunneled apps still go through your normal resolver. The connections themselves are tunneled. If you need to hide <em>which</em> sites you visit from your ISP, this isn't the tool yet.</li>
-        <li>Switching an app's route drops its open connections. Most reconnect on their own, but a big upload would restart.</li>
-        <li>It isn't signed with an Apple certificate yet, so macOS blocks it on first launch and you allow it once in System Settings. <a href="install.html">Here's the guide.</a> I'm funding the certificate from the first sales.</li>
-        <li>It's one person maintaining this. If it doesn't work for you, email me and I'll refund you.</li>
+        <li>Apple Silicon Macs only.</li>
+        <li>Connections are tunneled, but DNS lookups still go through your normal resolver. If you need to hide <em>which</em> sites you visit from your ISP, this isn't the right tool yet.</li>
+        <li>Moving an app in or out drops its open connections. Most apps reconnect on their own, but a large upload would start over.</li>
+        <li>It isn't signed by Apple yet, so you allow it once in System Settings on first launch. <a href="install.html">Here's the guide.</a> I'm paying for the certificate out of the first sales.</li>
+        <li>One person maintains this. If it doesn't work for you, email me and I'll refund you.</li>
       </ul>
     </section>
 
     <section>
-      <h2>why it's paid but also open</h2>
-      <p>The split-tunneling engine is about 300 lines of shell and C, MIT licensed, on <a href="https://github.com/kanishkdan/vpnonly">GitHub</a>. It runs as root on your machine, so you should be able to read every line of it. That's not generosity, it's the minimum.</p>
-      <p>The $19 is for the Mac app on top: the menu bar list, one-click setup, the country picker, updates. If you'd rather use the terminal, do that. It's free and always will be.</p>
+      <h2>why it's paid and open</h2>
+      <p>The part that runs as root is about 300 lines of shell and C, MIT licensed, on <a href="https://github.com/kanishkdan/vpnonly">GitHub</a>. You can read all of it before you trust it.</p>
+      <p>The $19 is for the Mac app around it: the menu bar list, setup, the country picker, updates. If you'd rather do it from the terminal, that's free and always will be.</p>
     </section>
 
     <section>
       <h2>quick answers</h2>
       <div class="qa">
         <div class="q">Do I need my VPN's own app running?</div>
-        <p>No, keep it closed. VPNonly talks to your provider's servers directly.</p>
+        <p>No, keep it closed. VPNonly connects to your provider's servers directly.</p>
       </div>
       <div class="qa">
         <div class="q">Which providers work?</div>
-        <p>NordVPN needs nothing but an access token — the app fetches your key and picks servers itself. For Mullvad, Proton, IVPN, AirVPN or your own server, download their WireGuard config and drop it in; import as many as you like and switch between them from the menu.</p>
+        <p>For NordVPN, paste an access token and the app does the rest. For Mullvad, Proton, IVPN, AirVPN or your own server, download a WireGuard config and drop it in. Import as many as you like and switch between them from the menu.</p>
       </div>
       <div class="qa">
         <div class="q">Why does it want my password?</div>
-        <p>Firewall rules need admin rights. It asks once, installs a root-owned engine you can read on GitHub, and never asks again.</p>
+        <p>Firewall rules need admin rights. It asks once, installs an engine you can read on GitHub, and never asks again.</p>
       </div>
       <div class="qa">
         <div class="q">How is this different from SplitTunnel.app?</div>
-        <p>They put your whole Mac on the VPN and exclude apps; here your Mac never joins at all. They're ~$49/year, this is $19 once. Their approach does avoid the one-time relaunch, which is fair, and it's on my list. <a href="faq.html">More questions →</a></p>
+        <p>They put your whole Mac on the VPN and then exclude apps. Here your Mac never joins at all. They charge about $49 a year, this is $19 once. Their approach does avoid the one-time restart, which is a fair advantage, and it's on my list. <a href="faq.html">More questions →</a></p>
       </div>
     </section>
 

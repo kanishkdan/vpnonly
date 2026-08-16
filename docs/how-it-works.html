@@ -22,7 +22,7 @@
 <meta name="twitter:description" content="A WireGuard tunnel with no default route, the PF group trick, and why an app restarts once.">
 <meta name="twitter:image" content="https://vpnonly.app/og.png">
 <link rel="icon" type="image/png" href="icon.png">
-<link rel="stylesheet" href="style.css?v=12">
+<link rel="stylesheet" href="style.css?v=13">
 <script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
@@ -43,36 +43,36 @@
 <div class="solo">
 <h1>How it works</h1>
 
-<p>Most VPN apps take over your whole machine: they replace your default route, and every packet from every app detours through another country whether it helps or not. VPNonly does the opposite — your Mac never joins the VPN, individual apps do.</p>
+<p>Most VPN apps take over the whole machine. They replace your default route, so every app's traffic goes through another country whether that helps or not. VPNonly does the opposite: your Mac never joins the VPN, individual apps do.</p>
 
 <h2>1. A tunnel nobody uses</h2>
-<p><code>wireguard-go</code> opens a tunnel to your VPN provider and <strong>no default route is installed</strong>. The tunnel just sits there. Nothing goes through it until you say so. This is why the failure mode is always "that one app is offline" and never "my internet is gone".</p>
+<p><code>wireguard-go</code> opens a tunnel to your VPN provider, and <strong>no default route is installed</strong>. The tunnel just sits there until you send something into it. So when something breaks, one app goes offline rather than your whole internet.</p>
 
 <h2>2. The firewall picks who goes in</h2>
-<p>macOS ships with PF, a packet filter that can't match traffic by application — but <em>can</em> match by unix group. So each app you add gets its own private group, and two rules do the work:</p>
+<p>macOS ships with PF, a packet filter that can't match traffic by application, but <em>can</em> match by unix group. So each app you add gets its own private group, and two rules do the work:</p>
 
 <pre><code>block return out proto { tcp udp } from any to any group vpn_a1b2c3
 pass out quick route-to (utun9 10.5.0.2) inet proto { tcp udp } \
     from any to any group vpn_a1b2c3 keep state</code></pre>
 
-<p>The second rule sends that group into the tunnel. The first is the kill switch: when the tunnel isn't up, the pass rule isn't there, so that traffic is refused instead of leaking to your ISP.</p>
+<p>The second rule sends that group into the tunnel. The first is the kill switch: when the tunnel isn't up, the pass rule isn't there either, so that traffic is refused instead of leaking to your ISP.</p>
 
-<p>Group membership is fixed when a process starts, but firewall rules aren't — which is why an app has to relaunch once to join, and never again after that. Toggling is just rewriting rules.</p>
+<p>A process's group is fixed when it starts, but firewall rules aren't. That's why an app has to restart once to join, and never again. After that, toggling it is just rewriting rules.</p>
 
 <h2>3. A very small launcher</h2>
-<p>A 30-line C program starts your app under its group and immediately drops root. Every helper process the app spawns inherits the group, so Chromium-style apps with a dozen subprocesses are covered.</p>
+<p>A 30-line C program starts your app under its group and immediately drops root. Helper processes inherit the group, so apps that spawn a dozen subprocesses are covered too.</p>
 
 <h2>About the password prompt</h2>
-<p>Making network interfaces and firewall rules needs admin rights — for any software, always. VPNonly asks once, installs a small engine owned by root that nothing else can modify, and never asks again. That engine is the open-source part, and it's short enough to read over a coffee.</p>
+<p>Creating network interfaces and firewall rules needs admin rights. That's true of any VPN software. VPNonly asks once, installs a small engine owned by root that nothing else can modify, and never asks again. That engine is the open-source part, and it's short enough to read in full.</p>
 
 <h2>What I haven't solved</h2>
 <ul>
-  <li>DNS for tunneled apps goes through the system resolver, which isn't in any group. Connections are tunneled, lookups aren't. Fixing it properly needs a scoped resolver.</li>
-  <li>IPv6 for tunneled apps is blocked rather than routed. No leak, but no v6.</li>
-  <li>An app launched from the Dock isn't in a group, so it needs one relaunch through VPNonly.</li>
+  <li>DNS for tunneled apps goes through the system resolver, which isn't in any group. Connections are tunneled, lookups aren't. Doing it properly needs a scoped resolver.</li>
+  <li>IPv6 for tunneled apps is blocked rather than routed. Nothing leaks, but there's no v6.</li>
+  <li>An app opened from the Dock isn't in a group, so it needs one restart through VPNonly.</li>
 </ul>
 
-<p>The version of this with no restarts at all needs Apple's Network Extension framework — a system extension that sees every connection with the app's signature attached. That's the plan, it's just a much bigger build.</p>
+<p>A version with no restarts at all needs Apple's Network Extension framework, which sees every connection along with the app that made it. That's the plan, it's just a much bigger build.</p>
 
 <p style="margin-top:34px;"><a class="btn" href="https://dodo.pe/vpnonly-get">Get it for Mac — $19</a></p>
 

@@ -18,7 +18,7 @@
 <meta name="twitter:description" content="How to route individual macOS apps through any WireGuard provider, using a config file you already have.">
 <meta name="twitter:image" content="https://vpnonly.app/og.png">
 <link rel="icon" type="image/png" href="../icon.png">
-<link rel="stylesheet" href="../style.css?v=12">
+<link rel="stylesheet" href="../style.css?v=13">
 <script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
@@ -60,7 +60,7 @@
 sudo ./run.sh /Applications/YourApp.app</code></pre>
 
 <h2>Two details worth knowing</h2>
-<p>Providers hand out <em>wg-quick</em> configs, which include <code>Address</code>, <code>DNS</code> and sometimes <code>MTU</code> lines. Plain <code>wg setconf</code> rejects those, so anything importing them has to strip them and apply the address separately — if you're scripting this yourself, that's the part that will bite you first.</p>
+<p>Providers hand out <em>wg-quick</em> configs, which include <code>Address</code>, <code>DNS</code> and sometimes <code>MTU</code> lines. Plain <code>wg setconf</code> rejects those, so anything importing them has to strip them out and apply the address separately. If you're scripting this yourself, that's the first thing to get right.</p>
 <p>Second: an IPv6-only config won't work with a tool that routes IPv4. Most provider configs include both, so this rarely comes up, but it's worth knowing if a config is refused.</p>
 
 <p style="margin-top:38px;"><a class="btn" href="https://dodo.pe/vpnonly-get">Get VPNonly for Mac — $19</a></p>

@@ -1,9 +1,9 @@
-/* vpnonly — split layout, like the product: two lanes, one of them special. */
+/* vpnonly — two lanes on desktop, one column on a phone. */
 :root {
   --paper: #fcfcfd;
   --ink: #0e0f13;       /* the only heavy, dark thing on the page */
-  --body: #8b8f97;      /* body recedes — light weight, light tone */
-  --faint: #b0b4bb;
+  --body: #6e737b;      /* light in tone, but still comfortably readable */
+  --faint: #979ca4;
   --line: #e6e7ea;
   --accent: #15161a;      /* the accent is just ink — no colour competing with the UI */
   --mono: ui-monospace, "SF Mono", Menlo, monospace;
@@ -12,8 +12,10 @@
 body {
   background: var(--paper);
   color: var(--body);
-  font: 400 17px/1.78 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font: 400 17px/1.75 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 a { color: #3f434b; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #cfd2d8; }
 a:hover { text-decoration-color: var(--ink); }
@@ -147,6 +149,17 @@ pre code { line-height: 1.65; }
   width: 6px; height: 1.5px; background: #c2c5cc;
 }
 
+/* a plain list of links with a line of context under each */
+.index { margin: 30px 0 0; }
+.index a {
+  display: block; color: var(--ink); font-weight: 560;
+  text-decoration: none; border-bottom: 1px solid transparent;
+  width: fit-content; line-height: 1.5;
+}
+.index a:hover { border-bottom-color: #c3c6cd; }
+.index span { display: block; font-size: 15.5px; margin: 2px 0 20px; }
+.index span:last-child { margin-bottom: 0; }
+
 /* who + what it works with */
 .who { text-decoration: none; }
 .who b { border-bottom: 1px solid transparent; transition: border-color .15s; }
@@ -159,4 +172,41 @@ pre code { line-height: 1.65; }
 
 @media (prefers-reduced-motion: reduce) {
   .shot video { animation: none; }
+}
+
+/* ─── phones ─────────────────────────────────────────────────────────────
+   Below 640px the nav can't hold six links on one line, so the wordmark
+   takes its own row and the links sit under it. Everything else just gets
+   more air per line and less padding around the edges. */
+@media (max-width: 640px) {
+  body { font-size: 16.5px; }
+  .shell { padding: 0 20px; }
+
+  .top { flex-wrap: wrap; gap: 18px; padding-top: 20px; font-size: 14.5px; }
+  .top .me { flex-basis: 100%; margin-right: 0; }
+
+  .lanes { gap: 40px; padding: 32px 0 60px; }
+
+  h1 { font-size: 30px; letter-spacing: -0.028em; margin-bottom: 16px; }
+  .hello, .left p { font-size: 16px; }
+  .state { margin: 20px 0 22px; font-size: 12.5px; }
+  .works { max-width: none; margin: 18px 0 22px; }
+
+  /* a full-width button is easier to hit with a thumb */
+  .actions { gap: 12px; align-items: stretch; }
+  .btn { display: block; text-align: center; padding: 15px 20px; }
+  .alt, .terms { text-align: center; }
+
+  .right > section { padding-bottom: 32px; }
+  .right > section + section { padding-top: 30px; }
+  .shot { margin-bottom: 32px; border-radius: 10px; }
+
+  .solo { padding: 32px 0 30px; }
+  .solo h2 { font-size: 18px; margin: 30px 0 10px; }
+
+  /* code blocks scroll on their own instead of stretching the page */
+  pre { padding: 13px 14px; border-radius: 8px; }
+  code { font-size: 12.5px; }
+
+  .foot { padding: 20px 0 44px; gap: 6px 16px; }
 }

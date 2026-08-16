@@ -22,7 +22,7 @@
 <meta name="twitter:description" content="How to open VPNonly the first time, and why macOS asks.">
 <meta name="twitter:image" content="https://vpnonly.app/og.png">
 <link rel="icon" type="image/png" href="icon.png">
-<link rel="stylesheet" href="style.css?v=12">
+<link rel="stylesheet" href="style.css?v=13">
 <script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
@@ -43,7 +43,7 @@
 <div class="solo">
 <h1>Installing VPNonly</h1>
 
-<p>VPNonly isn't signed with an Apple developer certificate yet, so macOS blocks it the first time and you have to allow it by hand. It's four steps, you do it once, and I'd rather tell you up front than let you hit it by surprise.</p>
+<p>VPNonly isn't signed with an Apple developer certificate yet, so macOS blocks it the first time and you have to allow it by hand. Four steps, once.</p>
 
 <h2>1. Move it to Applications</h2>
 <p>Unzip the download and drag <strong>VPNonly.app</strong> into your Applications folder.</p>
@@ -59,21 +59,21 @@
 <p>Double-click VPNonly once more and click <strong>Open</strong>. The shield appears in your menu bar. You won't see any of this again.</p>
 
 <h2>Then: the admin password</h2>
-<p>The first time you put an app in the VPN, VPNonly asks for your admin password once. Creating a network interface and firewall rules needs root. That's true of every VPN client. It installs a small engine owned by root and never asks again.</p>
-<p>You don't have to take my word for what that engine does: it's <a href="https://github.com/kanishkdan/vpnonly">open source</a>, about 300 lines of shell and C, and it's the same code the free command-line version uses. If you're the sort of person who reads before granting root, please do.</p>
+<p>The first time you put an app in the VPN, VPNonly asks for your admin password once. Creating a network interface and firewall rules needs root, which is true of every VPN client. It installs a small engine owned by root, and never asks again.</p>
+<p>You don't have to take my word for what that engine does. It's <a href="https://github.com/kanishkdan/vpnonly">open source</a>, about 300 lines of shell and C, and it's the same code the free command-line version uses.</p>
 
 <h2>Why isn't it signed?</h2>
-<p>An Apple developer certificate costs $99/year. VPNonly is a one-person project that just launched, so I'm funding the certificate from the first sales rather than before them. Once it's signed and notarized, this page becomes unnecessary and the app updates itself. No reinstall, no extra cost to you.</p>
+<p>An Apple developer certificate costs $99 a year. VPNonly is a one-person project that just launched, so I'm paying for it out of the first sales. Once it's signed and notarized, this page stops being necessary and the app updates itself. No reinstall, no extra cost to you.</p>
 
 <h2>Uninstalling</h2>
-<p>VPNonly installs a small root-owned engine and a passwordless rule so it doesn't have to ask for your password every time. Deleting the app wouldn't remove those, so there's a proper uninstaller: click the <strong>…</strong> button in the app and choose <strong>Uninstall VPNonly</strong>. It disconnects the tunnel, restores macOS's own firewall rules, removes the engine, the sudoers entry and the per-app groups, then quits so you can drag it to the Trash.</p>
+<p>VPNonly installs a small root-owned engine, and deleting the app wouldn't remove it. So there's a proper uninstaller: click the <strong>…</strong> button in the app and choose <strong>Uninstall VPNonly</strong>. It disconnects the tunnel, restores macOS's own firewall rules, removes the engine and the per-app groups, then quits so you can drag it to the Trash.</p>
 <p>Already deleted the app? Run this in Terminal:</p>
 <pre><code>sudo rm -rf "/Library/Application Support/VPNonly" /etc/sudoers.d/vpnonly
 sudo pfctl -f /etc/pf.conf
 for g in $(dscl . -list /Groups | grep '^vpn_'); do sudo dseditgroup -o delete "$g"; done</code></pre>
 
 <h2>Something went wrong?</h2>
-<p>Email <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a>. If I can't fix it quickly you get a refund — that's the deal. Within 14 days, no forms.</p>
+<p>Email <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a>. If I can't fix it quickly, you get a refund. Within 14 days, no forms.</p>
 
 <p style="margin-top:34px;"><a class="btn" href="https://dodo.pe/vpnonly-get">Get it for Mac — $19</a></p>
 
