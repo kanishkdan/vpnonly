@@ -7,6 +7,18 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.7.2</title>
+      <pubDate>Mon, 17 Aug 2026 22:03:02 +0530</pubDate>
+      <sparkle:version>1.7.2</sparkle:version>
+      <sparkle:shortVersionString>1.7.2</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Adds a button to pop the app out into a window you can move and keep open, and back to the menu bar again. It remembers which you prefer.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.7.2.zip"
+                 sparkle:edSignature="cYNk5JLhK9bzp2P7l7+QcIs3dsw1s3Dyr9MeczVtoro0e+93Bs5w6Facnmd4Jw03yW1dA2idklGfC+xkXWPuDA=="
+                 length="2863540"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.7.1</title>
       <pubDate>Mon, 17 Aug 2026 21:58:27 +0530</pubDate>
       <sparkle:version>1.7.1</sparkle:version>

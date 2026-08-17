@@ -1,5 +1,5 @@
 {
-  "version": "1.7.1",
+  "version": "1.7.2",
   "url": "https://vpnonly.app/",
-  "notes": "The menu now opens under the icon on the display you're using, instead of landing on another monitor."
+  "notes": "Adds a button to pop the app out into a window you can move and keep open, and back to the menu bar again. It remembers which you prefer."
 }
