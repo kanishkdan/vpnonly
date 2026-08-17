@@ -1,5 +1,5 @@
 {
-  "version": "1.6.1",
+  "version": "1.6.2",
   "url": "https://vpnonly.app/",
-  "notes": "Points the in-app buy link at the new store."
+  "notes": "Fixes a second window appearing on multi-monitor Macs, and the licence field not syncing between windows."
 }

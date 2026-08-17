@@ -7,6 +7,18 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.6.2</title>
+      <pubDate>Mon, 17 Aug 2026 14:27:35 +0530</pubDate>
+      <sparkle:version>1.6.2</sparkle:version>
+      <sparkle:shortVersionString>1.6.2</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Fixes a second window appearing on multi-monitor Macs, and the licence field not syncing between windows.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.6.2.zip"
+                 sparkle:edSignature="p4q2o7f3gOOr3aUtXctBzkDLUZP3+ycl49GZ5/fz+DLV/4DSEuYVXD8wYLKukTqdLFTwj/wW3BZEOR6hrSIeBQ=="
+                 length="2852022"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.6.1</title>
       <pubDate>Sun, 16 Aug 2026 16:44:08 +0530</pubDate>
       <sparkle:version>1.6.1</sparkle:version>
