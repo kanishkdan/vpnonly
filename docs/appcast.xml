@@ -7,6 +7,18 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.6.3</title>
+      <pubDate>Mon, 17 Aug 2026 19:44:06 +0530</pubDate>
+      <sparkle:version>1.6.3</sparkle:version>
+      <sparkle:shortVersionString>1.6.3</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Clears the licence field once your key is accepted.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.6.3.zip"
+                 sparkle:edSignature="KZoH4ChsXgYrjTmWF4950vDck+w4nvmCxYPLUeXwtcqZQdlORzlD+Qk6bLxAUw1lnZBOYWRw/MKrzRFmQ3INCg=="
+                 length="2854892"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.6.2</title>
       <pubDate>Mon, 17 Aug 2026 14:27:35 +0530</pubDate>
       <sparkle:version>1.6.2</sparkle:version>

@@ -1,5 +1,5 @@
 {
-  "version": "1.6.2",
+  "version": "1.6.3",
   "url": "https://vpnonly.app/",
-  "notes": "Fixes a second window appearing on multi-monitor Macs, and the licence field not syncing between windows."
+  "notes": "Clears the licence field once your key is accepted."
 }
