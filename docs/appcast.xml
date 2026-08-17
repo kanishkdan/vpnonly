@@ -7,6 +7,18 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.7.0</title>
+      <pubDate>Mon, 17 Aug 2026 21:41:59 +0530</pubDate>
+      <sparkle:version>1.7.0</sparkle:version>
+      <sparkle:shortVersionString>1.7.0</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Refuses to route Safari and explains why, offers to move itself to Applications on first launch, and adds Release This Mac so a licence can move to another machine.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.7.0.zip"
+                 sparkle:edSignature="7azq7fsbakTf47slKx99n972HGFbwq3VLH1gfsAB/G3wnirchiIcKZAvEAPPxmkEQ9bekFOUX7jSPodAqGZQAA=="
+                 length="2860137"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.6.5</title>
       <pubDate>Mon, 17 Aug 2026 20:27:37 +0530</pubDate>
       <sparkle:version>1.6.5</sparkle:version>
