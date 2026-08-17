@@ -1,5 +1,5 @@
 {
-  "version": "1.7.3",
+  "version": "1.7.4",
   "url": "https://vpnonly.app/",
-  "notes": "Fixes the move-to-Applications prompt appearing twice, and moving now works when a copy is already installed."
+  "notes": "Uninstall no longer fails when there was nothing installed to remove."
 }
