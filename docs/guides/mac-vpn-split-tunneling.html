@@ -83,6 +83,9 @@
 
 <p>One thing worth noticing: Proton's macOS implementation also requires restarting each app after you connect. That isn't a Proton failing, it's macOS. An app's network identity is fixed when it launches, so anything doing per-app routing has to relaunch it once. VPNonly has the same constraint, and <a href="../how-it-works.html">explains why here</a>.</p>
 
+<h2>One limit that applies to all of them</h2>
+<p>Safari can't be split-tunneled by anything. WebKit hands its connections to separate system processes that macOS launches on its own, so they don't carry the app's identity, and no per-app router can match them. Proton documents this for their implementation, and it's true of VPNonly too. If you want a browser on a different exit IP, use Chrome, Firefox, Arc or Brave.</p>
+
 <h2>Sources</h2>
 <ul>
   <li><a href="https://support.nordvpn.com/hc/en-us/articles/19618692366865-What-is-Split-Tunneling-and-how-to-use-it-with-NordVPN">NordVPN — What is Split Tunneling and how to use it</a></li>
