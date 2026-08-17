@@ -1,5 +1,5 @@
 {
-  "version": "1.6.3",
+  "version": "1.6.4",
   "url": "https://vpnonly.app/",
-  "notes": "Clears the licence field once your key is accepted."
+  "notes": "Opens on the display you're using, and no longer clips the window on multi-monitor Macs."
 }
