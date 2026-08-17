@@ -7,6 +7,18 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.6.5</title>
+      <pubDate>Mon, 17 Aug 2026 20:27:37 +0530</pubDate>
+      <sparkle:version>1.6.5</sparkle:version>
+      <sparkle:shortVersionString>1.6.5</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Opens on the display you're using, and no longer clips the window on multi-monitor Macs.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.6.5.zip"
+                 sparkle:edSignature="CBREVL9IkLLrNoTDuP9xOUVJrEDR97NSBC0vaORgGETxy1l3b+VJ5Jy33h8/fj66diSFCJqjbllnVV58TCt3Bw=="
+                 length="2856811"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.6.4</title>
       <pubDate>Mon, 17 Aug 2026 20:21:25 +0530</pubDate>
       <sparkle:version>1.6.4</sparkle:version>
