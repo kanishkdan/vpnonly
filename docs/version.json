@@ -1,5 +1,5 @@
 {
-  "version": "1.7.0",
+  "version": "1.7.1",
   "url": "https://vpnonly.app/",
-  "notes": "Refuses to route Safari and explains why, offers to move itself to Applications on first launch, and adds Release This Mac so a licence can move to another machine."
+  "notes": "The menu now opens under the icon on the display you're using, instead of landing on another monitor."
 }
