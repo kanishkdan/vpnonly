@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Installing VPNonly</title>
-<meta name="description" content="How to open VPNonly the first time, and why macOS asks.">
+<title>Installing and setting up VPNonly</title>
+<meta name="description" content="Install VPNonly, get past the macOS block, activate your licence and connect your VPN. Seven steps.">
 
 <link rel="canonical" href="https://vpnonly.app/install.html">
 <meta property="og:type" content="website">
@@ -41,9 +41,9 @@
 </div>
 
 <div class="solo">
-<h1>Installing VPNonly</h1>
+<h1>Installing and setting up VPNonly</h1>
 
-<p>VPNonly isn't signed with an Apple developer certificate yet, so macOS blocks it the first time and you have to allow it by hand. Four steps, once.</p>
+<p>VPNonly isn't signed with an Apple developer certificate yet, so macOS blocks it the first time and you have to allow it by hand. Seven steps, and the awkward one only happens once.</p>
 
 <p class="ownerbar">Already have a licence, or lost your download? <a href="download.html">Get the latest version here</a> — your key still works, and there's nothing to buy again.</p>
 
@@ -60,7 +60,19 @@
 <h2>4. Open it again</h2>
 <p>Double-click VPNonly once more and click <strong>Open</strong>. The shield appears in your menu bar. You won't see any of this again.</p>
 
-<h2>Then: the admin password</h2>
+<h2>5. Paste your licence key</h2>
+<p>Click the shield, paste the key from your purchase email, and hit <strong>Activate</strong>. One licence covers 2 Macs, so you can do this again on a second machine later. Lost the email? Your key is always in <a href="https://customer.dodopayments.com/login/bus_0NlVlYzwOq7gzrk1tWl0u">your purchases page</a> — sign in with the email you bought with.</p>
+
+<h2>6. Connect your VPN</h2>
+<p>VPNonly isn't a VPN and doesn't come with one. It uses the one you already pay for.</p>
+<p><strong>NordVPN:</strong> go to <a href="https://my.nordaccount.com/dashboard/nordvpn/manual-configuration/">my.nordaccount.com → Manual configuration → Access token</a> and generate a token. Paste it into VPNonly once. It fetches your key and gives you every country Nord offers, with search. Keep the NordVPN app itself closed while you use VPNonly, or their firewall rules will fight each other.</p>
+<p><strong>Mullvad, Proton, IVPN, AirVPN, or your own server:</strong> download a WireGuard <code>.conf</code> from your provider, one per server, and choose <strong>Import WireGuard config…</strong>. Import as many as you like and switch between them from the menu at the bottom.</p>
+
+<h2>7. Flip a switch</h2>
+<p>Every app on your Mac is in the list. Turn one on and it joins the VPN. Turn it off and it's back on your normal connection. Everything you didn't pick is untouched throughout.</p>
+<p>An app has to relaunch to join the tunnel, because macOS fixes how an app connects at the moment it opens. VPNonly warns you first, so save your work. While the app stays open, switching it in and out is instant.</p>
+
+<h2>The admin password</h2>
 <p>The first time you put an app in the VPN, VPNonly asks for your admin password once. Creating a network interface and firewall rules needs root, which is true of every VPN client. It installs a small engine owned by root, and never asks again.</p>
 <p>You don't have to take my word for what that engine does. It's <a href="https://github.com/kanishkdan/vpnonly">open source</a>, about 300 lines of shell and C, and it's the same code the free command-line version uses.</p>
 
