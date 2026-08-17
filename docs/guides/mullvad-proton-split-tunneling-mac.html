@@ -18,7 +18,7 @@
 <meta name="twitter:description" content="How to route individual macOS apps through any WireGuard provider, using a config file you already have.">
 <meta name="twitter:image" content="https://vpnonly.app/og.png">
 <link rel="icon" type="image/png" href="../icon.png">
-<link rel="stylesheet" href="../style.css?v=15">
+<link rel="stylesheet" href="../style.css?v=16">
 <script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
@@ -46,7 +46,7 @@
 <p>Where a separate tool helps is if you also use another provider, or want the opt-in model (your Mac stays on its normal connection, apps join the tunnel) rather than excluding apps from a full tunnel. For that, download a WireGuard config from your Mullvad account and import it.</p>
 
 <h2>ProtonVPN</h2>
-<p>Proton has no split tunneling on macOS. Their WireGuard configs are at <a href="https://account.protonvpn.com/downloads">account.protonvpn.com → Downloads → WireGuard configuration</a>: pick a server, generate, download the <code>.conf</code>.</p>
+<p>Proton added split tunneling to its macOS app, but it's still marked experimental: it only excludes apps from the tunnel, it doesn't work with Safari or anything else built on WebKit, and every excluded app has to be restarted after you connect. If that suits you, use it. Otherwise their WireGuard configs are at <a href="https://account.protonvpn.com/downloads">account.protonvpn.com → Downloads → WireGuard configuration</a>: pick a server, generate, download the <code>.conf</code>.</p>
 
 <h2>IVPN and AirVPN</h2>
 <p>Both publish WireGuard configs from your account area. AirVPN's include a preshared key, which is handled fine.</p>

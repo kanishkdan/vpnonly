@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Which Mac VPNs have split tunneling? (2026)</title>
+<meta name="description" content="Checked against each provider's own documentation: which VPNs support split tunneling on macOS, which don't, and what the limits are.">
+<link rel="canonical" href="https://vpnonly.app/guides/mac-vpn-split-tunneling.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="VPNonly">
+<meta property="og:url" content="https://vpnonly.app/guides/mac-vpn-split-tunneling.html">
+<meta property="og:title" content="Which Mac VPNs have split tunneling? (2026)">
+<meta property="og:description" content="Checked against each provider's own documentation: which VPNs support split tunneling on macOS, which don't, and what the limits are.">
+<meta property="og:image" content="https://vpnonly.app/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@kanishkrazdan">
+<meta name="twitter:title" content="Which Mac VPNs have split tunneling? (2026)">
+<meta name="twitter:description" content="Checked against each provider's own documentation: which VPNs support split tunneling on macOS, which don't, and what the limits are.">
+<meta name="twitter:image" content="https://vpnonly.app/og.png">
+<link rel="icon" type="image/png" href="../icon.png">
+<link rel="stylesheet" href="../style.css?v=16">
+<script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="shell">
+
+<div class="top">
+  <a class="me" href="../">
+    <svg viewBox="0 0 26 30"><path d="M13 1l11 4v9c0 7.5-4.8 13.6-11 15C6.8 27.6 2 21.5 2 14V5z" fill="none" stroke="#15161a" stroke-width="2.4" stroke-linejoin="round"/><path d="M13 1l-11 4v9c0 7.5 4.8 13.6 11 15z" fill="#15161a"/></svg>
+    <b>VPNonly</b>
+  </a>
+  <a href="../how-it-works.html">how it works</a>
+  <a class="here" href="./">guides</a>
+  <a href="../faq.html">faq</a>
+  <a href="../install.html">install</a>
+  <a href="https://github.com/kanishkdan/vpnonly">github</a>
+</div>
+
+<div class="solo">
+<h1>Which Mac VPNs have split tunneling?</h1>
+
+<p>Split tunneling means some traffic goes through the VPN and the rest doesn't. On Windows and Android nearly every provider offers it. On macOS the picture is patchier, and a lot of what's written about it online is out of date.</p>
+
+<p>Every row below is checked against the provider's own documentation, linked at the bottom. Last verified August 2026.</p>
+
+<div class="tablewrap">
+<table>
+  <thead>
+    <tr><th>Provider</th><th>On macOS</th><th>What you get</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>NordVPN</td><td class="no">No</td><td>Their split tunneling article lists Windows, Android, Android TV and Linux. macOS isn't there. The browser extension can route a browser, but not other apps.</td></tr>
+    <tr><td>ExpressVPN</td><td class="yes">Yes</td><td>On macOS 11 and later. Choose apps, plus specific IPs and subnets.</td></tr>
+    <tr><td>Surfshark</td><td class="yes">Yes</td><td>Called Bypasser. Apps and websites. Not supported on Big Sur.</td></tr>
+    <tr><td>Mullvad</td><td class="yes">Yes</td><td>Since app version 2024.4. Outgoing connections only, and it needs full-disk access so the daemon can track processes.</td></tr>
+    <tr><td>Windscribe</td><td class="yes">Yes</td><td>Listed as available in the Windows, Mac, Linux and Android apps.</td></tr>
+    <tr><td>Proton VPN</td><td class="part">Experimental</td><td>Exclude-only. Doesn't work with Safari or other WebKit apps, and each excluded app must be restarted after you connect.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>The part the tables usually miss</h2>
+
+<p>Every provider above does split tunneling the same way round: <strong>your whole Mac joins the VPN, and you list apps to exclude from it.</strong> The tunnel is the default and exclusions are the exception.</p>
+
+<p>That matters more than it sounds. If the VPN drops, or you forget to connect, or an app you didn't think about starts talking, the default is that your traffic is going through another country. You're opting things out of a decision that's already been made for the whole machine.</p>
+
+<p>The other model is the opposite: <strong>your Mac stays on its normal connection, and individual apps opt in.</strong> Nothing is tunneled unless you asked for it. If the tunnel drops, the apps you picked lose connectivity rather than silently falling back. That's how <a href="../">VPNonly</a> works, and it's the reason it exists.</p>
+
+<h2>The other difference: it's tied to your provider</h2>
+
+<p>Every feature in that table only works with that company's own service. Surfshark's Bypasser doesn't help if you're on Mullvad. If you switch providers, or run two, or use a WireGuard server you host yourself, you start again.</p>
+
+<p>A separate tool sits above all of them. VPNonly takes a WireGuard config from any provider — Mullvad, Proton, IVPN, AirVPN, your own server — or a NordVPN access token, and routes per app the same way regardless.</p>
+
+<h2>So which should you use?</h2>
+
+<ul>
+  <li><strong>If you're on ExpressVPN, Surfshark, Mullvad or Windscribe</strong> and the exclude model suits you, use what you already pay for. It's included, and there's no reason to buy anything else.</li>
+  <li><strong>If you're on NordVPN</strong>, there's nothing in the Mac app to use. That's the gap this site was built for.</li>
+  <li><strong>If you want apps to opt in</strong> rather than opt out, or you use more than one provider, a per-app router is the different shape of tool.</li>
+</ul>
+
+<p>One thing worth noticing: Proton's macOS implementation also requires restarting each app after you connect. That isn't a Proton failing, it's macOS. An app's network identity is fixed when it launches, so anything doing per-app routing has to relaunch it once. VPNonly has the same constraint, and <a href="../how-it-works.html">explains why here</a>.</p>
+
+<h2>Sources</h2>
+<ul>
+  <li><a href="https://support.nordvpn.com/hc/en-us/articles/19618692366865-What-is-Split-Tunneling-and-how-to-use-it-with-NordVPN">NordVPN — What is Split Tunneling and how to use it</a></li>
+  <li><a href="https://www.expressvpn.com/features/split-tunneling">ExpressVPN — Split tunneling</a></li>
+  <li><a href="https://support.surfshark.com/hc/en-us/articles/24914664935442-How-to-use-Surfshark-Bypasser-on-macOS">Surfshark — How to use Bypasser on macOS</a></li>
+  <li><a href="https://mullvad.net/en/help/split-tunneling-with-the-mullvad-app">Mullvad — Split tunneling with the Mullvad app</a></li>
+  <li><a href="https://windscribe.com/features/split-tunneling">Windscribe — Split tunneling</a></li>
+  <li><a href="https://protonvpn.com/support/protonvpn-split-tunneling">Proton VPN — How to use split tunneling</a></li>
+</ul>
+
+<p>If something here is wrong or has changed, <a href="mailto:kanishk@armoury.in">tell me</a> and I'll fix it. These pages get out of date quickly, which is most of the reason the rest of the internet's versions are wrong.</p>
+
+<p style="margin-top:38px;"><a class="btn" href="https://dodo.pe/get-vpnonly">Get VPNonly for Mac — $19</a></p>
+<p style="font-size:15px;">Or use the <a href="https://github.com/kanishkdan/vpnonly">free command-line version</a>. Same engine, no menu bar app.</p>
+
+<div class="foot">
+  <span>Made by <a href="https://x.com/kanishkrazdan">@kanishkrazdan</a></span>
+  <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a>
+  <a href="../download.html">download</a>
+  <a href="../changelog.html">changelog</a>
+  <a href="../terms.html">terms &amp; privacy</a>
+</div>
+</div>
+
+</div>
+</body>
+</html>

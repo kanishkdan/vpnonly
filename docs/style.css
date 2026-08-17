@@ -161,6 +161,17 @@ pre code { line-height: 1.65; }
   width: 6px; height: 1.5px; background: #c2c5cc;
 }
 
+/* comparison tables: scroll on their own rather than stretching the page */
+.tablewrap { overflow-x: auto; margin: 0 0 22px; -webkit-overflow-scrolling: touch; }
+table { border-collapse: collapse; width: 100%; min-width: 520px; font-size: 15.5px; }
+th, td { text-align: left; vertical-align: top; padding: 11px 14px 11px 0; border-bottom: 1px solid var(--line); }
+th { color: var(--faint); font-weight: 500; font-size: 13px; letter-spacing: 0.05em; text-transform: uppercase; }
+td:first-child { color: #2b2e34; font-weight: 560; white-space: nowrap; }
+td.yes, td.no, td.part { white-space: nowrap; font-weight: 560; }
+td.yes { color: #3f434b; }
+td.no { color: #2b2e34; }
+td.part { color: #6e737b; }
+
 /* a plain list of links with a line of context under each */
 .index { margin: 30px 0 0; }
 .index a {
