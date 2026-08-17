@@ -56,6 +56,12 @@
 </details>
 
 <details class="qsec" open>
+<summary><h2>Does it work with every app?</h2></summary>
+<p>Nearly. The exception is <strong>Safari</strong>, and anything else built on WebKit. Safari doesn't make its own network connections: WebKit hands them to separate system processes that macOS launches independently, so they never carry Safari's identity and the firewall can't match them. Proton VPN's macOS split tunneling has exactly the same limitation, for the same reason.</p>
+<p>Chrome, Firefox, Arc, Brave, CapCut, Slack, Discord and ordinary apps all work. If you need a browser on the VPN, use one of those.</p>
+</details>
+
+<details class="qsec" open>
 <summary><h2>Do I need my VPN's own app running?</h2></summary>
 <p>No, keep it closed. VPNonly talks to your provider's servers directly. Running both at once makes their firewall rules fight each other.</p>
 </details>

@@ -88,6 +88,7 @@
       <summary><h2>what it can't do yet</h2></summary>
       <ul>
         <li>Apple Silicon Macs only.</li>
+        <li>Safari can't be routed. WebKit hands its connections to separate system processes, so they never carry the app's identity. Proton's macOS split tunneling has the same limit. Chrome, Firefox, Arc and Brave all work.</li>
         <li>Connections are tunneled, but DNS lookups still go through your normal resolver. If you need to hide <em>which</em> sites you visit from your ISP, this isn't the right tool yet.</li>
         <li>Moving an app in or out drops its open connections. Most apps reconnect on their own, but a large upload would start over.</li>
         <li>It isn't signed by Apple yet, so you allow it once in System Settings on first launch. <a href="install.html">Here's the full setup guide.</a></li>
