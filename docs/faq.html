@@ -62,7 +62,7 @@
 
 <details class="qsec" open>
 <summary><h2>Does my app restart every time I toggle it?</h2></summary>
-<p>Only the first time it joins the VPN. macOS decides how an app connects at the moment it opens, so it has to be restarted once. After that, switching it in and out is instant and the app keeps running. Its open connections do drop when the exit IP changes, but most apps reconnect by themselves.</p>
+<p>Not every time, but more than once. macOS fixes how an app connects at the moment it opens, and the firewall matches on that, so an app has to be relaunched to get into the tunnel. While it stays open, switching it in and out is instant and it keeps running. Quit it and open it again yourself and it's outside the tunnel, so VPNonly relaunches it once to put it back. In practice: a restart the first time you add it, and one more whenever you reopen the app from scratch. Open connections do drop when the exit IP changes, but most apps reconnect by themselves.</p>
 </details>
 
 <details class="qsec" open>
