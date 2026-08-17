@@ -1,5 +1,5 @@
 {
-  "version": "1.7.2",
+  "version": "1.7.3",
   "url": "https://vpnonly.app/",
-  "notes": "Adds a button to pop the app out into a window you can move and keep open, and back to the menu bar again. It remembers which you prefer."
+  "notes": "Fixes the move-to-Applications prompt appearing twice, and moving now works when a copy is already installed."
 }

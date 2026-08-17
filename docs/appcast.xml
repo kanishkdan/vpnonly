@@ -7,6 +7,18 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.7.3</title>
+      <pubDate>Mon, 17 Aug 2026 22:11:24 +0530</pubDate>
+      <sparkle:version>1.7.3</sparkle:version>
+      <sparkle:shortVersionString>1.7.3</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Fixes the move-to-Applications prompt appearing twice, and moving now works when a copy is already installed.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.7.3.zip"
+                 sparkle:edSignature="adVqe6TFNNoRY4qODsOPqLjYO839qlXVvgleohbqBPHc73afBI/KEBKNB29Z666luwFJOjtSWpWQF48os2kgAQ=="
+                 length="2864657"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.7.2</title>
       <pubDate>Mon, 17 Aug 2026 22:03:02 +0530</pubDate>
       <sparkle:version>1.7.2</sparkle:version>
