@@ -1,14 +1,19 @@
 # vpnonly
 
-**[Website](https://vpnonly.app/)** · Prefer a menu bar app over the CLI? [VPNonly Pro — $19](https://dodo.pe/vpnonly-get)
+**[Website](https://vpnonly.app/)** · Prefer a menu bar app over the CLI? [VPNonly for Mac — $19](https://dodo.pe/vpnonly-github)
 
 **Per-app VPN split tunneling for macOS.** Route *only the apps you choose*
 through a WireGuard VPN while everything else on your Mac uses your normal
 connection. ~300 lines of shell + C. No kernel extensions, no changes to your
 default route, fully reversible with one command (or a reboot).
 
-Born out of a concrete itch: NordVPN (like most commercial VPN apps) has no
-split tunneling on macOS, and I wanted exactly one app inside the VPN.
+Born out of a concrete itch: NordVPN has no split tunneling on macOS at all,
+and I wanted exactly one app inside the VPN. Some providers do offer it now
+(ExpressVPN, Surfshark, Mullvad, Windscribe, and Proton experimentally) but
+each only works with its own service, and all of them work the other way
+round — your whole Mac joins the VPN and you exclude apps from it. Here,
+nothing is tunneled unless you ask for it.
+[Comparison, with sources.](https://vpnonly.app/guides/mac-vpn-split-tunneling.html)
 
 ```sh
 ./fetch-creds.sh                              # once (NordVPN; see below for others)
@@ -16,6 +21,16 @@ sudo ./up.sh                                  # tunnel up — nothing routed yet
 sudo ./run.sh /Applications/CapCut.app        # this app, and only this app, is in the VPN
 sudo ./down.sh                                # everything back to stock
 ```
+
+## Demo
+
+<!-- VIDEO: drag the .mp4 into a GitHub issue comment, copy the
+     user-images.githubusercontent.com URL it gives you, and paste it below as
+     <video src="..."></video>. GitHub renders that inline with a play button.
+     An external link (YouTube, vpnonly.app) will not embed — it just links. -->
+
+See it working: **[vpnonly.app](https://vpnonly.app/)** — one app on a Singapore
+IP while the browser next to it stays home.
 
 ## How it works
 
