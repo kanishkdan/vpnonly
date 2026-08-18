@@ -7,6 +7,18 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.7.9</title>
+      <pubDate>Tue, 18 Aug 2026 11:17:34 +0530</pubDate>
+      <sparkle:version>1.7.9</sparkle:version>
+      <sparkle:shortVersionString>1.7.9</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Signs the bundled WireGuard binaries properly, so the app's signature verifies.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.7.9.zip"
+                 sparkle:edSignature="hUY26x1R5BEm/edX2CSpm2IGuzVr28Ir53RIB1shWOc044xRLIQoOeBouB7wVzebf7pvKgkW5ClDfMvpTSQWAQ=="
+                 length="2866686"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.7.8</title>
       <pubDate>Tue, 18 Aug 2026 11:04:20 +0530</pubDate>
       <sparkle:version>1.7.8</sparkle:version>

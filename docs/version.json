@@ -1,5 +1,5 @@
 {
-  "version": "1.7.8",
+  "version": "1.7.9",
   "url": "https://vpnonly.app/",
-  "notes": "The download is now just VPNonly.app instead of a folder called dist, and moving it to Applications removes the copy you downloaded instead of leaving two."
+  "notes": "Signs the bundled WireGuard binaries properly, so the app's signature verifies."
 }
