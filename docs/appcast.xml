@@ -7,6 +7,18 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.7.7</title>
+      <pubDate>Tue, 18 Aug 2026 10:56:34 +0530</pubDate>
+      <sparkle:version>1.7.7</sparkle:version>
+      <sparkle:shortVersionString>1.7.7</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Fixes not being able to click into the licence field, and adds the window button to the licence screen.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.7.7.zip"
+                 sparkle:edSignature="7D3U+pWTPHB1r3jBzdgCzsnLLu7fJZELFrJ/dBJ0P/tN2Cz0UtmHMFGXcWUQhdveDHd1vWn/+4C7hI3xWEpUBA=="
+                 length="2868189"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.7.6</title>
       <pubDate>Tue, 18 Aug 2026 10:51:33 +0530</pubDate>
       <sparkle:version>1.7.6</sparkle:version>

@@ -1,5 +1,5 @@
 {
-  "version": "1.7.6",
+  "version": "1.7.7",
   "url": "https://vpnonly.app/",
-  "notes": "Uninstall now moves VPNonly to the Trash for you instead of asking you to do it."
+  "notes": "Fixes not being able to click into the licence field, and adds the window button to the licence screen."
 }
