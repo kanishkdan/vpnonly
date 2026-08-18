@@ -1,5 +1,5 @@
 {
-  "version": "1.7.10",
+  "version": "1.7.11",
   "url": "https://vpnonly.app/",
-  "notes": "The licence field stays on one line when you paste a key copied out of an email."
+  "notes": "Switching an app out of the VPN now restores its connection immediately instead of after a wait, and Safari no longer appears in the list since it can't be routed."
 }

@@ -7,6 +7,18 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.7.11</title>
+      <pubDate>Tue, 18 Aug 2026 11:55:48 +0530</pubDate>
+      <sparkle:version>1.7.11</sparkle:version>
+      <sparkle:shortVersionString>1.7.11</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Switching an app out of the VPN now restores its connection immediately instead of after a wait, and Safari no longer appears in the list since it can't be routed.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.7.11.zip"
+                 sparkle:edSignature="50gG5BAUspB3ZFLKytnCJgf5o5/XOD2mEHpZSRvg04cYwbIW3bWZv8deNH5ElEmtWsOk2eHZkBnjKQfMbw6BCg=="
+                 length="2868606"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.7.10</title>
       <pubDate>Tue, 18 Aug 2026 11:51:03 +0530</pubDate>
       <sparkle:version>1.7.10</sparkle:version>
