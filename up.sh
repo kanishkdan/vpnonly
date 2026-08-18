@@ -3,10 +3,10 @@
 # traffic from unix group "vpnonly" through it. The system default route is
 # never touched; everything else on the machine keeps its normal path.
 #
-# usage: sudo ./up.sh                    NordVPN, Singapore exit (default)
-#        sudo COUNTRY=us ./up.sh         NordVPN, choose exit country
-#        sudo ENDPOINT=1.2.3.4:51820 PEER_KEY=... CLIENT_IP=10.x.y.z ./up.sh
-#                                        any other WireGuard provider
+# usage: sudo ./up.sh                       NordVPN, Singapore exit (default)
+#        sudo COUNTRY=us ./up.sh            NordVPN, choose exit country
+#        sudo ./up.sh mullvad-sg.conf       any provider: just hand it the
+#                                           .conf file they gave you
 set -euo pipefail
 
 IF="${IF:-utun9}"
@@ -23,14 +23,33 @@ RHOME=$(dscl . -read "/Users/$RUSER" NFSHomeDirectory | awk '{print $2}')
 CONF="$RHOME/.config/vpnonly"
 DIR="$(cd "$(dirname "$0")" && pwd)"
 KEYFILE="$CONF/wg.key"
-[ -f "$KEYFILE" ] || { echo "no key at $KEYFILE — run fetch-creds.sh (Nord) or place your provider's WireGuard private key there"; exit 1; }
+if [ -z "${1:-}" ] && [ ! -f "$KEYFILE" ]; then
+    echo "no key at $KEYFILE"
+    echo "either: ./fetch-creds.sh            (NordVPN)"
+    echo "or:     sudo ./up.sh your-provider.conf"
+    exit 1
+fi
 
 if ifconfig "$IF" >/dev/null 2>&1; then
     echo "$IF already exists — run down.sh first"; exit 1
 fi
 
 # --- pick a server -----------------------------------------------------------
-if [ -n "${ENDPOINT:-}" ]; then
+# The easy path: a WireGuard .conf from any provider. parse-wg.py pulls out the
+# endpoint, the server key and the tunnel address, so nothing has to be typed
+# by hand or guessed at.
+PROVIDER_CONF="${1:-}"
+if [ -n "$PROVIDER_CONF" ]; then
+    [ -f "$PROVIDER_CONF" ] || { echo "no such file: $PROVIDER_CONF"; exit 1; }
+    PARSED=$("$DIR/parse-wg.py" "$PROVIDER_CONF" "$CONF/wg-session.conf") || exit 1
+    CLIENT_IP=$(echo "$PARSED" | awk '{print $1}')
+    ENDPOINT=$(echo "$PARSED" | awk '{print $2}')
+    STATION="${ENDPOINT%:*}"; PORT="${ENDPOINT##*:}"
+    HOST="$STATION"
+    PUBKEY=""            # already in the parsed session file
+    FROM_CONF=1
+    echo "config: $PROVIDER_CONF  (tunnel address $CLIENT_IP)"
+elif [ -n "${ENDPOINT:-}" ]; then
     STATION="${ENDPOINT%:*}"; PORT="${ENDPOINT##*:}"
     PUBKEY="${PEER_KEY:?set PEER_KEY=<server public key> when using ENDPOINT}"
     HOST="$STATION"
@@ -55,9 +74,13 @@ dseditgroup -o read vpnonly >/dev/null 2>&1 || \
 
 # --- WireGuard interface -----------------------------------------------------
 "$WG_GO" "$IF"
-"$WG" set "$IF" private-key "$KEYFILE" \
-    peer "$PUBKEY" endpoint "$STATION:$PORT" \
-    allowed-ips 0.0.0.0/0 persistent-keepalive 25
+if [ "${FROM_CONF:-0}" = 1 ]; then
+    "$WG" setconf "$IF" "$CONF/wg-session.conf"
+else
+    "$WG" set "$IF" private-key "$KEYFILE" \
+        peer "$PUBKEY" endpoint "$STATION:$PORT" \
+        allowed-ips 0.0.0.0/0 persistent-keepalive 25
+fi
 ifconfig "$IF" inet "$CLIENT_IP" "$CLIENT_IP" netmask 255.255.255.255 mtu 1420 up
 
 # --- PF: steer group traffic into the tunnel ---------------------------------

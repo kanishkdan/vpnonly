@@ -16,10 +16,17 @@ nothing is tunneled unless you ask for it.
 [Comparison, with sources.](https://vpnonly.app/guides/mac-vpn-split-tunneling.html)
 
 ```sh
-./fetch-creds.sh                              # once (NordVPN; see below for others)
-sudo ./up.sh                                  # tunnel up — nothing routed yet
+sudo ./up.sh mullvad-sg.conf                  # any provider: hand it their .conf
 sudo ./run.sh /Applications/CapCut.app        # this app, and only this app, is in the VPN
 sudo ./down.sh                                # everything back to stock
+```
+
+On NordVPN there's no config file to download, so fetch a key once instead:
+
+```sh
+./fetch-creds.sh                              # paste an access token, once
+sudo ./up.sh                                  # Singapore by default
+sudo COUNTRY=us ./up.sh                       # or pick a country
 ```
 
 ## Demo
@@ -78,13 +85,67 @@ happens automatically on first `up.sh`).
 then `./fetch-creds.sh` and paste it. Exit country: `sudo COUNTRY=us ./up.sh`
 (default `sg`).
 
-**Anything else that speaks WireGuard** (Mullvad, Proton, IVPN, a WireGuard
-server on your own VPS): put your private key in `~/.config/vpnonly/wg.key`
-(mode 600) and pass the server details directly:
+**Anything else that speaks WireGuard** (Mullvad, Proton, IVPN, AirVPN, a
+server on your own VPS): download a `.conf` from them and point `up.sh` at it.
+The key, the endpoint and the tunnel address all come out of the file, so
+there's nothing to copy by hand:
+
+```sh
+sudo ./up.sh ~/Downloads/mullvad-sg.conf
+```
+
+Providers hand out *wg-quick* configs, which carry `Address`, `DNS` and
+sometimes `MTU` lines that plain `wg setconf` rejects. `parse-wg.py` strips
+those and reports the tunnel address separately, which is what the NAT rule
+needs — Nord uses 10.5.0.2, Mullvad hands out 10.64.x.x, your own server is
+whatever you chose.
+
+If you'd rather pass the pieces yourself:
 
 ```sh
 sudo ENDPOINT=<server-ip:port> PEER_KEY=<server-pubkey> CLIENT_IP=<your-assigned-ip> ./up.sh
 ```
+
+## Set it up with Claude Code, Codex or Cursor
+
+Everything here is shell scripts and one small C file, which is exactly the
+sort of thing a coding agent can drive. Paste this into Claude Code, Codex or
+Cursor and let it walk you through it:
+
+```text
+Set up vpnonly on my Mac. It routes individual apps through a WireGuard VPN
+while the rest of the machine stays on my normal connection.
+
+Repo: https://github.com/kanishkdan/vpnonly
+
+Do this with me, one step at a time, and explain anything that needs sudo
+before you run it:
+
+1. brew install wireguard-go wireguard-tools
+2. Clone the repo and cd into it.
+3. Ask me which VPN I use.
+   - NordVPN: have me generate an access token at my.nordaccount.com >
+     Manual configuration > Access token, then run ./fetch-creds.sh
+   - Anything else (Mullvad, Proton, IVPN, AirVPN, my own server): ask me for
+     the path to the .conf file they gave me.
+4. Bring the tunnel up. Nothing is routed yet at this point:
+     sudo ./up.sh                    (NordVPN, add COUNTRY=us to pick a country)
+     sudo ./up.sh /path/to/my.conf   (any other provider)
+5. Ask which app I want on the VPN, then:
+     sudo ./run.sh /Applications/<App>.app
+6. Prove it worked by showing me both IPs side by side:
+     curl -s https://api.ipify.org
+     sudo ./run.sh /usr/bin/curl -s https://api.ipify.org
+   They should differ. If they don't, stop and tell me why.
+7. Show me how to undo everything: sudo ./down.sh
+
+Two things to know: don't try to route Safari, because WebKit connections
+can't be matched by the firewall, and don't run my VPN provider's own app at
+the same time, because its rules will fight these.
+```
+
+If you'd rather not hand an agent sudo, the same steps are above and they're
+short enough to read first.
 
 ## Verifying
 
@@ -104,6 +165,11 @@ sudo ./run.sh /usr/bin/curl -s https://api.ipify.org   # the VPN exit IP
   your threat model is "hide which hosts I talk to from my ISP," this matters;
   if it's "give one app a different exit IP," it mostly doesn't. Planned fix:
   per-flow steering of the resolver, or a scoped resolver inside the tunnel.
+- **Safari can't be routed, and neither can other WebKit apps.** WebKit hands
+  its connections to separate system processes that macOS starts on its own, so
+  they never carry the group and PF has nothing to match. Proton VPN's macOS
+  split tunneling documents the same limitation. Chrome, Firefox, Arc and Brave
+  are all fine.
 - IPv6 for grouped apps is blocked outright — no leak, but no v6 either.
 - No auto-reconnect if the VPN server dies (`down.sh` + `up.sh` to bounce).
 - Assumes the stock `/etc/pf.conf`. If you run a custom PF config, read
