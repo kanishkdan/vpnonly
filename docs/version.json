@@ -1,5 +1,5 @@
 {
-  "version": "1.7.11",
+  "version": "1.8.0",
   "url": "https://vpnonly.app/",
-  "notes": "Switching an app out of the VPN now restores its connection immediately instead of after a wait, and Safari no longer appears in the list since it can't be routed."
+  "notes": "Adds a Check button that asks the internet what a routed app's exit IP actually is, next to your Mac's own \u2014 so you can see it working rather than take my word for it."
 }
