@@ -7,6 +7,18 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.7.6</title>
+      <pubDate>Tue, 18 Aug 2026 10:51:33 +0530</pubDate>
+      <sparkle:version>1.7.6</sparkle:version>
+      <sparkle:shortVersionString>1.7.6</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Uninstall now moves VPNonly to the Trash for you instead of asking you to do it.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.7.6.zip"
+                 sparkle:edSignature="h5pJTTGfvitkz0RHn0X55CDvO+CC3YYmTkZA1n3gepII1a/f/ziK9QdpT6XaPSrK2zWwujL39CeLbXJU8NLBAA=="
+                 length="2866272"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.7.5</title>
       <pubDate>Tue, 18 Aug 2026 10:38:52 +0530</pubDate>
       <sparkle:version>1.7.5</sparkle:version>

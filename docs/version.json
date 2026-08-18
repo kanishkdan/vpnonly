@@ -1,5 +1,5 @@
 {
-  "version": "1.7.5",
+  "version": "1.7.6",
   "url": "https://vpnonly.app/",
-  "notes": "Fixes the menu bar panel rendering see-through."
+  "notes": "Uninstall now moves VPNonly to the Trash for you instead of asking you to do it."
 }
