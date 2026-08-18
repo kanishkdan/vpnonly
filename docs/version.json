@@ -1,5 +1,5 @@
 {
-  "version": "1.7.4",
+  "version": "1.7.5",
   "url": "https://vpnonly.app/",
-  "notes": "Uninstall no longer fails when there was nothing installed to remove."
+  "notes": "Fixes the menu bar panel rendering see-through."
 }
