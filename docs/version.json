@@ -1,5 +1,5 @@
 {
-  "version": "1.7.7",
+  "version": "1.7.8",
   "url": "https://vpnonly.app/",
-  "notes": "Fixes not being able to click into the licence field, and adds the window button to the licence screen."
+  "notes": "The download is now just VPNonly.app instead of a folder called dist, and moving it to Applications removes the copy you downloaded instead of leaving two."
 }

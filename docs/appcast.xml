@@ -7,6 +7,18 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.7.8</title>
+      <pubDate>Tue, 18 Aug 2026 11:04:20 +0530</pubDate>
+      <sparkle:version>1.7.8</sparkle:version>
+      <sparkle:shortVersionString>1.7.8</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>The download is now just VPNonly.app instead of a folder called dist, and moving it to Applications removes the copy you downloaded instead of leaving two.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.7.8.zip"
+                 sparkle:edSignature="fiuD1gkLInqozx4Koal7UhyfR5eBY7Eps66KOnUEhT4GAzItQxkWbHpMvXkMU11VS/xlJdUh0YXgi+D+PhH8DQ=="
+                 length="2866557"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.7.7</title>
       <pubDate>Tue, 18 Aug 2026 10:56:34 +0530</pubDate>
       <sparkle:version>1.7.7</sparkle:version>
