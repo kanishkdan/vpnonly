@@ -1,5 +1,5 @@
 {
-  "version": "1.7.9",
+  "version": "1.7.10",
   "url": "https://vpnonly.app/",
-  "notes": "Signs the bundled WireGuard binaries properly, so the app's signature verifies."
+  "notes": "The licence field stays on one line when you paste a key copied out of an email."
 }
