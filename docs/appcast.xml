@@ -7,6 +7,18 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.8.7</title>
+      <pubDate>Wed, 19 Aug 2026 16:22:13 +0530</pubDate>
+      <sparkle:version>1.8.7</sparkle:version>
+      <sparkle:shortVersionString>1.8.7</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>When the tunnel is up but the server never replies, the app now says so and offers to replace the token or import a config, instead of leaving you to work it out.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.8.7.zip"
+                 sparkle:edSignature="VSZcz9KjTYjIW5ww7isket4v74i+0gyOX5V+qo5pbpeT15ci4i8q4uzjdPAJsT+AyP3UKTK4Xcyx6bOXcUKaAA=="
+                 length="2991033"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.8.6</title>
       <pubDate>Wed, 19 Aug 2026 16:18:14 +0530</pubDate>
       <sparkle:version>1.8.6</sparkle:version>
