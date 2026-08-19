@@ -7,6 +7,18 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.8.2</title>
+      <pubDate>Wed, 19 Aug 2026 15:31:25 +0530</pubDate>
+      <sparkle:version>1.8.2</sparkle:version>
+      <sparkle:shortVersionString>1.8.2</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>The Check result now clears when you change which apps are routed, instead of showing an answer about an app you've since switched off.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.8.2.zip"
+                 sparkle:edSignature="Qr3WVjC5iQy/fajMc0yIdHx9gZCXGix/rluHcViu9qpC9VjuKJAXnc0CDdV+BdYD9EiaWPXM+uOtHif1TCz+Bg=="
+                 length="2978029"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.8.1</title>
       <pubDate>Wed, 19 Aug 2026 12:36:27 +0530</pubDate>
       <sparkle:version>1.8.1</sparkle:version>

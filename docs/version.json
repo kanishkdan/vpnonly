@@ -1,5 +1,5 @@
 {
-  "version": "1.8.1",
+  "version": "1.8.2",
   "url": "https://vpnonly.app/",
-  "notes": "Corrects the uninstall note, and keeps the app's icon on the dialogs shown while it removes itself."
+  "notes": "The Check result now clears when you change which apps are routed, instead of showing an answer about an app you've since switched off."
 }
