@@ -7,6 +7,18 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.9.3</title>
+      <pubDate>Thu, 20 Aug 2026 02:23:19 +0530</pubDate>
+      <sparkle:version>1.9.3</sparkle:version>
+      <sparkle:shortVersionString>1.9.3</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>After an update, apps that were already in the VPN are recognised as still routed instead of appearing closed.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.9.3.zip"
+                 sparkle:edSignature="HcM6FzaIgFnyXCpZPEyzrBmlgNNiqur0PRz6P0pCv1mOzxfG9nY2/Wg/vkIsHupPd5EkhY20HXstzYImyqrUCw=="
+                 length="2998759"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.9.2</title>
       <pubDate>Thu, 20 Aug 2026 01:59:34 +0530</pubDate>
       <sparkle:version>1.9.2</sparkle:version>

@@ -1,5 +1,5 @@
 {
-  "version": "1.9.2",
+  "version": "1.9.3",
   "url": "https://vpnonly.app/",
-  "notes": "The status line now says what's actually happening: which app is verified, on which IP, and how recently, checked in the background rather than only when you press the button."
+  "notes": "After an update, apps that were already in the VPN are recognised as still routed instead of appearing closed."
 }
