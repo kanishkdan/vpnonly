@@ -7,6 +7,18 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.9.2</title>
+      <pubDate>Thu, 20 Aug 2026 01:59:34 +0530</pubDate>
+      <sparkle:version>1.9.2</sparkle:version>
+      <sparkle:shortVersionString>1.9.2</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>The status line now says what's actually happening: which app is verified, on which IP, and how recently, checked in the background rather than only when you press the button.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.9.2.zip"
+                 sparkle:edSignature="3lJHvA2NBjwrzvno1Q26fNmWIwUvZlt8X1Hd06sAaCrtFXPYREaT3zOwcbuoz2+zLvTpkZ7bPNPpbPqm7qjPAg=="
+                 length="2995641"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.9.1</title>
       <pubDate>Thu, 20 Aug 2026 01:47:59 +0530</pubDate>
       <sparkle:version>1.9.1</sparkle:version>

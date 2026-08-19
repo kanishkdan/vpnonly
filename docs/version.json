@@ -1,5 +1,5 @@
 {
-  "version": "1.9.1",
+  "version": "1.9.2",
   "url": "https://vpnonly.app/",
-  "notes": "Notices when a working tunnel stops carrying traffic, and stops warning about a quiet tunnel when no app is using it."
+  "notes": "The status line now says what's actually happening: which app is verified, on which IP, and how recently, checked in the background rather than only when you press the button."
 }
