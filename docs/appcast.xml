@@ -7,6 +7,18 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.8.1</title>
+      <pubDate>Wed, 19 Aug 2026 12:36:27 +0530</pubDate>
+      <sparkle:version>1.8.1</sparkle:version>
+      <sparkle:shortVersionString>1.8.1</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Corrects the uninstall note, and keeps the app's icon on the dialogs shown while it removes itself.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.8.1.zip"
+                 sparkle:edSignature="dd6MbUSm2W7iCKbeQ/9pmYvVtfy+DTe3m55XuCaOsfwWevgYTEFifrbYzbtLYInuFZ9Qwtrq+kafWl2QI+CqBQ=="
+                 length="2976571"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.8.0</title>
       <pubDate>Tue, 18 Aug 2026 11:59:57 +0530</pubDate>
       <sparkle:version>1.8.0</sparkle:version>

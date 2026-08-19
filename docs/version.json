@@ -1,5 +1,5 @@
 {
-  "version": "1.8.0",
+  "version": "1.8.1",
   "url": "https://vpnonly.app/",
-  "notes": "Adds a Check button that asks the internet what a routed app's exit IP actually is, next to your Mac's own \u2014 so you can see it working rather than take my word for it."
+  "notes": "Corrects the uninstall note, and keeps the app's icon on the dialogs shown while it removes itself."
 }
