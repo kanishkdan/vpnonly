@@ -1,5 +1,5 @@
 {
-  "version": "1.9.0",
+  "version": "1.9.1",
   "url": "https://vpnonly.app/",
-  "notes": "Keeps the tunnel alive when idle, and stops reporting a quiet tunnel as a broken one."
+  "notes": "Notices when a working tunnel stops carrying traffic, and stops warning about a quiet tunnel when no app is using it."
 }
