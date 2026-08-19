@@ -1,5 +1,5 @@
 {
-  "version": "1.8.9",
+  "version": "1.9.0",
   "url": "https://vpnonly.app/",
-  "notes": "Fixes the status showing Connected when no tunnel exists, and fixes connecting with no apps chosen immediately disconnecting itself."
+  "notes": "Keeps the tunnel alive when idle, and stops reporting a quiet tunnel as a broken one."
 }
