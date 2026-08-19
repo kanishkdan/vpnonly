@@ -7,6 +7,18 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.8.6</title>
+      <pubDate>Wed, 19 Aug 2026 16:18:14 +0530</pubDate>
+      <sparkle:version>1.8.6</sparkle:version>
+      <sparkle:shortVersionString>1.8.6</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Tidies the Check result into a card you can dismiss, with each IP on its own line.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.8.6.zip"
+                 sparkle:edSignature="cU/jw/AnLg3HN8DedcbNITggnwwgLTTxTiG6L9O9KoPC7vZZM3YHf6tfNeGoetbZ+lpvvsFqnF4qM2c3QjoDAA=="
+                 length="2985384"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.8.5</title>
       <pubDate>Wed, 19 Aug 2026 16:15:19 +0530</pubDate>
       <sparkle:version>1.8.5</sparkle:version>

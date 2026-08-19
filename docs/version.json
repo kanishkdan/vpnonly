@@ -1,5 +1,5 @@
 {
-  "version": "1.8.5",
+  "version": "1.8.6",
   "url": "https://vpnonly.app/",
-  "notes": "Adds Replace NordVPN token to the provider menu, so an expired token can be swapped without deleting files by hand."
+  "notes": "Tidies the Check result into a card you can dismiss, with each IP on its own line."
 }
