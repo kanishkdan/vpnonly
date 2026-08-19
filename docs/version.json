@@ -1,5 +1,5 @@
 {
-  "version": "1.8.7",
+  "version": "1.8.8",
   "url": "https://vpnonly.app/",
-  "notes": "When the tunnel is up but the server never replies, the app now says so and offers to replace the token or import a config, instead of leaving you to work it out."
+  "notes": "Fixes the status flickering between connected and not connected, and reads the tunnel's received traffic from the right column so Connected means it's actually working."
 }
