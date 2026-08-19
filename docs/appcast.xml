@@ -7,6 +7,18 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.8.4</title>
+      <pubDate>Wed, 19 Aug 2026 16:12:42 +0530</pubDate>
+      <sparkle:version>1.8.4</sparkle:version>
+      <sparkle:shortVersionString>1.8.4</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Tells you when the tunnel is up but the server isn't answering, instead of saying Connected, and points at an expired NordVPN token as the usual cause.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.8.4.zip"
+                 sparkle:edSignature="38K+SF3dcvznTy3crRuR5oF2dUICnb5qwY/kIB9nxVR/91XjkZYtQRRjHRJ1qfN3nUx5p0YAx64IVdGv27C9Ag=="
+                 length="2980093"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.8.3</title>
       <pubDate>Wed, 19 Aug 2026 15:35:10 +0530</pubDate>
       <sparkle:version>1.8.3</sparkle:version>

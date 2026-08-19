@@ -1,5 +1,5 @@
 {
-  "version": "1.8.3",
+  "version": "1.8.4",
   "url": "https://vpnonly.app/",
-  "notes": "Check now says which app it's waiting on, instead of telling you to switch one on when you already have."
+  "notes": "Tells you when the tunnel is up but the server isn't answering, instead of saying Connected, and points at an expired NordVPN token as the usual cause."
 }
