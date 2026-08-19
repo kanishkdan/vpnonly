@@ -7,6 +7,18 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.8.5</title>
+      <pubDate>Wed, 19 Aug 2026 16:15:19 +0530</pubDate>
+      <sparkle:version>1.8.5</sparkle:version>
+      <sparkle:shortVersionString>1.8.5</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Adds Replace NordVPN token to the provider menu, so an expired token can be swapped without deleting files by hand.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.8.5.zip"
+                 sparkle:edSignature="XlY1qtjAXp2+LFNohUPl66ORaPUvfKJPXzl7dICUU2nA4DZU9EW++Dv6z12rtDJsQ17a2MUPsaKGOPU/8I7iBA=="
+                 length="2980034"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.8.4</title>
       <pubDate>Wed, 19 Aug 2026 16:12:42 +0530</pubDate>
       <sparkle:version>1.8.4</sparkle:version>
