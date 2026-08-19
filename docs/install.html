@@ -80,7 +80,7 @@
 <p>An Apple developer certificate costs $99 a year. VPNonly is a one-person project that just launched, so I'm paying for it out of the first sales. Once it's signed and notarized, this page stops being necessary and the app updates itself. No reinstall, no extra cost to you.</p>
 
 <h2>Uninstalling</h2>
-<p>VPNonly installs a small root-owned engine, and deleting the app wouldn't remove it. So there's a proper uninstaller: click the <strong>…</strong> button in the app and choose <strong>Uninstall VPNonly</strong>. It disconnects the tunnel, restores macOS's own firewall rules, removes the engine and the per-app groups, then quits so you can drag it to the Trash.</p>
+<p>VPNonly installs a small root-owned engine, and deleting the app wouldn't remove it. So there's a proper uninstaller: click the <strong>…</strong> button in the app and choose <strong>Uninstall VPNonly</strong>. It disconnects the tunnel, restores macOS's own firewall rules, removes the engine and the per-app groups, then puts the app in the Trash and quits. Nothing left to tidy up by hand.</p>
 <p>Already deleted the app? Run this in Terminal:</p>
 <pre><code>sudo rm -rf "/Library/Application Support/VPNonly" /etc/sudoers.d/vpnonly
 sudo pfctl -f /etc/pf.conf
