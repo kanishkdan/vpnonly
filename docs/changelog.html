@@ -47,117 +47,13 @@
 <!-- RELEASES -->
 <h2>1.9.0 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 20 August 2026</span></h2>
 <ul>
-  <li>Keeps the tunnel alive when idle, and stops reporting a quiet tunnel as a broken one.</li>
-</ul>
-
-<h2>1.8.9 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 20 August 2026</span></h2>
-<ul>
-  <li>Fixes the status showing Connected when no tunnel exists, and fixes connecting with no apps chosen immediately disconnecting itself.</li>
-</ul>
-
-<h2>1.8.8 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 19 August 2026</span></h2>
-<ul>
-  <li>Fixes the status flickering between connected and not connected, and reads the tunnel's received traffic from the right column so Connected means it's actually working.</li>
-</ul>
-
-<h2>1.8.7 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 19 August 2026</span></h2>
-<ul>
-  <li>When the tunnel is up but the server never replies, the app now says so and offers to replace the token or import a config, instead of leaving you to work it out.</li>
-</ul>
-
-<h2>1.8.6 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 19 August 2026</span></h2>
-<ul>
-  <li>Tidies the Check result into a card you can dismiss, with each IP on its own line.</li>
-</ul>
-
-<h2>1.8.5 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 19 August 2026</span></h2>
-<ul>
-  <li>Adds Replace NordVPN token to the provider menu, so an expired token can be swapped without deleting files by hand.</li>
-</ul>
-
-<h2>1.8.4 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 19 August 2026</span></h2>
-<ul>
-  <li>Tells you when the tunnel is up but the server isn't answering, instead of saying Connected, and points at an expired NordVPN token as the usual cause.</li>
-</ul>
-
-<h2>1.8.3 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 19 August 2026</span></h2>
-<ul>
-  <li>Check now says which app it's waiting on, instead of telling you to switch one on when you already have.</li>
-</ul>
-
-<h2>1.8.2 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 19 August 2026</span></h2>
-<ul>
-  <li>The Check result now clears when you change which apps are routed, instead of showing an answer about an app you've since switched off.</li>
-</ul>
-
-<h2>1.8.1 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 19 August 2026</span></h2>
-<ul>
-  <li>Corrects the uninstall note, and keeps the app's icon on the dialogs shown while it removes itself.</li>
-</ul>
-
-<h2>1.8.0 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 18 August 2026</span></h2>
-<ul>
-  <li>Adds a Check button that asks the internet what a routed app's exit IP actually is, next to your Mac's own — so you can see it working rather than take my word for it.</li>
-</ul>
-
-<h2>1.7.11 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 18 August 2026</span></h2>
-<ul>
-  <li>Switching an app out of the VPN now restores its connection immediately instead of after a wait, and Safari no longer appears in the list since it can't be routed.</li>
-</ul>
-
-<h2>1.7.10 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 18 August 2026</span></h2>
-<ul>
-  <li>The licence field stays on one line when you paste a key copied out of an email.</li>
-</ul>
-
-<h2>1.7.9 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 18 August 2026</span></h2>
-<ul>
-  <li>Signs the bundled WireGuard binaries properly, so the app's signature verifies.</li>
-</ul>
-
-<h2>1.7.8 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 18 August 2026</span></h2>
-<ul>
-  <li>The download is now just VPNonly.app instead of a folder called dist, and moving it to Applications removes the copy you downloaded instead of leaving two.</li>
-</ul>
-
-<h2>1.7.7 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 18 August 2026</span></h2>
-<ul>
-  <li>Fixes not being able to click into the licence field, and adds the window button to the licence screen.</li>
-</ul>
-
-<h2>1.7.6 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 18 August 2026</span></h2>
-<ul>
-  <li>Uninstall now moves VPNonly to the Trash for you instead of asking you to do it.</li>
-</ul>
-
-<h2>1.7.5 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 18 August 2026</span></h2>
-<ul>
-  <li>Fixes the menu bar panel rendering see-through.</li>
-</ul>
-
-<h2>1.7.4 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 17 August 2026</span></h2>
-<ul>
-  <li>Uninstall no longer fails when there was nothing installed to remove.</li>
-</ul>
-
-<h2>1.7.3 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 17 August 2026</span></h2>
-<ul>
-  <li>Fixes the move-to-Applications prompt appearing twice, and moving now works when a copy is already installed.</li>
-</ul>
-
-<h2>1.7.2 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 17 August 2026</span></h2>
-<ul>
-  <li>Adds a button to pop the app out into a window you can move and keep open, and back to the menu bar again. It remembers which you prefer.</li>
-</ul>
-
-<h2>1.7.1 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 17 August 2026</span></h2>
-<ul>
-  <li>The menu now opens under the icon on the display you're using, instead of landing on another monitor.</li>
-</ul>
-
-<h2>1.7.0 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 17 August 2026</span></h2>
-<ul>
-  <li>Refuses to route Safari and explains why, offers to move itself to Applications on first launch, and adds Release This Mac so a licence can move to another machine.</li>
+  <li><strong>Check.</strong> A button that asks the internet what a routed app's exit IP actually is, next to your Mac's own, so you can see it working instead of taking my word for it.</li>
+  <li><strong>Switching an app out is instant.</strong> Its connections used to keep using the tunnel for up to a minute after you turned it off.</li>
+  <li><strong>Safari is gone from the list.</strong> It can't be routed by any per-app VPN on macOS, so offering a switch that always refuses was worse than not offering it.</li>
+  <li><strong>Release This Mac.</strong> Hand an activation back so your licence can move to another machine.</li>
+  <li><strong>Open it in a window.</strong> A button switches between the menu bar panel and a window you can move and keep open, and it remembers which you prefer.</li>
+  <li><strong>It offers to move itself to Applications</strong> if you open it from Downloads, and the uninstaller now puts the app in the Trash for you.</li>
+  <li>The download is just VPNonly.app now, rather than a folder. The tunnel stays alive when idle. Various fixes to multi-monitor placement, the licence field, and the connection status.</li>
 </ul>
 
 <h2>1.6.5 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 17 August 2026</span></h2>
