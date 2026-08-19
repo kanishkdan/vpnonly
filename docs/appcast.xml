@@ -7,6 +7,18 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.8.9</title>
+      <pubDate>Thu, 20 Aug 2026 01:22:59 +0530</pubDate>
+      <sparkle:version>1.8.9</sparkle:version>
+      <sparkle:shortVersionString>1.8.9</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Fixes the status showing Connected when no tunnel exists, and fixes connecting with no apps chosen immediately disconnecting itself.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.8.9.zip"
+                 sparkle:edSignature="eh7yx+Zek6z6oZZHCDCgyGw601omeMlJWkgWIzC9y30mrtIMS/AjqVqZBIkSvJkFV3Ru4EVi/nueFxWaaaF3CQ=="
+                 length="2990921"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.8.8</title>
       <pubDate>Wed, 19 Aug 2026 16:35:03 +0530</pubDate>
       <sparkle:version>1.8.8</sparkle:version>

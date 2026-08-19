@@ -1,5 +1,5 @@
 {
-  "version": "1.8.8",
+  "version": "1.8.9",
   "url": "https://vpnonly.app/",
-  "notes": "Fixes the status flickering between connected and not connected, and reads the tunnel's received traffic from the right column so Connected means it's actually working."
+  "notes": "Fixes the status showing Connected when no tunnel exists, and fixes connecting with no apps chosen immediately disconnecting itself."
 }
