@@ -18,6 +18,7 @@ nothing is tunneled unless you ask for it.
 ```sh
 sudo ./up.sh mullvad-sg.conf                  # any provider: hand it their .conf
 sudo ./run.sh /Applications/CapCut.app        # this app, and only this app, is in the VPN
+sudo ./status.sh                              # what's routed, and both exit IPs
 sudo ./down.sh                                # everything back to stock
 ```
 
@@ -77,6 +78,10 @@ git clone https://github.com/kanishkdan/vpnonly && cd vpnonly
 
 Requires Xcode Command Line Tools (for `cc`, to build the tiny launcher —
 happens automatically on first `up.sh`).
+
+Works on Intel and Apple Silicon: the launcher is compiled on your machine, so
+there's no prebuilt binary to match. (The paid menu bar app is Apple Silicon
+only for now — the scripts aren't.)
 
 ## Providers
 
@@ -149,8 +154,20 @@ short enough to read first.
 
 ## Verifying
 
-`up.sh` prints the tunnel exit IP next to your normal IP. You can also check
-any time:
+`status.sh` answers the only question that matters — is this app's traffic
+actually going somewhere different?
+
+```sh
+$ sudo ./status.sh
+tunnel:   up on utun9 (10.5.0.2)
+received: 314665312 bytes
+in vpn:
+  4821  CapCut
+your ip:  182.69.179.136
+vpn ip:   103.75.11.42
+```
+
+Two different addresses means it's working. Under the hood it's just:
 
 ```sh
 curl -s https://api.ipify.org                          # your normal IP
