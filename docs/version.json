@@ -1,5 +1,5 @@
 {
-  "version": "1.8.2",
+  "version": "1.8.3",
   "url": "https://vpnonly.app/",
-  "notes": "The Check result now clears when you change which apps are routed, instead of showing an answer about an app you've since switched off."
+  "notes": "Check now says which app it's waiting on, instead of telling you to switch one on when you already have."
 }

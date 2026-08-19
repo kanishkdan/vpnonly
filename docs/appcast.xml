@@ -7,6 +7,18 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.8.3</title>
+      <pubDate>Wed, 19 Aug 2026 15:35:10 +0530</pubDate>
+      <sparkle:version>1.8.3</sparkle:version>
+      <sparkle:shortVersionString>1.8.3</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Check now says which app it's waiting on, instead of telling you to switch one on when you already have.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.8.3.zip"
+                 sparkle:edSignature="zPT8PUIPuo/xeydgykEAW9Z9WhVp16qBx58+ot2HQejtAwNuMkU44IaExmDFfaMpS0QwOvH+wzYJQjiv+hrnDg=="
+                 length="2978193"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.8.2</title>
       <pubDate>Wed, 19 Aug 2026 15:31:25 +0530</pubDate>
       <sparkle:version>1.8.2</sparkle:version>
