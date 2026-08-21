@@ -1,5 +1,5 @@
 {
-  "version": "1.9.5",
+  "version": "1.9.6",
   "url": "https://vpnonly.app/",
-  "notes": "Fixes the app failing to open after a reinstall."
+  "notes": "Checks for updates hourly instead of daily, so fixes reach you the same day."
 }
