@@ -1,5 +1,5 @@
 {
-  "version": "1.9.4",
+  "version": "1.9.5",
   "url": "https://vpnonly.app/",
-  "notes": "Apps you've chosen now say they're waiting for the tunnel when the VPN is off, instead of claiming to be joining it."
+  "notes": "Fixes the app failing to open after a reinstall."
 }

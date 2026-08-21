@@ -7,6 +7,18 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.9.5</title>
+      <pubDate>Fri, 21 Aug 2026 16:32:19 +0530</pubDate>
+      <sparkle:version>1.9.5</sparkle:version>
+      <sparkle:shortVersionString>1.9.5</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Fixes the app failing to open after a reinstall.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.9.5.zip"
+                 sparkle:edSignature="z4I8MI30qewkjDJvf1K1aWmCrVTL1d6dWffN7dStuL2RDOPOS6iWgcgFzuzrIVQFWJDJ8oN/M12HBzE/e7RMBA=="
+                 length="2998996"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.9.4</title>
       <pubDate>Fri, 21 Aug 2026 14:34:59 +0530</pubDate>
       <sparkle:version>1.9.4</sparkle:version>
