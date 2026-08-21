@@ -1,5 +1,5 @@
 {
-  "version": "1.9.6",
+  "version": "1.9.7",
   "url": "https://vpnonly.app/",
-  "notes": "Checks for updates hourly instead of daily, so fixes reach you the same day."
+  "notes": "Fixes VPNonly failing to open with a not responding error on a fresh install."
 }
