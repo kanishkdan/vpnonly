@@ -1,5 +1,5 @@
 {
-  "version": "1.9.3",
+  "version": "1.9.4",
   "url": "https://vpnonly.app/",
-  "notes": "After an update, apps that were already in the VPN are recognised as still routed instead of appearing closed."
+  "notes": "Apps you've chosen now say they're waiting for the tunnel when the VPN is off, instead of claiming to be joining it."
 }

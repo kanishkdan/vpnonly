@@ -7,6 +7,18 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.9.4</title>
+      <pubDate>Fri, 21 Aug 2026 14:34:59 +0530</pubDate>
+      <sparkle:version>1.9.4</sparkle:version>
+      <sparkle:shortVersionString>1.9.4</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Apps you've chosen now say they're waiting for the tunnel when the VPN is off, instead of claiming to be joining it.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.9.4.zip"
+                 sparkle:edSignature="oh+nveQEtbsDO62SSGc4lmo2pqWEw6fPPInHpDdBIEzIZ6Z/mgukZcCW9gaJV2RroRz3m0UVasy9uc+apqjfDQ=="
+                 length="2998907"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.9.3</title>
       <pubDate>Thu, 20 Aug 2026 02:23:19 +0530</pubDate>
       <sparkle:version>1.9.3</sparkle:version>
