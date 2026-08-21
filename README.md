@@ -32,13 +32,10 @@ sudo COUNTRY=us ./up.sh                       # or pick a country
 
 ## Demo
 
-<!-- VIDEO: drag the .mp4 into a GitHub issue comment, copy the
-     user-images.githubusercontent.com URL it gives you, and paste it below as
-     <video src="..."></video>. GitHub renders that inline with a play button.
-     An external link (YouTube, vpnonly.app) will not embed — it just links. -->
+**[Watch the two-minute demo →](https://youtu.be/C9L9OaURekc)**
 
-See it working: **[vpnonly.app](https://vpnonly.app/)** — one app on a Singapore
-IP while the browser next to it stays home.
+Setting it up from scratch, then CapCut on a Singapore IP while everything else
+on the Mac stays on its normal connection.
 
 ## How it works
 
