@@ -1,5 +1,5 @@
 {
-  "version": "1.9.7",
+  "version": "1.9.8",
   "url": "https://vpnonly.app/",
-  "notes": "Fixes VPNonly failing to open with a not responding error on a fresh install."
+  "notes": "Fixes VPNonly failing when another VPN owns utun9, avoids disturbing other firewall rules, and makes Connected mean a real WireGuard handshake."
 }
