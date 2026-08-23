@@ -98,8 +98,8 @@
 
     <details class="sec" open>
       <summary><h2>why it's paid and open</h2></summary>
-      <p>The part that runs as root is about 300 lines of shell and C, MIT licensed, on <a href="https://github.com/kanishkdan/vpnonly">GitHub</a>. You can read all of it before you trust it.</p>
-      <p>The $19 is for the Mac app around it: the menu bar list, setup, the country picker, updates. If you'd rather do it from the terminal, that's free and always will be.</p>
+      <p>From version 1.9.8 onward, the exact privileged engine shipped in each release is MIT licensed and published with a checksum manifest in <a href="https://github.com/kanishkdan/vpnonly/tree/main/app-engine">GitHub's app-engine directory</a>. You can read every privileged line before you trust it.</p>
+      <p>The $19 is for the Mac app around it: the menu bar list, safe setup and migration, the country picker, and updates.</p>
     </details>
 
     <details class="sec" open>
@@ -114,7 +114,7 @@
       </div>
       <div class="qa">
         <div class="q">Why does it want my password?</div>
-        <p>Firewall rules need admin rights. It asks once, installs an engine you can read on GitHub, and never asks again.</p>
+        <p>Firewall rules need admin rights. It asks on first setup and when a security-sensitive engine update needs approval. The exact engine source is on GitHub.</p>
       </div>
       <div class="qa">
         <div class="q">How is this different from SplitTunnel.app?</div>

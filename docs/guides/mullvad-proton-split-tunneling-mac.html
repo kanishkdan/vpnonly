@@ -56,16 +56,14 @@
 
 <h2>Importing a config</h2>
 <p>In <a href="../">VPNonly</a>: click the provider name at the bottom of the window, choose <strong>Import WireGuard config…</strong>, and pick the <code>.conf</code> file. One file per server; import as many as you like and switch between them from the same menu. Then flip the switch next to any app.</p>
-<p>With the free command-line version instead:</p>
-<pre><code>sudo ENDPOINT=1.2.3.4:51820 PEER_KEY=&lt;server public key&gt; CLIENT_IP=10.64.0.2 ./up.sh
-sudo ./run.sh /Applications/YourApp.app</code></pre>
+<p>The exact privileged engine used by the app is public for inspection. The historical command-line prototype is retained on GitHub for reference, but it is not the current app engine.</p>
 
 <h2>Two details worth knowing</h2>
 <p>Providers hand out <em>wg-quick</em> configs, which include <code>Address</code>, <code>DNS</code> and sometimes <code>MTU</code> lines. Plain <code>wg setconf</code> rejects those, so anything importing them has to strip them out and apply the address separately. If you're scripting this yourself, that's the first thing to get right.</p>
 <p>Second: an IPv6-only config won't work with a tool that routes IPv4. Most provider configs include both, so this rarely comes up, but it's worth knowing if a config is refused.</p>
 
 <p style="margin-top:38px;"><a class="btn" href="https://dodo.pe/get-vpnonly">Get VPNonly for Mac — $19</a></p>
-<p style="font-size:15px;">Or use the <a href="https://github.com/kanishkdan/vpnonly">free command-line version</a>. Same engine, no menu bar app.</p>
+<p style="font-size:15px;">The app’s <a href="https://github.com/kanishkdan/vpnonly/tree/main/app-engine">exact privileged engine source</a> is public and MIT licensed.</p>
 
 <div class="foot">
   <span>Made by <a href="https://x.com/kanishkrazdan">@kanishkrazdan</a></span>

@@ -65,7 +65,7 @@
 
 <h2>6. Connect your VPN</h2>
 <p>VPNonly isn't a VPN and doesn't come with one. It uses the one you already pay for.</p>
-<p><strong>NordVPN:</strong> go to <a href="https://my.nordaccount.com/dashboard/nordvpn/manual-configuration/">my.nordaccount.com → Manual configuration → Access token</a> and generate a token. Paste it into VPNonly once. It fetches your key and gives you every country Nord offers, with search. Keep the NordVPN app itself closed while you use VPNonly, or their firewall rules will fight each other.</p>
+<p><strong>NordVPN:</strong> go to <a href="https://my.nordaccount.com/dashboard/nordvpn/manual-configuration/">my.nordaccount.com → Manual configuration → Access token</a> and generate a token. Paste it into VPNonly once. It fetches your key and gives you every country Nord offers, with search. Keep NordVPN's own app disconnected while using VPNonly; a connected whole-Mac VPN changes the route underneath every app.</p>
 <p><strong>Mullvad, Proton, IVPN, AirVPN, or your own server:</strong> download a WireGuard <code>.conf</code> from your provider, one per server, and choose <strong>Import WireGuard config…</strong>. Import as many as you like and switch between them from the menu at the bottom.</p>
 
 <h2>7. Flip a switch</h2>
@@ -73,18 +73,17 @@
 <p>An app has to relaunch to join the tunnel, because macOS fixes how an app connects at the moment it opens. VPNonly warns you first, so save your work. While the app stays open, switching it in and out is instant.</p>
 
 <h2>The admin password</h2>
-<p>The first time you put an app in the VPN, VPNonly asks for your admin password once. Creating a network interface and firewall rules needs root, which is true of every VPN client. It installs a small engine owned by root, and never asks again.</p>
-<p>You don't have to take my word for what that engine does. It's <a href="https://github.com/kanishkdan/vpnonly">open source</a>, about 300 lines of shell and C, and it's the same code the free command-line version uses.</p>
+<p>The first time you put an app in the VPN, VPNonly asks for your admin password. Creating a network interface and firewall rules needs root, which is true of every VPN client. A later security-sensitive engine upgrade can ask again.</p>
+<p>You don't have to take my word for what that engine does. From version 1.9.8 onward, the <a href="https://github.com/kanishkdan/vpnonly/tree/main/app-engine">exact privileged source shipped by the app</a> is public, MIT licensed, and published with a checksum manifest on each release.</p>
 
 <h2>Why isn't it signed?</h2>
 <p>An Apple developer certificate costs $99 a year. VPNonly is a one-person project that just launched, so I'm paying for it out of the first sales. Once it's signed and notarized, this page stops being necessary and the app updates itself. No reinstall, no extra cost to you.</p>
 
 <h2>Uninstalling</h2>
-<p>VPNonly installs a small root-owned engine, and deleting the app wouldn't remove it. So there's a proper uninstaller: click the <strong>…</strong> button in the app and choose <strong>Uninstall VPNonly</strong>. It disconnects the tunnel, restores macOS's own firewall rules, removes the engine and the per-app groups, then puts the app in the Trash and quits. Nothing left to tidy up by hand.</p>
-<p>Already deleted the app? Run this in Terminal:</p>
-<pre><code>sudo rm -rf "/Library/Application Support/VPNonly" /etc/sudoers.d/vpnonly
-sudo pfctl -f /etc/pf.conf
-for g in $(dscl . -list /Groups | grep '^vpn_'); do sudo dseditgroup -o delete "$g"; done</code></pre>
+<p>VPNonly installs a small root-owned engine, and deleting the app wouldn't remove it. So there's a proper uninstaller: click the <strong>…</strong> button in the app and choose <strong>Uninstall VPNonly</strong>. It disconnects the owned tunnel, removes only VPNonly's firewall rules, removes the engine and its per-app groups, then puts the app in the Trash and quits.</p>
+<p>Already deleted the app? Download the audited <a href="https://raw.githubusercontent.com/kanishkdan/vpnonly/main/app-engine/vpnonly-clean-sweep.sh">clean-sweep script</a>, read it, then run it as your normal account. It asks for the administrator password itself:</p>
+<pre><code>chmod +x vpnonly-clean-sweep.sh
+./vpnonly-clean-sweep.sh</code></pre>
 
 <h2>Something went wrong?</h2>
 <p>Email <a href="mailto:kanishk@armoury.in">kanishk@armoury.in</a>. If I can't fix it quickly, you get a refund. Within 14 days, no forms.</p>

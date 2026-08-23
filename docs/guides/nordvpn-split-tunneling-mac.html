@@ -50,13 +50,8 @@
 <p>This is the part most people don't realise: NordVPN gives you WireGuard credentials for your own account. Any WireGuard client can connect to their servers with them, which means a per-app tool on your Mac can use the Nord subscription you're already paying for, while their app stays closed.</p>
 <p><strong>VPNonly</strong> does this in one step: generate an access token at <a href="https://my.nordaccount.com/dashboard/nordvpn/manual-configuration/">my.nordaccount.com → Manual configuration → Access token</a>, paste it in once, and it fetches your key and picks servers for you. Then you flip a switch next to any app.</p>
 
-<h3>Or roll it yourself</h3>
-<p>The same thing with scripts, free:</p>
-<pre><code>brew install wireguard-go wireguard-tools
-git clone https://github.com/kanishkdan/vpnonly &amp;&amp; cd vpnonly
-./fetch-creds.sh            # paste your Nord access token once
-sudo COUNTRY=us ./up.sh
-sudo ./run.sh /Applications/YourApp.app</code></pre>
+<h3>Inspect how it works</h3>
+<p>VPNonly's <a href="https://github.com/kanishkdan/vpnonly/tree/main/app-engine">current privileged engine source</a> is public. The repository's root-level command-line scripts are a historical prototype, not the engine shipped in the app; they assume a fixed tunnel interface and replace PF's main ruleset, so they are not recommended on a current Mac.</p>
 
 <h3>Or route everything and exclude apps</h3>
 <p>If you'd rather have the whole Mac tunneled with a few exceptions, SplitTunnel.app takes that approach and works with any VPN including Nord. Different model, subscription pricing.</p>
@@ -65,10 +60,10 @@ sudo ./run.sh /Applications/YourApp.app</code></pre>
 <p>Yes. NordVPN publishes manual configuration instructions and issues WireGuard credentials for exactly this purpose — routers, Linux boxes, and third-party clients. You're using the subscription you pay for, on your own device.</p>
 
 <h2>Don't run both at once</h2>
-<p>Whatever you choose, keep the NordVPN app disconnected while a per-app tool is running. Their client installs its own firewall and routing rules, and two things fighting over your packet filter is a bad afternoon.</p>
+<p>Whatever you choose, keep NordVPN's whole-Mac connection disconnected while a per-app tool is running. It changes the route underneath every app, which makes the promise that unselected apps stay on your normal connection impossible.</p>
 
 <p style="margin-top:38px;"><a class="btn" href="https://dodo.pe/get-vpnonly">Get VPNonly for Mac — $19</a></p>
-<p style="font-size:15px;">Or use the <a href="https://github.com/kanishkdan/vpnonly">free command-line version</a>. Same engine, no menu bar app.</p>
+<p style="font-size:15px;">The app’s <a href="https://github.com/kanishkdan/vpnonly/tree/main/app-engine">exact privileged engine source</a> is public and MIT licensed.</p>
 
 <div class="foot">
   <span>Made by <a href="https://x.com/kanishkrazdan">@kanishkrazdan</a></span>

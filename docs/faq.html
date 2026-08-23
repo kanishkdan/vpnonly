@@ -46,7 +46,7 @@
 <details class="qsec" open>
 <summary><h2>macOS says it can't verify the app. Is it safe?</h2></summary>
 <p>VPNonly isn't signed with an Apple developer certificate yet, so macOS blocks it on first launch and you allow it once in System Settings. There's a <a href="install.html">short guide here</a>. The certificate costs $99 a year and I'm paying for it out of the first sales. Once it's signed, the app updates itself and this step goes away.</p>
-<p>If that's a dealbreaker, don't buy it yet. The <a href="https://github.com/kanishkdan/vpnonly">command-line version</a> is free, does the same routing, and you can read every line of it.</p>
+<p>If that's a dealbreaker, don't buy it yet. You can still <a href="https://github.com/kanishkdan/vpnonly/tree/main/app-engine">read every privileged line</a> before deciding.</p>
 </details>
 
 <details class="qsec" open>
@@ -63,7 +63,7 @@
 
 <details class="qsec" open>
 <summary><h2>Do I need my VPN's own app running?</h2></summary>
-<p>No, keep it closed. VPNonly talks to your provider's servers directly. Running both at once makes their firewall rules fight each other.</p>
+<p>No. VPNonly talks to your provider's servers directly. Keep a whole-Mac VPN disconnected while using it; that changes the underlying route for everything and VPNonly will refuse a conflicting nested connection when it can detect one.</p>
 </details>
 
 <details class="qsec" open>
@@ -78,13 +78,13 @@
 
 <details class="qsec" open>
 <summary><h2>Why does it want my password?</h2></summary>
-<p>Creating a network interface and firewall rules needs admin rights. It asks once, installs a root-owned engine, and doesn't ask again. That engine is <a href="https://github.com/kanishkdan/vpnonly">open source</a>, so you can read every privileged line before you trust it.</p>
+<p>Creating a network interface and firewall rules needs admin rights. It asks on first setup and when a security-sensitive engine update needs approval. The exact root-owned engine is <a href="https://github.com/kanishkdan/vpnonly/tree/main/app-engine">open source</a>, so you can read every privileged line before you trust it.</p>
 </details>
 
 <details class="qsec" open>
 <summary><h2>What's bundled inside, and under what licence?</h2></summary>
 <p>Two unmodified programs from the WireGuard project, run as child processes: <strong>wireguard-go</strong> (MIT) and <strong>wg</strong> from wireguard-tools (GPL-2.0-only). Full notices, versions, upstream source links and a GPL written offer are in <a href="third-party-notices.txt">third-party-notices.txt</a>, also included in the download.</p>
-<p>VPNonly's own privileged code, the part that runs as root, is MIT and <a href="https://github.com/kanishkdan/vpnonly">on GitHub</a>. "WireGuard" is a registered trademark of Jason A. Donenfeld. VPNonly isn't affiliated with the WireGuard project or with any VPN provider.</p>
+<p>VPNonly's own privileged code, the part that runs as root, is MIT and <a href="https://github.com/kanishkdan/vpnonly/tree/main/app-engine">on GitHub</a>. The app also bundles Sparkle for updates; its licence is included in the download. "WireGuard" is a registered trademark of Jason A. Donenfeld. VPNonly isn't affiliated with the WireGuard project or with any VPN provider.</p>
 </details>
 
 <details class="qsec" open>
@@ -104,7 +104,7 @@
 
 <details class="qsec" open>
 <summary><h2>What do I get for $19?</h2></summary>
-<p>The Mac app, a license for 2 Macs, and all 1.x updates. The command-line engine is free and MIT licensed either way.</p>
+<p>The Mac app, a license for 2 Macs, and all 1.x updates. The privileged engine source is public and MIT licensed either way.</p>
 </details>
 
 <details class="qsec" open>
@@ -114,7 +114,7 @@
 
 <details class="qsec" open>
 <summary><h2>How do I uninstall it?</h2></summary>
-<p>Click the <strong>…</strong> button in the app and choose <strong>Uninstall VPNonly</strong>. That removes the root-owned engine, the passwordless rule and the per-app groups, restores macOS's firewall rules, then puts the app in the Trash and quits. Manual commands are on the <a href="install.html">install page</a> if you've already deleted the app.</p>
+<p>Click the <strong>…</strong> button in the app and choose <strong>Uninstall VPNonly</strong>. That removes the owned tunnel, VPNonly's own firewall rules, the root engine, passwordless rule and per-app groups, then puts the app in the Trash and quits. The audited recovery script is on the <a href="install.html">install page</a> if you've already deleted the app.</p>
 </details>
 
 <details class="qsec" open>

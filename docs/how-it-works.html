@@ -51,11 +51,11 @@
 <h2>2. The firewall picks who goes in</h2>
 <p>macOS ships with PF, a packet filter that can't match traffic by application, but <em>can</em> match by unix group. So each app you add gets its own private group, and two rules do the work:</p>
 
-<pre><code>block return out proto { tcp udp } from any to any group vpn_a1b2c3
-pass out quick route-to (utun9 10.5.0.2) inet proto { tcp udp } \
-    from any to any group vpn_a1b2c3 keep state</code></pre>
+<pre><code>pass out quick route-to (utunN 10.5.0.2) inet proto { tcp udp } \
+    from any to any group vpn_a1b2c3 keep state
+block return out quick proto { tcp udp } from any to any group vpn_a1b2c3</code></pre>
 
-<p>The second rule sends that group into the tunnel. The first is the kill switch: when the tunnel isn't up, the pass rule isn't there either, so that traffic is refused instead of leaking to your ISP.</p>
+<p>macOS chooses a free <code>utunN</code>; VPNonly records the exact interface and process it created instead of assuming a fixed name. These rules live in the dedicated <code>com.apple/vpnonly</code> PF anchor, so normal connect and disconnect operations never replace another product's main firewall rules. The pass sends the group into the tunnel. The block is the kill switch when an owned tunnel is unavailable.</p>
 
 <p>A process's group is fixed when it starts, but firewall rules aren't. That's why an app has to restart once to join, and never again. After that, toggling it is just rewriting rules.</p>
 
@@ -63,7 +63,7 @@ pass out quick route-to (utun9 10.5.0.2) inet proto { tcp udp } \
 <p>A 30-line C program starts your app under its group and immediately drops root. Helper processes inherit the group, so apps that spawn a dozen subprocesses are covered too.</p>
 
 <h2>About the password prompt</h2>
-<p>Creating network interfaces and firewall rules needs admin rights. That's true of any VPN software. VPNonly asks once, installs a small engine owned by root that nothing else can modify, and never asks again. That engine is the open-source part, and it's short enough to read in full.</p>
+<p>Creating network interfaces and firewall rules needs admin rights. That's true of any VPN software. VPNonly installs a small engine owned by root; first setup and security-sensitive engine upgrades can ask for approval. From version 1.9.8 onward, the <a href="https://github.com/kanishkdan/vpnonly/tree/main/app-engine">exact privileged source</a> is published with each release.</p>
 
 <h2>What I haven't solved</h2>
 <ul>

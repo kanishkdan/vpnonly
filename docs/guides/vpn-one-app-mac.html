@@ -55,23 +55,19 @@
 <p>Run the app inside a VM (UTM, Parallels, VMware Fusion) and connect the VPN inside the guest. Complete isolation, works with any VPN client, and costs you nothing if you use UTM.</p>
 <p>The downsides are real though: several gigabytes of disk, a second OS to keep updated, no GPU acceleration for video work, and clumsy file sharing. Fine for a browser or a chat client, painful for a video editor.</p>
 
-<h2>3. Do it yourself with PF and WireGuard</h2>
-<p>macOS ships with PF, a packet filter that can't match traffic by application but <em>can</em> match by unix group. So you can create a group, launch an app under it, and write a firewall rule that routes that group into a WireGuard tunnel.</p>
-<p>That's exactly what VPNonly does, and the scripts are free and MIT licensed if you'd rather run it yourself:</p>
-<pre><code>brew install wireguard-go wireguard-tools
-git clone https://github.com/kanishkdan/vpnonly
-sudo ./up.sh                                  # tunnel up, nothing routed yet
-sudo ./run.sh /Applications/YourApp.app       # this app only</code></pre>
-<p>You'll want to understand what you're doing here — it runs as root and edits firewall rules — but it's about 300 lines and readable in one sitting. The <a href="../how-it-works.html">how it works</a> page explains the mechanism.</p>
+<h2>3. Understand the PF and WireGuard approach</h2>
+<p>macOS ships with PF, a packet filter that can't match traffic by application but <em>can</em> match by unix group. A per-app VPN can launch an app under a private group and route that group's traffic into an owned WireGuard tunnel.</p>
+<p>VPNonly's <a href="https://github.com/kanishkdan/vpnonly/tree/main/app-engine">current privileged engine source</a> is public for inspection. The repository's root-level command-line scripts are an older prototype: they assume a fixed tunnel interface and replace PF's main ruleset. They are kept for history and are not recommended on a current Mac.</p>
+<p>The <a href="../how-it-works.html">how it works</a> page explains the current app's safer ownership and firewall model.</p>
 
 <h2>Which one to pick</h2>
-<p>If you're comfortable in a terminal and only need this occasionally, use the free scripts. If you want a switch in your menu bar and someone to email when it breaks, that's what the paid app is for. If you need genuine isolation rather than just a different exit IP, use a VM.</p>
+<p>If you want a maintained per-app switch and support when it breaks, that's what VPNonly is for. If you need genuine isolation rather than just a different exit IP, use a VM.</p>
 
 <h2>One thing to know either way</h2>
 <p>Moving an app onto a VPN changes its exit IP, not its DNS by default. With VPNonly, connections are tunneled but DNS lookups still go through your system resolver. If your goal is a different exit IP, that's fine. If your goal is hiding which sites you visit from your ISP, you need a tool built for that.</p>
 
 <p style="margin-top:38px;"><a class="btn" href="https://dodo.pe/get-vpnonly">Get VPNonly for Mac — $19</a></p>
-<p style="font-size:15px;">Or use the <a href="https://github.com/kanishkdan/vpnonly">free command-line version</a>. Same engine, no menu bar app.</p>
+<p style="font-size:15px;">The app’s <a href="https://github.com/kanishkdan/vpnonly/tree/main/app-engine">exact privileged engine source</a> is public and MIT licensed.</p>
 
 <div class="foot">
   <span>Made by <a href="https://x.com/kanishkrazdan">@kanishkrazdan</a></span>
