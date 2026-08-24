@@ -1,5 +1,5 @@
 {
-  "version": "1.9.8",
+  "version": "1.9.9",
   "url": "https://vpnonly.app/",
-  "notes": "Fixes VPNonly failing when another VPN owns utun9, avoids disturbing other firewall rules, and makes Connected mean a real WireGuard handshake."
+  "notes": "VPNonly no longer force-quits apps that need a moment to close, so browsers keep their tabs. Apps held offline now fail straight away instead of hanging, and connecting works again after a reinstall."
 }

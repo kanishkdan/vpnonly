@@ -7,13 +7,25 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.9.9</title>
+      <pubDate>Mon, 24 Aug 2026 16:26:39 +0530</pubDate>
+      <sparkle:version>1.9.9</sparkle:version>
+      <sparkle:shortVersionString>1.9.9</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>VPNonly no longer force-quits apps that need a moment to close, so browsers keep their tabs. Apps held offline now fail straight away instead of hanging, and connecting works again after a reinstall.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.9.9.zip"
+                 sparkle:edSignature="8hLneoNaEodSYl7SrCm2AjRgDaJA8pAJf9Wek3ZRQhLyQGekc05NaJFKECM9FND3MG5oJ1do7vBFr3AbV2BXAQ=="
+                 length="3218196"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.9.8</title>
       <pubDate>Sun, 23 Aug 2026 11:41:57 +0530</pubDate>
       <sparkle:version>1.9.8</sparkle:version>
       <sparkle:shortVersionString>1.9.8</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>Fixes VPNonly failing when another VPN owns utun9, avoids disturbing other firewall rules, and makes Connected mean a real WireGuard handshake.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.9.8.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.9.8/VPNonly-1.9.8.zip"
                  sparkle:edSignature="gfoQQJ7FHkqwgtbn1/IfPknGHrRB5c2n/84sSknZBqhBgBUmEgFWvlny+gQ9cSrBDiSxGDjo00nbue7RsRgACQ=="
                  length="3214608"
                  type="application/octet-stream" />
@@ -25,7 +37,7 @@
       <sparkle:shortVersionString>1.9.7</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>Fixes VPNonly failing to open with a not responding error on a fresh install.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.9.7.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.9.7/VPNonly-1.9.7.zip"
                  sparkle:edSignature="KnWeXuRdFc0Z4wI31lLKcmJZkvJE05odLadTHN08PEYwPWZVhBQemPgyszaNeSXE9EUzTljZrAPyJPPI+UQqAA=="
                  length="2999658"
                  type="application/octet-stream" />
@@ -37,7 +49,7 @@
       <sparkle:shortVersionString>1.9.6</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>Checks for updates hourly instead of daily, so fixes reach you the same day.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.9.6.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.9.6/VPNonly-1.9.6.zip"
                  sparkle:edSignature="pPxlBy89dyVeFgh+p92z5ckhGnbBne7OX6rZRfbsLU5pbLGkaNmTIJqf2iH9geZgnmD7EgdY4cO6MrHU4QACAQ=="
                  length="2998997"
                  type="application/octet-stream" />
@@ -49,7 +61,7 @@
       <sparkle:shortVersionString>1.9.5</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>Fixes the app failing to open after a reinstall.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.9.5.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.9.5/VPNonly-1.9.5.zip"
                  sparkle:edSignature="z4I8MI30qewkjDJvf1K1aWmCrVTL1d6dWffN7dStuL2RDOPOS6iWgcgFzuzrIVQFWJDJ8oN/M12HBzE/e7RMBA=="
                  length="2998996"
                  type="application/octet-stream" />
@@ -61,7 +73,7 @@
       <sparkle:shortVersionString>1.9.4</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>Apps you've chosen now say they're waiting for the tunnel when the VPN is off, instead of claiming to be joining it.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.9.4.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.9.4/VPNonly-1.9.4.zip"
                  sparkle:edSignature="oh+nveQEtbsDO62SSGc4lmo2pqWEw6fPPInHpDdBIEzIZ6Z/mgukZcCW9gaJV2RroRz3m0UVasy9uc+apqjfDQ=="
                  length="2998907"
                  type="application/octet-stream" />
@@ -73,7 +85,7 @@
       <sparkle:shortVersionString>1.9.3</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>After an update, apps that were already in the VPN are recognised as still routed instead of appearing closed.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.9.3.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.9.3/VPNonly-1.9.3.zip"
                  sparkle:edSignature="HcM6FzaIgFnyXCpZPEyzrBmlgNNiqur0PRz6P0pCv1mOzxfG9nY2/Wg/vkIsHupPd5EkhY20HXstzYImyqrUCw=="
                  length="2998759"
                  type="application/octet-stream" />
@@ -85,7 +97,7 @@
       <sparkle:shortVersionString>1.9.2</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>The status line now says what's actually happening: which app is verified, on which IP, and how recently, checked in the background rather than only when you press the button.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.9.2.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.9.2/VPNonly-1.9.2.zip"
                  sparkle:edSignature="3lJHvA2NBjwrzvno1Q26fNmWIwUvZlt8X1Hd06sAaCrtFXPYREaT3zOwcbuoz2+zLvTpkZ7bPNPpbPqm7qjPAg=="
                  length="2995641"
                  type="application/octet-stream" />
@@ -97,7 +109,7 @@
       <sparkle:shortVersionString>1.9.1</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>Notices when a working tunnel stops carrying traffic, and stops warning about a quiet tunnel when no app is using it.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.9.1.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.9.1/VPNonly-1.9.1.zip"
                  sparkle:edSignature="sE/qGGM5XB24a1U8GL1B/yIcSAyQf/gpxHCQ6KSxKbjoAUJF4Ynhbj1pHgEcv3UIW8+R7QV8Qci9NY+S5UWcDg=="
                  length="2991831"
                  type="application/octet-stream" />
@@ -109,7 +121,7 @@
       <sparkle:shortVersionString>1.9.0</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>Keeps the tunnel alive when idle, and stops reporting a quiet tunnel as a broken one.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.9.0.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.9.0/VPNonly-1.9.0.zip"
                  sparkle:edSignature="rARPzEV1rB808Yaf1JhlAbhCZ+z9dYdHXi7SiBBLjsRNA+ip4A7ZqbklyOWnBIykSORwlSbE8EPPR3/RYqprBA=="
                  length="2991125"
                  type="application/octet-stream" />
@@ -121,7 +133,7 @@
       <sparkle:shortVersionString>1.8.9</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>Fixes the status showing Connected when no tunnel exists, and fixes connecting with no apps chosen immediately disconnecting itself.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.8.9.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.8.9/VPNonly-1.8.9.zip"
                  sparkle:edSignature="eh7yx+Zek6z6oZZHCDCgyGw601omeMlJWkgWIzC9y30mrtIMS/AjqVqZBIkSvJkFV3Ru4EVi/nueFxWaaaF3CQ=="
                  length="2990921"
                  type="application/octet-stream" />
@@ -133,7 +145,7 @@
       <sparkle:shortVersionString>1.8.8</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>Fixes the status flickering between connected and not connected, and reads the tunnel's received traffic from the right column so Connected means it's actually working.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.8.8.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.8.8/VPNonly-1.8.8.zip"
                  sparkle:edSignature="Ugx1vDcYTHgcoLQ8LhiMJFiDy1O0HbUAVccMt82KqJa63PmYnublppuke9EjpKwtQfSRUjqW9gLcSJVKUc+mAA=="
                  length="2991381"
                  type="application/octet-stream" />
@@ -145,7 +157,7 @@
       <sparkle:shortVersionString>1.8.7</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>When the tunnel is up but the server never replies, the app now says so and offers to replace the token or import a config, instead of leaving you to work it out.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.8.7.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.8.7/VPNonly-1.8.7.zip"
                  sparkle:edSignature="VSZcz9KjTYjIW5ww7isket4v74i+0gyOX5V+qo5pbpeT15ci4i8q4uzjdPAJsT+AyP3UKTK4Xcyx6bOXcUKaAA=="
                  length="2991033"
                  type="application/octet-stream" />
@@ -157,7 +169,7 @@
       <sparkle:shortVersionString>1.8.6</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>Tidies the Check result into a card you can dismiss, with each IP on its own line.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.8.6.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.8.6/VPNonly-1.8.6.zip"
                  sparkle:edSignature="cU/jw/AnLg3HN8DedcbNITggnwwgLTTxTiG6L9O9KoPC7vZZM3YHf6tfNeGoetbZ+lpvvsFqnF4qM2c3QjoDAA=="
                  length="2985384"
                  type="application/octet-stream" />
@@ -169,7 +181,7 @@
       <sparkle:shortVersionString>1.8.5</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>Adds Replace NordVPN token to the provider menu, so an expired token can be swapped without deleting files by hand.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.8.5.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.8.5/VPNonly-1.8.5.zip"
                  sparkle:edSignature="XlY1qtjAXp2+LFNohUPl66ORaPUvfKJPXzl7dICUU2nA4DZU9EW++Dv6z12rtDJsQ17a2MUPsaKGOPU/8I7iBA=="
                  length="2980034"
                  type="application/octet-stream" />
@@ -181,7 +193,7 @@
       <sparkle:shortVersionString>1.8.4</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>Tells you when the tunnel is up but the server isn't answering, instead of saying Connected, and points at an expired NordVPN token as the usual cause.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.8.4.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.8.4/VPNonly-1.8.4.zip"
                  sparkle:edSignature="38K+SF3dcvznTy3crRuR5oF2dUICnb5qwY/kIB9nxVR/91XjkZYtQRRjHRJ1qfN3nUx5p0YAx64IVdGv27C9Ag=="
                  length="2980093"
                  type="application/octet-stream" />
@@ -193,7 +205,7 @@
       <sparkle:shortVersionString>1.8.3</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>Check now says which app it's waiting on, instead of telling you to switch one on when you already have.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.8.3.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.8.3/VPNonly-1.8.3.zip"
                  sparkle:edSignature="zPT8PUIPuo/xeydgykEAW9Z9WhVp16qBx58+ot2HQejtAwNuMkU44IaExmDFfaMpS0QwOvH+wzYJQjiv+hrnDg=="
                  length="2978193"
                  type="application/octet-stream" />
@@ -205,7 +217,7 @@
       <sparkle:shortVersionString>1.8.2</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>The Check result now clears when you change which apps are routed, instead of showing an answer about an app you've since switched off.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.8.2.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.8.2/VPNonly-1.8.2.zip"
                  sparkle:edSignature="Qr3WVjC5iQy/fajMc0yIdHx9gZCXGix/rluHcViu9qpC9VjuKJAXnc0CDdV+BdYD9EiaWPXM+uOtHif1TCz+Bg=="
                  length="2978029"
                  type="application/octet-stream" />
@@ -217,7 +229,7 @@
       <sparkle:shortVersionString>1.8.1</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>Corrects the uninstall note, and keeps the app's icon on the dialogs shown while it removes itself.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.8.1.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.8.1/VPNonly-1.8.1.zip"
                  sparkle:edSignature="dd6MbUSm2W7iCKbeQ/9pmYvVtfy+DTe3m55XuCaOsfwWevgYTEFifrbYzbtLYInuFZ9Qwtrq+kafWl2QI+CqBQ=="
                  length="2976571"
                  type="application/octet-stream" />
@@ -229,7 +241,7 @@
       <sparkle:shortVersionString>1.8.0</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>Adds a Check button that asks the internet what a routed app's exit IP actually is, next to your Mac's own — so you can see it working rather than take my word for it.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.8.0.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.8.0/VPNonly-1.8.0.zip"
                  sparkle:edSignature="heryk0gfTOuuctqXEt46tV/GpKg/VBgSDqnAaIZe5wxNxvZ1dkZg/y2OcVSIVaV3m9zf17DGP6UPxrdPJQMAAA=="
                  length="2885573"
                  type="application/octet-stream" />
@@ -241,7 +253,7 @@
       <sparkle:shortVersionString>1.7.11</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>Switching an app out of the VPN now restores its connection immediately instead of after a wait, and Safari no longer appears in the list since it can't be routed.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.7.11.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.7.11/VPNonly-1.7.11.zip"
                  sparkle:edSignature="50gG5BAUspB3ZFLKytnCJgf5o5/XOD2mEHpZSRvg04cYwbIW3bWZv8deNH5ElEmtWsOk2eHZkBnjKQfMbw6BCg=="
                  length="2868606"
                  type="application/octet-stream" />
@@ -253,7 +265,7 @@
       <sparkle:shortVersionString>1.7.10</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>The licence field stays on one line when you paste a key copied out of an email.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.7.10.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.7.10/VPNonly-1.7.10.zip"
                  sparkle:edSignature="ouTLnVs+/YrxZAoghB2qkAjKONcaf2aFl49HR12Ix7ZmqBnbSTyUeGQiEncTMHzEGSrDsVYG44s0Yv4LYV9yBg=="
                  length="2867655"
                  type="application/octet-stream" />
@@ -265,7 +277,7 @@
       <sparkle:shortVersionString>1.7.9</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>Signs the bundled WireGuard binaries properly, so the app's signature verifies.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.7.9.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.7.9/VPNonly-1.7.9.zip"
                  sparkle:edSignature="hUY26x1R5BEm/edX2CSpm2IGuzVr28Ir53RIB1shWOc044xRLIQoOeBouB7wVzebf7pvKgkW5ClDfMvpTSQWAQ=="
                  length="2866686"
                  type="application/octet-stream" />
@@ -277,7 +289,7 @@
       <sparkle:shortVersionString>1.7.8</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>The download is now just VPNonly.app instead of a folder called dist, and moving it to Applications removes the copy you downloaded instead of leaving two.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.7.8.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.7.8/VPNonly-1.7.8.zip"
                  sparkle:edSignature="fiuD1gkLInqozx4Koal7UhyfR5eBY7Eps66KOnUEhT4GAzItQxkWbHpMvXkMU11VS/xlJdUh0YXgi+D+PhH8DQ=="
                  length="2866557"
                  type="application/octet-stream" />
@@ -289,7 +301,7 @@
       <sparkle:shortVersionString>1.7.7</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>Fixes not being able to click into the licence field, and adds the window button to the licence screen.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.7.7.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.7.7/VPNonly-1.7.7.zip"
                  sparkle:edSignature="7D3U+pWTPHB1r3jBzdgCzsnLLu7fJZELFrJ/dBJ0P/tN2Cz0UtmHMFGXcWUQhdveDHd1vWn/+4C7hI3xWEpUBA=="
                  length="2868189"
                  type="application/octet-stream" />
@@ -301,7 +313,7 @@
       <sparkle:shortVersionString>1.7.6</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>Uninstall now moves VPNonly to the Trash for you instead of asking you to do it.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.7.6.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.7.6/VPNonly-1.7.6.zip"
                  sparkle:edSignature="h5pJTTGfvitkz0RHn0X55CDvO+CC3YYmTkZA1n3gepII1a/f/ziK9QdpT6XaPSrK2zWwujL39CeLbXJU8NLBAA=="
                  length="2866272"
                  type="application/octet-stream" />
