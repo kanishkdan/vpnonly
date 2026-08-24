@@ -7,13 +7,25 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.9.12</title>
+      <pubDate>Mon, 24 Aug 2026 17:56:40 +0530</pubDate>
+      <sparkle:version>1.9.12</sparkle:version>
+      <sparkle:shortVersionString>1.9.12</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Setup is simpler and safer, and VPNonly explains what to do if a much older version is still installed.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.9.12.zip"
+                 sparkle:edSignature="3j6FJgmsIa0Z4nNmNhKAbWpdmctuKgEENdE6Enyv6im/PaQbrZyL07Z9yDpgKCQzkq3fNCzjYfzan7jiemy8AQ=="
+                 length="3148546"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.9.11</title>
       <pubDate>Mon, 24 Aug 2026 17:28:38 +0530</pubDate>
       <sparkle:version>1.9.11</sparkle:version>
       <sparkle:shortVersionString>1.9.11</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>Tries another VPN server when one doesn&#x27;t answer, instead of asking you to try again.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.9.11.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.9.11/VPNonly-1.9.11.zip"
                  sparkle:edSignature="mRA43SAyfS1cd1juSvyDrws/5YuVNa6A8vhq6pCw6JAHS3VbR3LqMI+bwiIOm00fe79O9/2VcPBq7GY2xnENAw=="
                  length="3221949"
                  type="application/octet-stream" />
