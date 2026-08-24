@@ -7,13 +7,25 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.9.10</title>
+      <pubDate>Mon, 24 Aug 2026 17:08:26 +0530</pubDate>
+      <sparkle:version>1.9.10</sparkle:version>
+      <sparkle:shortVersionString>1.9.10</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>VPNonly now asks before it closes an app, on every path. Previously a background check could quit a running app with no warning at all.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.9.10.zip"
+                 sparkle:edSignature="2gbE+zyQ7+Xdh0XdKZjB9qLOvl9qmIfju1P/WRTjgbhEvl28qi1wwdkjAzM5t1JSxrRZ6BiThi3dahzTKncYAg=="
+                 length="3221314"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.9.9</title>
       <pubDate>Mon, 24 Aug 2026 16:26:39 +0530</pubDate>
       <sparkle:version>1.9.9</sparkle:version>
       <sparkle:shortVersionString>1.9.9</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>VPNonly no longer force-quits apps that need a moment to close, so browsers keep their tabs. Apps held offline now fail straight away instead of hanging, and connecting works again after a reinstall.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.9.9.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.9.9/VPNonly-1.9.9.zip"
                  sparkle:edSignature="8hLneoNaEodSYl7SrCm2AjRgDaJA8pAJf9Wek3ZRQhLyQGekc05NaJFKECM9FND3MG5oJ1do7vBFr3AbV2BXAQ=="
                  length="3218196"
                  type="application/octet-stream" />

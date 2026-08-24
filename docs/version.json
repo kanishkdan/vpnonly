@@ -1,5 +1,5 @@
 {
-  "version": "1.9.9",
+  "version": "1.9.10",
   "url": "https://vpnonly.app/",
-  "notes": "VPNonly no longer force-quits apps that need a moment to close, so browsers keep their tabs. Apps held offline now fail straight away instead of hanging, and connecting works again after a reinstall."
+  "notes": "VPNonly now asks before it closes an app, on every path. Previously a background check could quit a running app with no warning at all."
 }
