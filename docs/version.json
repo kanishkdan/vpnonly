@@ -1,5 +1,5 @@
 {
-  "version": "1.9.10",
+  "version": "1.9.11",
   "url": "https://vpnonly.app/",
-  "notes": "VPNonly now asks before it closes an app, on every path. Previously a background check could quit a running app with no warning at all."
+  "notes": "Tries another VPN server when one doesn't answer, instead of asking you to try again."
 }
