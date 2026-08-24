@@ -1,5 +1,5 @@
 {
-  "version": "1.9.13",
+  "version": "1.9.14",
   "url": "https://vpnonly.app/",
-  "notes": "Explains what to do if another program has replaced this Mac's firewall configuration, instead of showing a technical message."
+  "notes": "The status no longer shows a problem while VPNonly is still working \u2014 a normal connect briefly looked like an error."
 }

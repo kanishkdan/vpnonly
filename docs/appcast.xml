@@ -7,13 +7,25 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.9.14</title>
+      <pubDate>Mon, 24 Aug 2026 18:29:00 +0530</pubDate>
+      <sparkle:version>1.9.14</sparkle:version>
+      <sparkle:shortVersionString>1.9.14</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>The status no longer shows a problem while VPNonly is still working — a normal connect briefly looked like an error.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.9.14.zip"
+                 sparkle:edSignature="5sZosd3uaPCwOZZcwF2FoYCcZ6rWBoYaWa/SpyLTygV1K68b0knBy8ype3j4ijSGqoM4AzO88Wb7yjX3ipNODw=="
+                 length="3148813"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.9.13</title>
       <pubDate>Mon, 24 Aug 2026 18:02:42 +0530</pubDate>
       <sparkle:version>1.9.13</sparkle:version>
       <sparkle:shortVersionString>1.9.13</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>Explains what to do if another program has replaced this Mac&#x27;s firewall configuration, instead of showing a technical message.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.9.13.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.9.13/VPNonly-1.9.13.zip"
                  sparkle:edSignature="O3GvTOLgHzVJ134Mz6wVTdMD9t1xPeNyMWGDuulQew2au9pzIWurm3uFNq/XiAiy1+/UAB4HJuh6zY0NsYzjAw=="
                  length="3148768"
                  type="application/octet-stream" />
