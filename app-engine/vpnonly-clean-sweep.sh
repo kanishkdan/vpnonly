@@ -490,7 +490,7 @@ if root_path_exists /Applications/VPNonly.app; then
     fi
 fi
 for p in "$ACCOUNT_HOME/Applications/VPNonly.app" "$ACCOUNT_HOME/Downloads/VPNonly.app" \
-         "$ACCOUNT_HOME/Desktop/VPNonly.app" "$ACCOUNT_HOME/.Trash/VPNonly.app"; do
+         "$ACCOUNT_HOME/Desktop/VPNonly.app"; do
     if [ -e "$p" ] || [ -L "$p" ]; then
         if /bin/rm -rf "$p" && [ ! -e "$p" ] && [ ! -L "$p" ]; then
             echo "    removed $p"
@@ -500,6 +500,20 @@ for p in "$ACCOUNT_HOME/Applications/VPNonly.app" "$ACCOUNT_HOME/Downloads/VPNon
         fi
     fi
 done
+
+# The Trash is deliberately not treated as a failure. macOS protects ~/.Trash,
+# so rm is refused unless the terminal has Full Disk Access — and a copy sitting
+# in the Trash is already discarded: it is not installed, not running, and owns
+# nothing. Reporting that as an incomplete cleanup told people their Mac was
+# still dirty when it wasn't.
+TRASHED="$ACCOUNT_HOME/.Trash/VPNonly.app"
+if [ -e "$TRASHED" ] || [ -L "$TRASHED" ]; then
+    if /bin/rm -rf "$TRASHED" 2>/dev/null && [ ! -e "$TRASHED" ] && [ ! -L "$TRASHED" ]; then
+        echo "    removed $TRASHED"
+    else
+        echo "    a copy is still in the Trash; empty it in Finder when convenient"
+    fi
+fi
 /bin/rm -f "$ACCOUNT_HOME/Downloads/VPNonly-"*.zip 2>/dev/null || CLEANUP_FAILED=1
 
 echo "==> removing your settings, licence and cached data"
