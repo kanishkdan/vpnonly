@@ -17,6 +17,40 @@ export PATH LC_ALL
 
 SRC="$(cd "$(dirname "$0")" && pwd)"
 DEST="/Library/Application Support/VPNonly/engine"
+BUNDLED_VERSION=$(cat "$SRC/VERSION") || exit 1
+case "$BUNDLED_VERSION" in
+    0|0*|*[!0-9]*) echo "Bundled VPNonly engine version is invalid." >&2; exit 1 ;;
+esac
+[ "${#BUNDLED_VERSION}" -le 9 ] || {
+    echo "Bundled VPNonly engine version is invalid." >&2
+    exit 1
+}
+# Versions 9 and 10 used the same fixed-utun/main-PF install layout. Their
+# keepalive/state-bookkeeping differences do not change this migration.
+MIN_MIGRATABLE_VERSION=9
+
+validate_installed_version() {
+    local installed="$1"
+    case "$installed" in
+        "") return 0 ;;
+        0|0*|*[!0-9]*)
+            echo "Existing VPNonly engine version is invalid." >&2
+            return 1
+            ;;
+    esac
+    [ "${#installed}" -le 9 ] || {
+        echo "Existing VPNonly engine version is invalid." >&2
+        return 1
+    }
+    if [ "$installed" -gt "$BUNDLED_VERSION" ]; then
+        echo "NEWER_ENGINE: installed=$installed bundled=$BUNDLED_VERSION" >&2
+        return 12
+    fi
+    if [ "$installed" -lt "$MIN_MIGRATABLE_VERSION" ]; then
+        echo "Existing VPNonly engine version is too old for this installer." >&2
+        return 1
+    fi
+}
 
 # The passwordless rule is granted to one named user, not to %admin: on a Mac
 # with several admin accounts, a blanket rule would let any of them run these
@@ -336,13 +370,7 @@ if [ -e "$DEST" ] || [ -L "$DEST" ]; then
             exit 1
         }
         INSTALLED_VERSION=$(cat "$VERSION_FILE") || exit 1
-        case "$INSTALLED_VERSION" in
-            ""|10|11) ;;
-            *)
-                echo "Existing VPNonly engine version is not supported by this installer." >&2
-                exit 1
-                ;;
-        esac
+        validate_installed_version "$INSTALLED_VERSION"
     fi
 fi
 
