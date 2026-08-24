@@ -1,5 +1,5 @@
 {
-  "version": "1.9.12",
+  "version": "1.9.13",
   "url": "https://vpnonly.app/",
-  "notes": "Setup is simpler and safer, and VPNonly explains what to do if a much older version is still installed."
+  "notes": "Explains what to do if another program has replaced this Mac's firewall configuration, instead of showing a technical message."
 }
