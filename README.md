@@ -5,6 +5,13 @@ connection and moves only the apps you choose into a VPN tunnel.
 
 **[Website](https://vpnonly.app/)** · **[Install guide](https://vpnonly.app/install.html)** · **[How it works](https://vpnonly.app/how-it-works.html)** · **[VPNonly for Mac — $19](https://dodo.pe/vpnonly-github)**
 
+## Demo
+
+[![VPNonly demo](https://img.youtube.com/vi/C9L9OaURekc/maxresdefault.jpg)](https://youtu.be/C9L9OaURekc)
+
+Two minutes: setup from scratch, then CapCut on a Singapore IP while everything
+else on the Mac stays on its normal connection.
+
 ## Privileged source
 
 Starting with VPNonly 1.9.8, each app release publishes the exact source for
@@ -55,7 +62,16 @@ the audited current
 
 ## Licence
 
-VPNonly's privileged source is MIT licensed. Bundled WireGuard and Sparkle
-components retain their upstream licences; the release bundle and
+VPNonly's privileged source is MIT licensed: everything under
+[`app-engine/`](app-engine/) and the historical command-line tool at the
+repository root. Read it, audit it, reuse it.
+
+The compiled app (the `VPNonly-*.zip` releases) and the website under `docs/`
+are not MIT. The app is a paid product and redistributing it isn't permitted —
+its terms are at [vpnonly.app/terms](https://vpnonly.app/terms.html).
+[`LICENSE`](LICENSE) sets out the split in full.
+
+Bundled WireGuard and Sparkle components retain their upstream licences; the
+release bundle and
 [`app-engine/THIRD-PARTY-NOTICES.txt`](app-engine/THIRD-PARTY-NOTICES.txt)
 contain the corresponding notices.

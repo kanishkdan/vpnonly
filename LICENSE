@@ -1,3 +1,32 @@
+VPNonly — licensing
+===================
+
+This repository holds two different kinds of material, under two different
+terms. Read this before copying anything out of it.
+
+MIT licensed — the terms below apply in full:
+
+  * The command-line tool at the repository root: up.sh, down.sh, run.sh,
+    status.sh, fetch-creds.sh, parse-wg.py and vpnrun.c
+  * Everything under app-engine/, which is the privileged source that runs
+    as root inside the VPNonly app
+
+All rights reserved — the MIT terms below do NOT apply:
+
+  * The compiled VPNonly application, distributed as VPNonly-*.zip under
+    docs/ and as GitHub release assets. It is a paid product; redistributing
+    it is not permitted. Its terms of use are at https://vpnonly.app/terms.html
+  * The website under docs/ — its pages, stylesheets, images and video
+
+Bundled WireGuard and Sparkle components keep their own upstream licences.
+See app-engine/THIRD-PARTY-NOTICES.txt for those notices.
+
+If you want to read, audit, modify or reuse the part of VPNonly that runs with
+root privileges, that is the MIT-licensed material above, and you are welcome
+to it.
+
+-------------------------------------------------------------------------------
+
 MIT License
 
 Copyright (c) 2026 Kanishk Razdan

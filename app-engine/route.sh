@@ -264,7 +264,13 @@ if [ "$NVPNG" -gt 0 ]; then
         fi
         # Anything this IPv4-only tunnel cannot deliberately route stays
         # fail-closed too (IPv6, ICMP, and uncommon protocols included).
-        printf 'block drop out quick on ! lo0 from any to any group %s\n' \
+        #
+        # `return`, not `drop`: a silent drop leaves the app waiting for a
+        # timeout, so a blocked app looks hung rather than offline. `return`
+        # sends a TCP RST and an ICMP unreachable for UDP, so the app fails at
+        # once and says so. Every other protocol is still dropped silently,
+        # which is what `return` already does for them.
+        printf 'block return out quick on ! lo0 from any to any group %s\n' \
             "$group" >> "$PFCONF"
     done
 fi
