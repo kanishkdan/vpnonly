@@ -45,121 +45,39 @@
 <p class="lead">Everything that's changed, including the things that were broken. VPNonly updates itself from 1.5.0 onwards.</p>
 
 <!-- RELEASES -->
-<h2>1.9.10 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 24 August 2026</span></h2>
+<h2>Working alongside everything else <span style="font-weight:400;color:#979ca4;font-size:15px;">· 1.9.8–1.9.10 · August 2026</span></h2>
 <ul>
-  <li>VPNonly now asks before it closes an app, on every path. Previously a background check could quit a running app with no warning at all.</li>
+  <li><strong>It works when another VPN is already running.</strong> VPNonly used to assume a particular tunnel was its own. If something else had taken it, VPNonly would report a connection it didn't have. It now asks macOS for a free one and proves the tunnel is its own before claiming anything.</li>
+  <li><strong>It no longer disturbs your other firewall rules.</strong> Its rules live in their own space rather than being mixed into the system's, so other tools keep working and VPNonly stops clobbering them.</li>
+  <li><strong>Connected means connected.</strong> The status only says so after the VPN server has actually answered.</li>
+  <li><strong>It asks before closing an app.</strong> A background check could previously quit a running app with no warning, which cost people their browser tabs.</li>
+  <li><strong>A blocked app fails straight away</strong> instead of hanging until it times out.</li>
 </ul>
 
-<h2>1.9.9 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 24 August 2026</span></h2>
+<h2>Showing its work <span style="font-weight:400;color:#979ca4;font-size:15px;">· 1.9.0–1.9.7 · August 2026</span></h2>
 <ul>
-  <li>VPNonly no longer force-quits apps that need a moment to close, so browsers keep their tabs. Apps held offline now fail straight away instead of hanging, and connecting works again after a reinstall.</li>
-</ul>
-
-<h2>1.9.8 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 23 August 2026</span></h2>
-<ul>
-  <li>Fixes VPNonly failing when another VPN owns utun9, avoids disturbing other firewall rules, and makes Connected mean a real WireGuard handshake.</li>
-</ul>
-
-<h2>1.9.7 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 21 August 2026</span></h2>
-<ul>
-  <li>Fixes VPNonly failing to open with a not responding error on a fresh install.</li>
-</ul>
-
-<h2>1.9.6 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 21 August 2026</span></h2>
-<ul>
-  <li>Checks for updates hourly instead of daily, so fixes reach you the same day.</li>
-</ul>
-
-<h2>1.9.5 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 21 August 2026</span></h2>
-<ul>
-  <li>Fixes the app failing to open after a reinstall.</li>
-</ul>
-
-<h2>1.9.4 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 21 August 2026</span></h2>
-<ul>
-  <li>Apps you've chosen now say they're waiting for the tunnel when the VPN is off, instead of claiming to be joining it.</li>
-</ul>
-
-<h2>1.9.3 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 20 August 2026</span></h2>
-<ul>
-  <li>After an update, apps that were already in the VPN are recognised as still routed instead of appearing closed.</li>
-</ul>
-
-<h2>1.9.2 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 20 August 2026</span></h2>
-<ul>
-  <li>The status line now says what's actually happening: which app is verified, on which IP, and how recently, checked in the background rather than only when you press the button.</li>
-</ul>
-
-<h2>1.9.1 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 20 August 2026</span></h2>
-<ul>
-  <li>Notices when a working tunnel stops carrying traffic, and stops warning about a quiet tunnel when no app is using it.</li>
-</ul>
-
-<h2>1.9.0 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 20 August 2026</span></h2>
-<ul>
-  <li><strong>Check.</strong> A button that asks the internet what a routed app's exit IP actually is, next to your Mac's own, so you can see it working instead of taking my word for it.</li>
-  <li><strong>Switching an app out is instant.</strong> Its connections used to keep using the tunnel for up to a minute after you turned it off.</li>
+  <li><strong>Check.</strong> A button that asks the internet what a routed app's exit IP actually is, next to your Mac's own, so you can see it working instead of taking my word for it. It re-checks in the background too.</li>
+  <li><strong>Switching an app out is instant.</strong> Its connections used to keep using the tunnel for up to a minute.</li>
   <li><strong>Safari is gone from the list.</strong> It can't be routed by any per-app VPN on macOS, so offering a switch that always refuses was worse than not offering it.</li>
   <li><strong>Release This Mac.</strong> Hand an activation back so your licence can move to another machine.</li>
-  <li><strong>Open it in a window.</strong> A button switches between the menu bar panel and a window you can move and keep open, and it remembers which you prefer.</li>
-  <li><strong>It offers to move itself to Applications</strong> if you open it from Downloads, and the uninstaller now puts the app in the Trash for you.</li>
-  <li>The download is just VPNonly.app now, rather than a folder. The tunnel stays alive when idle. Various fixes to multi-monitor placement, the licence field, and the connection status.</li>
+  <li><strong>Open it in a window,</strong> instead of the menu bar panel, and it remembers which you prefer.</li>
+  <li>Updates arrive within the hour. Fixes for launching after a reinstall, and for apps appearing closed after an update.</li>
 </ul>
 
-<h2>1.6.5 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 17 August 2026</span></h2>
+<h2>Every country, and staying put <span style="font-weight:400;color:#979ca4;font-size:15px;">· 1.5.0–1.6.5 · August 2026</span></h2>
 <ul>
-  <li>Opens on the display you're using, and no longer clips the window on multi-monitor Macs.</li>
+  <li><strong>Every country your provider offers</strong> — 149, not a hardcoded ten — with search and recents.</li>
+  <li><strong>Apps stay in the VPN.</strong> Quitting an app used to quietly take it out, so opening it again put it back on your normal connection. The switch is now a lasting choice.</li>
+  <li><strong>Automatic updates,</strong> installed with one click without macOS asking you to approve the app again.</li>
+  <li>No more vanishing into a full menu bar: VPNonly opens in a window with a Dock icon instead. Multi-monitor and licence field fixes.</li>
 </ul>
 
-<h2>1.6.4 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 17 August 2026</span></h2>
+<h2>Any provider, and instant switching <span style="font-weight:400;color:#979ca4;font-size:15px;">· 1.2.0–1.4.0 · August 2026</span></h2>
 <ul>
-  <li>Opens on the display you're using, and no longer clips the window on multi-monitor Macs.</li>
-</ul>
-
-<h2>1.6.3 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 17 August 2026</span></h2>
-<ul>
-  <li>Clears the licence field once your key is accepted.</li>
-</ul>
-
-<h2>1.6.2 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 17 August 2026</span></h2>
-<ul>
-  <li>Fixes a second window appearing on multi-monitor Macs, and the licence field not syncing between windows.</li>
-</ul>
-
-<h2>1.6.1 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 16 August 2026</span></h2>
-<ul>
-  <li>Points the in-app buy link at the new store.</li>
-</ul>
-
-<h2>1.6.0 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 14 August 2026</span></h2>
-<ul>
-  <li>Every country your provider offers (149, not a hardcoded ten), with search and recents. Plus a what's-new note after each update.</li>
-</ul>
-
-<h2>1.5.0 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 14 August 2026</span></h2>
-<ul>
-  <li><strong>Apps stay in the VPN.</strong> Quitting an app used to quietly take it out of the VPN, so opening it again put it back on your normal connection. Now the switch is a lasting choice: open the app from anywhere and it rejoins the tunnel on its own.</li>
-  <li><strong>No more vanishing into the menu bar.</strong> If the menu bar is full, macOS hides the newest icon without saying so, and VPNonly looked like it had failed to launch. It now opens in a window with a Dock icon instead.</li>
-  <li><strong>Automatic updates.</strong> New versions install with one click, without macOS asking you to approve the app again.</li>
-  <li>Double-clicking VPNonly while it's already running no longer shows "not responding" — it opens the window.</li>
-</ul>
-
-<h2>1.4.0 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 4 August 2026</span></h2>
-<ul>
-  <li><strong>Any WireGuard provider.</strong> Import a config from Mullvad, Proton, IVPN, AirVPN or your own server, alongside the existing NordVPN token setup. Import as many servers as you like and switch between them.</li>
-  <li>Licence activation, and a proper uninstaller that removes the root-owned engine and its permissions rather than leaving them behind.</li>
-</ul>
-
-<h2>1.3.0 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 3 August 2026</span></h2>
-<ul>
-  <li><strong>Instant switching.</strong> Each app gets its own private group, so moving one in or out of the VPN is a firewall change rather than a restart. An app only restarts the first time it joins.</li>
-  <li>Firewall safety: rules are validated before they load, and can only ever target VPNonly's own groups.</li>
-</ul>
-
-<h2>1.2.0 <span style="font-weight:400;color:#979ca4;font-size:15px;">· 3 August 2026</span></h2>
-<ul>
-  <li>The menu bar app: every app on your Mac, searchable, with a switch each.</li>
-  <li>One password prompt ever, instead of one per action.</li>
+  <li><strong>Any WireGuard provider.</strong> Import a config from Mullvad, Proton, IVPN, AirVPN or your own server, alongside NordVPN token setup. Import as many as you like and switch between them.</li>
+  <li><strong>Instant switching.</strong> Each app gets its own private group, so moving one in or out is a firewall change rather than a restart. An app only restarts the first time it joins.</li>
+  <li><strong>The menu bar app:</strong> every app on your Mac, searchable, with a switch each, and one password prompt ever instead of one per action.</li>
+  <li>Licence activation, and a proper uninstaller that removes the root-owned engine and its permissions rather than leaving them behind. Firewall rules are validated before they load and can only ever target VPNonly's own groups.</li>
 </ul>
 
 <div class="foot">

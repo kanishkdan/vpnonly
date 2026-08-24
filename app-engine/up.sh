@@ -473,6 +473,22 @@ if [ -e "$STATE_DIR" ] || [ -L "$STATE_DIR" ]; then
 fi
 
 WGSET=$(mktemp); chmod 600 "$WGSET"
+CANDIDATES=""
+
+# Nord hands back several recommended servers. Writing one of them into the
+# wg-setconf file is the only difference between attempts, so keep it in one
+# place the retry loop can call again.
+write_nord_peer() {
+    {
+        echo "[Interface]"
+        echo "PrivateKey = $PRIVATE_KEY"
+        echo "[Peer]"
+        echo "PublicKey = $2"
+        echo "Endpoint = $1:51820"
+        echo "AllowedIPs = 0.0.0.0/0"
+        echo "PersistentKeepalive = 25"
+    } > "$WGSET"
+}
 
 case "$MODE" in
 # ── NordVPN: their API hands us a server for the country you picked ─────────
@@ -508,24 +524,21 @@ nord)
     [ "$SERVER_COUNT" -gt 0 ] 2>/dev/null || {
         echo "NOSERVER: NordVPN returned no usable server for '$COUNTRY'"; exit 5
     }
-    # A later self-heal should not deterministically select the same failing
-    # endpoint. Nord already returns only recommended servers, so choose among
-    # that small healthy set rather than pinning every attempt to item zero.
-    SERVER_PICK=$((RANDOM % SERVER_COUNT + 1))
+    # Rotate by a random offset rather than pinning every attempt to item zero,
+    # so a later self-heal does not deterministically re-pick a failing
+    # endpoint. Keep the whole rotated list: the handshake stage below tries the
+    # next one instead of turning a single dead server into an error the user
+    # has to read and act on.
+    OFFSET=$((RANDOM % SERVER_COUNT))
+    CANDIDATES=$(printf '%s\n' "$SERVER_LINES" | /usr/bin/awk -v off="$OFFSET" '
+        NF == 3 { lines[c++] = $0 }
+        END { for (i = 0; i < c; i++) print lines[(i + off) % c] }')
+
     HOST=""; STATION=""; PUBKEY=""
-    read -r HOST STATION PUBKEY <<< "$(printf '%s\n' "$SERVER_LINES" |
-        awk -v pick="$SERVER_PICK" 'NF == 3 { seen++; if (seen == pick) { print; exit } }')"
+    read -r HOST STATION PUBKEY <<< "$(printf '%s\n' "$CANDIDATES" | /usr/bin/head -n 1)"
     [ -n "${PUBKEY:-}" ] || { echo "NOSERVER: NordVPN returned no usable server for '$COUNTRY'"; exit 5; }
 
-    {
-        echo "[Interface]"
-        echo "PrivateKey = $PRIVATE_KEY"
-        echo "[Peer]"
-        echo "PublicKey = $PUBKEY"
-        echo "Endpoint = $STATION:51820"
-        echo "AllowedIPs = 0.0.0.0/0"
-        echo "PersistentKeepalive = 25"
-    } > "$WGSET"
+    write_nord_peer "$STATION" "$PUBKEY"
     LABEL="$HOST"
     ;;
 
@@ -684,33 +697,70 @@ ifconfig "$NEW_IF" inet "$CLIENT_IP" "$CLIENT_IP" netmask 255.255.255.255 mtu 14
 # A local utun is not a connection. Temporarily use a one-second keepalive to
 # force a WireGuard initiation, and do not publish ownership state or report
 # Connected until the provider has completed a handshake.
-PEERS=$("$WG" show "$NEW_IF" peers 2>/dev/null)
-[ -n "$PEERS" ] || {
-    echo "NOHANDSHAKE: provider configuration has no WireGuard peer" >&2
-    abort_new_tunnel 12
-}
-for pk in $PEERS; do
-    "$WG" set "$NEW_IF" peer "$pk" persistent-keepalive 1
-done
+#
+# One dead server should not become a dialog the user has to read. The provider
+# handed back several; try the next before giving up. Reconfiguring the peer on
+# the interface we already own is enough — there is no need to tear the tunnel
+# down, so ownership state and the interface name stay put across attempts.
+CANDIDATE_COUNT=$(printf '%s\n' "$CANDIDATES" | /usr/bin/awk 'NF == 3 { n++ } END { print n + 0 }')
+[ "$CANDIDATE_COUNT" -le 3 ] 2>/dev/null || CANDIDATE_COUNT=3
+[ "$CANDIDATE_COUNT" -ge 1 ] 2>/dev/null || CANDIDATE_COUNT=1
 
+ATTEMPT=1
 LATEST=0
-tries=0
-while [ "$LATEST" -eq 0 ] 2>/dev/null && [ "$tries" -lt 120 ]; do
-    LATEST=$("$WG" show "$NEW_IF" latest-handshakes 2>/dev/null |
-        awk 'NF == 2 && $2 ~ /^[0-9]+$/ && $2 > latest { latest=$2 }
-             END { print latest + 0 }' || echo 0)
-    [ "$LATEST" -gt 0 ] 2>/dev/null && break
-    process_is_ours "$NEW_PID" || {
-        echo "WireGuard stopped while contacting the provider" >&2
-        abort_new_tunnel 1
+while : ; do
+    PEERS=$("$WG" show "$NEW_IF" peers 2>/dev/null)
+    [ -n "$PEERS" ] || {
+        echo "NOHANDSHAKE: provider configuration has no WireGuard peer" >&2
+        abort_new_tunnel 12
     }
-    /bin/sleep 0.1
-    tries=$((tries + 1))
+    for pk in $PEERS; do
+        "$WG" set "$NEW_IF" peer "$pk" persistent-keepalive 1
+    done
+
+    # 8s per candidate. A WireGuard handshake is a single round trip, so this is
+    # already generous, and three of them still beat one 12s wait end to end.
+    LATEST=0
+    tries=0
+    while [ "$LATEST" -eq 0 ] 2>/dev/null && [ "$tries" -lt 80 ]; do
+        LATEST=$("$WG" show "$NEW_IF" latest-handshakes 2>/dev/null |
+            awk 'NF == 2 && $2 ~ /^[0-9]+$/ && $2 > latest { latest=$2 }
+                 END { print latest + 0 }' || echo 0)
+        [ "$LATEST" -gt 0 ] 2>/dev/null && break
+        process_is_ours "$NEW_PID" || {
+            echo "WireGuard stopped while contacting the provider" >&2
+            abort_new_tunnel 1
+        }
+        /bin/sleep 0.1
+        tries=$((tries + 1))
+    done
+    [ "$LATEST" -gt 0 ] 2>/dev/null && break
+
+    # Out of attempts, or nothing left to fall back to (an imported profile
+    # names exactly one server, so it fails here on the first pass).
+    [ "$ATTEMPT" -lt "$CANDIDATE_COUNT" ] || {
+        echo "NOHANDSHAKE: the VPN server did not answer" >&2
+        abort_new_tunnel 12
+    }
+
+    ATTEMPT=$((ATTEMPT + 1))
+    NEXT=$(printf '%s\n' "$CANDIDATES" |
+        /usr/bin/awk -v want="$ATTEMPT" 'NF == 3 { n++; if (n == want) { print; exit } }')
+    [ -n "$NEXT" ] || {
+        echo "NOHANDSHAKE: the VPN server did not answer" >&2
+        abort_new_tunnel 12
+    }
+    NHOST=""; NSTATION=""; NPUBKEY=""
+    read -r NHOST NSTATION NPUBKEY <<< "$NEXT"
+    [ -n "${NPUBKEY:-}" ] || {
+        echo "NOHANDSHAKE: the VPN server did not answer" >&2
+        abort_new_tunnel 12
+    }
+    echo "RETRY: $LABEL did not answer, trying $NHOST" >&2
+    write_nord_peer "$NSTATION" "$NPUBKEY"
+    "$WG" setconf "$NEW_IF" "$WGSET"
+    LABEL="$NHOST"
 done
-[ "$LATEST" -gt 0 ] 2>/dev/null || {
-    echo "NOHANDSHAKE: the VPN server did not answer" >&2
-    abort_new_tunnel 12
-}
 
 # Once verified, use the conventional 25-second keepalive to preserve NAT
 # mappings without turning health checks into unnecessary traffic.
