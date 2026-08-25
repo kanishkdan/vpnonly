@@ -76,6 +76,10 @@ is_on() {
     return 1
 }
 
+is_running() {
+    ps -axo comm= 2>/dev/null | grep -q "^$1/Contents/MacOS/"
+}
+
 refresh_ips() {
     MYIP=$(curl -s --max-time 6 https://api.ipify.org 2>/dev/null || echo "?")
     if tunnel_up; then
@@ -224,10 +228,17 @@ draw_app() {
         printf '    \e[2mQuits %s and reopens it on your normal connection.\e[0m\n' "$name"
     else
         printf '  \e[36m▶\e[0m \e[1mTurn on\e[0m\n'
-        if tunnel_up; then
-            printf '    \e[2mReopens %s inside the tunnel. Nothing else moves.\e[0m\n' "$name"
+        # An open app cannot be moved in: macOS fixes a process's group when it
+        # starts. Say that here rather than letting them find out mid-flow.
+        if is_running "$app"; then
+            tunnel_up ||
+                printf '    \e[2mConnects the tunnel, then\e[0m\n'
+            printf '    \e[33mquits %s (it is open now)\e[0m\e[2m and reopens it inside the tunnel.\e[0m\n' "$name"
+            printf '    \e[2mIt has to be reopened, because macOS fixes an app'"'"'s group when it starts.\e[0m\n'
+        elif tunnel_up; then
+            printf '    \e[2mOpens %s inside the tunnel. Nothing else moves.\e[0m\n' "$name"
         else
-            printf '    \e[2mConnects the tunnel, then reopens %s inside it.\e[0m\n' "$name"
+            printf '    \e[2mConnects the tunnel, then opens %s inside it.\e[0m\n' "$name"
         fi
     fi
 

@@ -149,10 +149,75 @@ fi
 [ -x "$BIN" ] || { echo "not executable: $BIN"; exit 1; }
 [ -x "$DIR/vpnrun" ] || { echo "vpnrun not built — run up.sh first"; exit 1; }
 
+NAME=$(basename "$TARGET" .app)
+VPNGID=$(dscl . -read /Groups/vpnonly PrimaryGroupID 2>/dev/null | awk '{print $2}')
+
+tagged_count() {
+    [ -n "${VPNGID:-}" ] || { echo 0; return; }
+    ps -axo rgid=,comm= 2>/dev/null |
+        awk -v g="$VPNGID" -v a="$TARGET/Contents/MacOS/" \
+            '$1 == g && index($0, a) { n++ } END { print n + 0 }'
+}
+
+running_count() {
+    ps -axo comm= 2>/dev/null | grep -c "^$TARGET/Contents/MacOS/" || true
+}
+
+# A running app cannot be moved into the group. macOS fixes a process's group
+# when it starts, and launching a second copy of a single-instance app just
+# hands off to the first — which stays outside the tunnel. Quitting first is
+# the only way, so say so rather than launching something that does nothing.
+if [ -d "$TARGET" ] && [[ "$TARGET" == *.app ]] && [ "$(running_count)" -gt 0 ]; then
+    if [ "$(tagged_count)" -gt 0 ]; then
+        echo "$NAME is already running inside the tunnel."
+        exit 0
+    fi
+    echo "$NAME is already open, outside the tunnel."
+    echo
+    echo "macOS fixes an app's group when it starts, so a copy that is already"
+    echo "running can't be moved in. It has to be quit and reopened."
+    echo
+    if [ ! -t 0 ]; then
+        echo "Quit $NAME, then run this again."
+        exit 1
+    fi
+    printf 'Quit %s and reopen it in the VPN? [y/N] ' "$NAME"
+    read -r reply
+    case "$reply" in
+        y|Y|yes|YES) ;;
+        *) echo "Left $NAME alone. It is still on your normal connection."; exit 1 ;;
+    esac
+    echo "Quitting $NAME…"
+    osascript -e "quit app \"$NAME\"" 2>/dev/null || true
+    for _ in $(seq 1 40); do
+        [ "$(running_count)" -eq 0 ] && break
+        sleep 0.25
+    done
+    if [ "$(running_count)" -gt 0 ]; then
+        echo "$NAME didn't quit. Close it yourself, then run this again."
+        exit 1
+    fi
+fi
+
 if [ -d "$TARGET" ] && [[ "$TARGET" == *.app ]]; then
     "$DIR/vpnrun" "$RUSER" "$BIN" "$@" >/dev/null 2>&1 &
-    echo "launched through the tunnel (pid $!): $(basename "$TARGET" .app)"
-    echo "check it with: sudo $DIR/status.sh"
+    # Verify rather than claim. If nothing ends up carrying the group, the
+    # launch handed off to something else and the app is still going out over
+    # the normal connection — which is exactly the lie this tool must not tell.
+    for _ in $(seq 1 24); do
+        [ "$(tagged_count)" -gt 0 ] && break
+        sleep 0.25
+    done
+    if [ "$(tagged_count)" -gt 0 ]; then
+        echo "$NAME is in the tunnel."
+        echo "check it with: sudo $DIR/status.sh"
+    else
+        echo "$NAME started, but nothing is carrying VPNonly's group, so it is"
+        echo "NOT in the tunnel. That usually means another copy was already"
+        echo "running and this one handed off to it. Quit $NAME completely and"
+        echo "try again."
+        exit 1
+    fi
 else
     exec "$DIR/vpnrun" "$RUSER" "$BIN" "$@"
 fi
