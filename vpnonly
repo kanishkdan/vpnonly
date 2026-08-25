@@ -98,14 +98,34 @@ reload_state() {
 # the answer from the cache. A version check must not delay the interface or
 # hang it when the network is slow — this one cannot do either, at the cost of
 # telling you one launch later than it could.
+# True when $1 is a strictly newer version than $2.
+version_gt() {
+    local a1 a2 a3 b1 b2 b3
+    IFS=. read -r a1 a2 a3 <<< "$1"
+    IFS=. read -r b1 b2 b3 <<< "$2"
+    case "$a1$a2$a3$b1$b2$b3" in ''|*[!0-9]*) return 1 ;; esac
+    [ "$a1" -ne "$b1" ] && { [ "$a1" -gt "$b1" ]; return; }
+    [ "$a2" -ne "$b2" ] && { [ "$a2" -gt "$b2" ]; return; }
+    [ "$a3" -gt "$b3" ]
+}
+
 check_for_update() {
-    local cache="$CONF/update-check" age now
+    local cache="$CONF/update-check" age now cached
     now=$(date +%s)
     if [ -s "$cache" ]; then
         age=$(( now - $(awk 'NR==1{print $1+0}' "$cache") ))
         [ "$age" -lt 0 ] && age=99999
-        UPDATE=$(awk 'NR==1{print $2}' "$cache")
-        [ "$UPDATE" = "$VPNONLY_VERSION" ] && UPDATE=""
+        cached=$(awk 'NR==1{print $2}' "$cache")
+        # Only ever advertise something strictly newer. Comparing for
+        # inequality announced an older cached release as an upgrade.
+        if version_gt "$cached" "$VPNONLY_VERSION"; then
+            UPDATE="$cached"
+        else
+            UPDATE=""
+            # We are at or past what the cache knows, so the cache is stale
+            # regardless of its age. Let it refresh below.
+            age=99999
+        fi
         [ "$age" -lt 86400 ] && return 0
     fi
     (
