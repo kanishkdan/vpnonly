@@ -89,47 +89,66 @@ run_visible() {
     echo
     printf 'press enter to continue '
     read -r _ </dev/tty
-    printf '\e[?1049h\e[?25l'
+    printf '\e[?1049h\e[?25l\e[H\e[2J'
     return $rc
 }
 
 restore() { printf '\e[?25h\e[?1049l'; }
 
 draw() {
-    local rows view i name marker state
+    local rows view i name state dot line label
     rows=$(tput lines 2>/dev/null || echo 24)
-    view=$((rows - 9)); [ "$view" -lt 3 ] && view=3
+    view=$((rows - 10)); [ "$view" -lt 3 ] && view=3
     [ "${#APPS[@]}" -lt "$view" ] && view=${#APPS[@]}
     [ "$SEL" -lt "$TOP" ] && TOP=$SEL
     [ "$SEL" -ge $((TOP + view)) ] && TOP=$((SEL - view + 1))
 
-    printf '\e[H\e[J'
-    printf '  \e[1mvpnonly\e[0m\n\n'
+    # Home, clear to end, and clear scrollback. Some terminals keep the old
+    # frame around without the third one.
+    printf '\e[H\e[2J\e[3J'
+
+    printf '  \e[1;36mVPNonly\e[0m  \e[2mone app on the VPN, not your whole Mac\e[0m\n\n'
+
     if tunnel_up; then
-        printf '  tunnel    \e[32mconnected\e[0m on %s\n' "$(tunnel_if)"
-        printf '  exit IP   %s\n' "${VPNIP:-checking…}"
+        printf '  \e[32m●\e[0m connected\e[2m ·\e[0m %s\n' "$(tunnel_if)"
+        if [ -n "$VPNIP" ] && [ "$VPNIP" != "?" ]; then
+            printf '    \e[32m%s\e[0m through the VPN\e[2m ·\e[0m %s normally\n' \
+                "$VPNIP" "${MYIP:-?}"
+        else
+            printf '    \e[2mchecking the exit address…\e[0m\n'
+        fi
     else
-        printf '  tunnel    \e[2mnot connected\e[0m\n'
-        printf '  exit IP   \e[2m—\e[0m\n'
+        printf '  \e[2m○ not connected\e[0m\n'
+        if [ "${#ROUTED[@]}" -gt 0 ]; then
+            # Tagged apps with no tunnel are refused, not leaking. Say that,
+            # rather than calling them protected.
+            printf '    \e[33m%d app%s blocked until you connect\e[0m\e[2m · this is the kill switch\e[0m\n' \
+                "${#ROUTED[@]}" "$([ ${#ROUTED[@]} -eq 1 ] || echo s)"
+        else
+            printf '    \e[2myour IP is %s\e[0m\n' "${MYIP:-?}"
+        fi
     fi
-    printf '  your IP   %s\n' "${MYIP:-checking…}"
-    printf '  in VPN    %d app%s\n\n' "${#ROUTED[@]}" "$([ ${#ROUTED[@]} -eq 1 ] || echo s)"
+    printf '\n'
 
     i=$TOP
     while [ "$i" -lt $((TOP + view)) ] && [ "$i" -lt "${#APPS[@]}" ]; do
         name=$(basename "${APPS[$i]}" .app)
-        state="        "
+        state=""
         for r in ${ROUTED[@]+"${ROUTED[@]}"}; do
-            [ "$r" = "${APPS[$i]}" ] && state=$'\e[32min VPN\e[0m'
+            if [ "$r" = "${APPS[$i]}" ]; then
+                if tunnel_up; then state=$'\e[32m● in VPN\e[0m'
+                else state=$'\e[33m● blocked\e[0m'; fi
+            fi
         done
         if [ "$i" -eq "$SEL" ]; then
-            printf '\e[7m> %-28s\e[0m %b\n' "$name" "$state"
+            printf '\e[36m▶\e[0m \e[1m%-30s\e[0m %b\n' "$name" "$state"
         else
-            printf '  %-28s %b\n' "$name" "$state"
+            printf '  %-30s %b\n' "$name" "$state"
         fi
         i=$((i + 1))
     done
-    printf '\n  \e[2menter toggle · c connect · d disconnect · r refresh · q quit\e[0m'
+
+    printf '\n  \e[2m↑↓\e[0m  \e[2m|\e[0m  \e[2mEnter\e[0m toggle  \e[2m|\e[0m  \e[2mC\e[0m connect  \e[2m|\e[0m  \e[2mD\e[0m disconnect  \e[2m|\e[0m  \e[2mR\e[0m refresh  \e[2m|\e[0m  \e[2mQ\e[0m quit'
 }
 
 reload_state() {
@@ -165,7 +184,7 @@ turn_off() {
     echo
     printf 'press enter to continue '
     read -r _ </dev/tty
-    printf '\e[?1049h\e[?25l'
+    printf '\e[?1049h\e[?25l\e[H\e[2J'
 }
 
 IFS=$'\n' read -r -d '' -a APPS < <(list_apps && printf '\0') || true
