@@ -1,11 +1,42 @@
-# VPNonly
+<p align="center">
+  <img src="docs/icon.png" width="76" alt="">
+</p>
 
-Route **only the apps you choose** through a WireGuard VPN on macOS. Everything
-else on the Mac keeps its normal connection.
+<h1 align="center">VPNonly</h1>
+
+<p align="center">
+  Route <b>only the apps you choose</b> through a WireGuard VPN on macOS.<br>
+  Everything else keeps its normal connection.
+</p>
+
+<p align="center">
+  <a href="https://vpnonly.app">vpnonly.app</a> ·
+  <a href="#install">install</a> ·
+  <a href="#how-it-works">how it works</a> ·
+  <a href="#limitations">limitations</a>
+</p>
+
+---
 
 Most VPNs are all or nothing: you connect, and your browser, video calls and
-banking all move to another country. This does the opposite. Nothing is
-tunneled unless you ask for it.
+banking all move to another country. This does the opposite. **Nothing is
+tunneled unless you ask for it.**
+
+```
+  ▗▖  ▗▖▗▄▄▖ ▗▖  ▗▖ ▗▄▖ ▗▖  ▗▖▗▖ ▗▖  ▗▖
+  ▐▌  ▐▌▐▌ ▐▌▐▛▚▖▐▌▐▌ ▐▌▐▛▚▖▐▌▐▌  ▝▚▞▘
+  ▐▌  ▐▌▐▛▀▘ ▐▌ ▝▜▌▐▌ ▐▌▐▌ ▝▜▌▐▌   ▐▌
+   ▝▚▞▘ ▐▌   ▐▌  ▐▌▝▚▄▞▘▐▌  ▐▌▐▙▄▄▖▐▌
+
+  ● connected · utun7 · exit 187.15.103.25
+  your address is 182.69.182.133
+
+  CapCut                         ● in VPN
+▶ Google Chrome
+  Cursor
+
+  ↑↓  |  Enter open  |  D disconnect  |  R refresh  |  Q quit
+```
 
 Around 350 lines of shell and one small C file. No kernel extension, no
 Network Extension entitlement, and your default route is never touched.
