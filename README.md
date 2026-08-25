@@ -10,47 +10,52 @@ tunneled unless you ask for it.
 Around 350 lines of shell and one small C file. No kernel extension, no
 Network Extension entitlement, and your default route is never touched.
 
-## Setup
+## Install
+
+```sh
+brew tap kanishkdan/vpnonly && brew trust kanishkdan/vpnonly && brew install vpnonly
+```
+
+Homebrew pulls in WireGuard, compiles the small launcher, and puts `vpnonly` on
+your PATH. The `brew trust` step is Homebrew 6's confirmation for third-party
+taps, which seems fair for something that asks for root.
+
+Then set up a provider, once.
+
+**NordVPN.** There's no config file to download, so fetch a key. Generate an
+access token at
+[my.nordaccount.com → Manual configuration → Access token](https://my.nordaccount.com/dashboard/nordvpn/manual-configuration/),
+then run `fetch-creds.sh` from the install directory
+(`$(brew --prefix)/opt/vpnonly/libexec/fetch-creds.sh`) and paste it in.
+
+**Anything else that speaks WireGuard** (Mullvad, Proton, IVPN, AirVPN, your
+own server): download a `.conf` from them. Nothing to copy by hand.
+
+### Or from source
 
 ```sh
 brew install wireguard-go wireguard-tools
 git clone https://github.com/kanishkdan/vpnonly && cd vpnonly
+./fetch-creds.sh          # NordVPN only
 ```
 
-You also need Xcode Command Line Tools, for `cc` to build the 30-line launcher.
-macOS offers to install them the first time it's needed.
-
-Then pick your provider.
-
-**NordVPN.** There's no config file to download, so fetch a key once. Generate
-an access token at
-[my.nordaccount.com → Manual configuration → Access token](https://my.nordaccount.com/dashboard/nordvpn/manual-configuration/),
-then:
-
-```sh
-./fetch-creds.sh          # paste the token, once
-```
-
-**Anything else that speaks WireGuard** (Mullvad, Proton, IVPN, AirVPN, your
-own server): download a `.conf` from them. Nothing to copy by hand.
+You need Xcode Command Line Tools either way, for `cc` to build the 30-line
+launcher. macOS offers to install them the first time it's needed.
 
 ## Using it
 
 One command does everything:
 
 ```sh
-sudo ./vpnonly
+vpnonly
 ```
+
+It asks for your password, because creating a tunnel and firewall rules needs
+root. From source, that's `sudo ./vpnonly`.
 
 That shows what's connected and which apps are inside the tunnel, and lets you
 switch any app in or out with the arrow keys. Connect with `c`, disconnect with
 `d`, quit with `q`.
-
-If you'd rather type `vpnonly` from anywhere:
-
-```sh
-sudo ln -s "$PWD/vpnonly" /usr/local/bin/vpnonly
-```
 
 ### The individual commands
 
