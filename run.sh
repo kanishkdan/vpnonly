@@ -160,7 +160,10 @@ tagged_count() {
 }
 
 running_count() {
-    ps -axo comm= 2>/dev/null | grep -c "^$TARGET/Contents/MacOS/" || true
+    # index(), not grep: an app name is a literal, and "Google Chrome.app"
+    # contains a regex metacharacter.
+    ps -axo comm= 2>/dev/null |
+        awk -v a="$TARGET/Contents/MacOS/" 'index($0, a) == 1 { n++ } END { print n + 0 }'
 }
 
 # A running app cannot be moved into the group. macOS fixes a process's group
