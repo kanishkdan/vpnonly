@@ -5,10 +5,18 @@
 #   ./status.sh          (sudo only needed for the per-app exit IP)
 set -uo pipefail
 
-IF="${IF:-utun9}"
 DIR="$(cd "$(dirname "$0")" && pwd)"
+# Under sudo, $HOME is root's. Read the invoking user's config either way.
+RUSER="${SUDO_USER:-$USER}"
+RHOME=$(dscl . -read "/Users/$RUSER" NFSHomeDirectory 2>/dev/null | awk '{print $2}')
+CONF="${RHOME:-$HOME}/.config/vpnonly"
 
-if ifconfig "$IF" >/dev/null 2>&1; then
+# Only ever report the interface up.sh recorded. There is deliberately no
+# fallback: an unrecorded utun belongs to something else, and calling it ours is
+# how you end up reporting a connection you don't have.
+IF=$(cat "$CONF/tunnel-if" 2>/dev/null || true)
+
+if [ -n "$IF" ] && ifconfig "$IF" >/dev/null 2>&1; then
     ADDR=$(ifconfig "$IF" | awk '/inet /{print $2}')
     echo "tunnel:   up on $IF ($ADDR)"
     # Interface counters only ever climb, so this says whether anything has
@@ -37,7 +45,7 @@ curl -s --max-time 8 https://api.ipify.org || echo "(no answer)"
 echo
 if [ "$(id -u)" = 0 ]; then
     echo -n "vpn ip:   "
-    "$DIR/run.sh" "${SUDO_USER:-$USER}" vpnonly /usr/bin/curl -s --max-time 8 https://api.ipify.org || echo "(no answer)"
+    "$DIR/run.sh" /usr/bin/curl -s --max-time 8 https://api.ipify.org || echo "(no answer)"
     echo
 else
     echo "vpn ip:   run with sudo to see the exit IP from inside the tunnel"

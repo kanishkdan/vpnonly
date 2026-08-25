@@ -1,21 +1,25 @@
 #!/bin/bash
-# Bring up the split tunnel: a WireGuard interface + PF rules that route ONLY
+# Bring up the split tunnel: a WireGuard interface plus PF rules that route ONLY
 # traffic from unix group "vpnonly" through it. The system default route is
-# never touched; everything else on the machine keeps its normal path.
+# never touched, so everything else on the machine keeps its normal path.
 #
 # usage: sudo ./up.sh                       NordVPN, Singapore exit (default)
 #        sudo COUNTRY=us ./up.sh            NordVPN, choose exit country
-#        sudo ./up.sh mullvad-sg.conf       any provider: just hand it the
-#                                           .conf file they gave you
+#        sudo ./up.sh mullvad-sg.conf       any provider: hand it their .conf
 set -euo pipefail
 
-IF="${IF:-utun9}"
 CLIENT_IP="${CLIENT_IP:-10.5.0.2}"      # NordLynx always assigns 10.5.0.2
 COUNTRY="${COUNTRY:-sg}"
+ANCHOR="com.apple/vpnonly-cli"
 WG=/opt/homebrew/bin/wg
 WG_GO=/opt/homebrew/bin/wireguard-go
 [ -x "$WG" ] || WG=/usr/local/bin/wg
 [ -x "$WG_GO" ] || WG_GO=/usr/local/bin/wireguard-go
+[ -x "$WG" ] && [ -x "$WG_GO" ] || {
+    echo "wireguard-go and wg not found. Install them first:"
+    echo "  brew install wireguard-go wireguard-tools"
+    exit 1
+}
 
 [ "$(id -u)" = 0 ] || { echo "run with sudo"; exit 1; }
 RUSER="${SUDO_USER:?run via sudo from your normal user}"
@@ -23,6 +27,8 @@ RHOME=$(dscl . -read "/Users/$RUSER" NFSHomeDirectory | awk '{print $2}')
 CONF="$RHOME/.config/vpnonly"
 DIR="$(cd "$(dirname "$0")" && pwd)"
 KEYFILE="$CONF/wg.key"
+mkdir -p "$CONF"; chown "$RUSER" "$CONF"
+
 if [ -z "${1:-}" ] && [ ! -f "$KEYFILE" ]; then
     echo "no key at $KEYFILE"
     echo "either: ./fetch-creds.sh            (NordVPN)"
@@ -30,9 +36,20 @@ if [ -z "${1:-}" ] && [ ! -f "$KEYFILE" ]; then
     exit 1
 fi
 
-if ifconfig "$IF" >/dev/null 2>&1; then
-    echo "$IF already exists — run down.sh first"; exit 1
+if [ -s "$CONF/tunnel-if" ] && ifconfig "$(cat "$CONF/tunnel-if")" >/dev/null 2>&1; then
+    echo "a vpnonly tunnel is already up on $(cat "$CONF/tunnel-if") — run down.sh first"
+    exit 1
 fi
+
+# PF evaluates anchors nested under com.apple/*, which is where our rules go.
+# If something has replaced the main ruleset, an anchor we load would never be
+# evaluated: rules present, traffic unaffected, no error anywhere. Refuse
+# instead, rather than claim protection we cannot deliver.
+pfctl -s rules 2>/dev/null | grep -Eq '^[[:space:]]*anchor "com\.apple/\*" all[[:space:]]*$' || {
+    echo "This Mac's main PF ruleset is not the stock one, so VPNonly's anchor"
+    echo "would never be evaluated. Nothing has been changed."
+    exit 1
+}
 
 # --- pick a server -----------------------------------------------------------
 # The easy path: a WireGuard .conf from any provider. parse-wg.py pulls out the
@@ -67,13 +84,42 @@ print(s['hostname'], s['station'], pk)")"
 fi
 echo "server: $HOST ($STATION:$PORT)"
 
+# Another full-device VPN holding the default route would carry our own
+# encrypted traffic inside its tunnel, which usually breaks on MTU.
+OUTER=$(route -n get "$STATION" 2>/dev/null | awk '/interface:/{print $2; exit}' || true)
+case "$OUTER" in
+    utun*|ppp*|ipsec*)
+        echo "Another VPN is active on $OUTER and owns the route to $STATION."
+        echo "Disconnect it first. Nothing has been changed."
+        exit 1
+        ;;
+esac
+
 # --- group + launcher --------------------------------------------------------
 dseditgroup -o read vpnonly >/dev/null 2>&1 || \
     dseditgroup -o create -r "VPN-only apps (vpnonly)" vpnonly
 [ -x "$DIR/vpnrun" ] || cc -O2 -o "$DIR/vpnrun" "$DIR/vpnrun.c"
 
 # --- WireGuard interface -----------------------------------------------------
-"$WG_GO" "$IF"
+# Ask the kernel for a free utunN rather than claiming a fixed name. Anything
+# else on this Mac may already hold utun0..utun9, and adopting an interface we
+# do not own means reporting a connection that isn't ours.
+NAMEFILE=$(mktemp)
+WG_TUN_NAME_FILE="$NAMEFILE" nohup "$WG_GO" -f utun </dev/null >/dev/null 2>&1 &
+WG_PID=$!
+for _ in $(seq 1 50); do [ -s "$NAMEFILE" ] && break; sleep 0.1; done
+IF=$(cat "$NAMEFILE" 2>/dev/null || true); rm -f "$NAMEFILE"
+case "$IF" in
+    utun[0-9]*) ;;
+    *) echo "wireguard-go did not report an interface"; exit 1 ;;
+esac
+echo "interface: $IF"
+
+for _ in $(seq 1 50); do
+    [ -S "/var/run/wireguard/$IF.sock" ] && ifconfig "$IF" >/dev/null 2>&1 && break
+    sleep 0.1
+done
+
 if [ "${FROM_CONF:-0}" = 1 ]; then
     "$WG" setconf "$IF" "$CONF/wg-session.conf"
 else
@@ -83,23 +129,40 @@ else
 fi
 ifconfig "$IF" inet "$CLIENT_IP" "$CLIENT_IP" netmask 255.255.255.255 mtu 1420 up
 
-# --- PF: steer group traffic into the tunnel ---------------------------------
-# Merged ruleset = stock /etc/pf.conf + our NAT (inserted in the translation
-# section) + filter rules at the end. /etc/pf.conf itself is never modified;
-# down.sh reloads it verbatim.
-PFMERGED="$CONF/pf-merged.conf"
-{
-    echo 'set skip on lo0'
-    awk -v nat="nat on $IF inet from any to any -> $CLIENT_IP" \
-        '{print} /^rdr-anchor/{print nat}' /etc/pf.conf
-    # kill switch: if the tunnel is down, group traffic is blocked, not leaked
-    echo "block return out proto { tcp udp } from any to any group vpnonly"
-    echo "pass out quick route-to ($IF $CLIENT_IP) inet proto { tcp udp } from any to any group vpnonly keep state"
-} > "$PFMERGED"
-grep -q "nat on $IF" "$PFMERGED" || { echo "failed to insert NAT rule (non-stock /etc/pf.conf? see README)"; exit 1; }
+printf '%s\n' "$IF" > "$CONF/tunnel-if"
+printf '%s\n' "$CLIENT_IP" > "$CONF/tunnel-ip"
+printf '%s\n' "$WG_PID" > "$CONF/tunnel-pid"
+chown "$RUSER" "$CONF/tunnel-if" "$CONF/tunnel-ip" "$CONF/tunnel-pid"
 
-pfctl -q -f "$PFMERGED"
+# --- PF: steer group traffic into the tunnel ---------------------------------
+# Everything goes in VPNonly's own anchor. /etc/pf.conf is never read, rebuilt
+# or reloaded, so other firewall tools keep their rules and we keep ours.
+#
+# Rule order matters: both rules are `quick`, so the first match wins and the
+# pass must come first. `on ! lo0` keeps loopback out of it, or a routed app
+# would lose its own localhost connections. `return` rather than `drop` so a
+# blocked app fails immediately instead of hanging until it times out.
+PFRULES=$(mktemp)
+{
+    printf 'nat on %s inet from any to any -> %s\n' "$IF" "$CLIENT_IP"
+    printf 'pass out quick on ! lo0 route-to (%s %s) inet proto { tcp udp } from any to any group vpnonly keep state\n' "$IF" "$CLIENT_IP"
+    printf 'block return out quick on ! lo0 from any to any group vpnonly\n'
+} > "$PFRULES"
+
+pfctl -n -a "$ANCHOR" -f "$PFRULES" 2>/dev/null || {
+    echo "generated PF rules failed validation; nothing loaded"; rm -f "$PFRULES"; exit 1
+}
+# pfctl prints a warning about flushing the main ruleset whenever -f is used,
+# even when loading into an anchor, which cannot touch the main ruleset. Keep
+# the message for real failures, drop it when the load succeeded.
+if ! PF_MSG=$(pfctl -q -a "$ANCHOR" -f "$PFRULES" 2>&1); then
+    echo "$PF_MSG" >&2
+    rm -f "$PFRULES"
+    exit 1
+fi
+rm -f "$PFRULES"
 pfctl -E 2>&1 | awk '/Token/{print $NF}' > "$CONF/pf-token" || true
+chown "$RUSER" "$CONF/pf-token" 2>/dev/null || true
 
 # --- verify -------------------------------------------------------------------
 echo -n "exit IP via tunnel: "
@@ -107,4 +170,7 @@ echo -n "exit IP via tunnel: "
 echo
 echo -n "your normal IP:     "
 curl -s --max-time 10 https://api.ipify.org; echo
-echo "Tunnel up. Launch an app inside it:  sudo $DIR/run.sh /Applications/YourApp.app"
+echo
+echo "Tunnel up, but nothing is routed through it yet."
+echo "Put an app inside it:  sudo $DIR/run.sh          (pick from a list)"
+echo "                       sudo $DIR/run.sh CapCut   (or name it)"
