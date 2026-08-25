@@ -26,7 +26,8 @@ RUSER="${SUDO_USER:?run from your normal account, not as root}"
 RHOME=$(dscl . -read "/Users/$RUSER" NFSHomeDirectory 2>/dev/null | awk '{print $2}')
 CONF="${RHOME:-$HOME}/.config/vpnonly"
 
-MYIP=""; VPNIP=""; SCREEN="list"; NOTE=""; ROWS=24
+VPNONLY_VERSION="1.0.2"   # rewritten by package-cli.sh at release time
+MYIP=""; VPNIP=""; SCREEN="list"; NOTE=""; ROWS=24; UPDATE=""
 
 cannot_route() {
     case "$(basename "$1")" in
@@ -89,6 +90,31 @@ reload_state() {
     IFS=$'\n' read -r -d '' -a ROUTED < <(routed_apps && printf '\0') || true
 }
 
+# Look for a newer release at most once a day, detached, and only ever read
+# the answer from the cache. A version check must not delay the interface or
+# hang it when the network is slow — this one cannot do either, at the cost of
+# telling you one launch later than it could.
+check_for_update() {
+    local cache="$CONF/update-check" age now
+    now=$(date +%s)
+    if [ -s "$cache" ]; then
+        age=$(( now - $(awk 'NR==1{print $1+0}' "$cache") ))
+        [ "$age" -lt 0 ] && age=99999
+        UPDATE=$(awk 'NR==1{print $2}' "$cache")
+        [ "$UPDATE" = "$VPNONLY_VERSION" ] && UPDATE=""
+        [ "$age" -lt 86400 ] && return 0
+    fi
+    (
+        latest=$(curl -sf --max-time 8 \
+            https://api.github.com/repos/kanishkdan/vpnonly/releases 2>/dev/null |
+            awk -F'"' '/"tag_name"/ && $4 ~ /^cli-/ { sub(/^cli-/, "", $4); print $4; exit }')
+        case "$latest" in
+            [0-9]*.[0-9]*.[0-9]*) printf '%s %s\n' "$now" "$latest" > "$cache"
+                                  chown "$RUSER" "$cache" 2>/dev/null || true ;;
+        esac
+    ) >/dev/null 2>&1 &
+}
+
 enter_screen() { printf '\e[?1049h\e[?25l'; }
 restore()      { printf '\e[?25h\e[?1049l'; }
 
@@ -108,14 +134,19 @@ run_visible() {
 }
 
 banner() {
-    # Only when there's room. On a short window the app list matters more.
-    [ "$ROWS" -ge 26 ] || { printf '  \e[1;36mVPNonly\e[0m\n\n'; return; }
+    # Chrome costs 12 rows with the wordmark, so 18 still leaves six apps
+    # visible. Below that the list matters more than the logo.
+    [ "$ROWS" -ge 18 ] || { printf '  \e[1;36mVPNonly\e[0m\n\n'; return; }
     printf '  \e[36m%s\e[0m\n' \
         '▗▖  ▗▖▗▄▄▖ ▗▖  ▗▖ ▗▄▖ ▗▖  ▗▖▗▖ ▗▖  ▗▖' \
         '▐▌  ▐▌▐▌ ▐▌▐▛▚▖▐▌▐▌ ▐▌▐▛▚▖▐▌▐▌  ▝▚▞▘ ' \
         '▐▌  ▐▌▐▛▀▘ ▐▌ ▝▜▌▐▌ ▐▌▐▌ ▝▜▌▐▌   ▐▌  ' \
         ' ▝▚▞▘ ▐▌   ▐▌  ▐▌▝▚▄▞▘▐▌  ▐▌▐▙▄▄▖▐▌  '
-    printf '\n  \e[2mone app on the VPN, not your whole Mac\e[0m\n\n'
+    printf '\n  \e[2mone app on the VPN, not your whole Mac\e[0m\n'
+    if [ -n "$UPDATE" ]; then
+        printf '  \e[33m%s available\e[0m\e[2m · brew upgrade vpnonly\e[0m\n' "$UPDATE"
+    fi
+    printf '\n'
 }
 
 connection_line() {
@@ -138,7 +169,7 @@ connection_line() {
 
 draw_list() {
     local view i name state
-    if [ "$ROWS" -ge 26 ]; then view=$((ROWS - 13)); else view=$((ROWS - 8)); fi
+    if [ "$ROWS" -ge 18 ]; then view=$((ROWS - 13)); else view=$((ROWS - 8)); fi
     [ "$view" -lt 3 ] && view=3
     [ "${#APPS[@]}" -lt "$view" ] && view=${#APPS[@]}
     [ "$SEL" -lt "$TOP" ] && TOP=$SEL
@@ -240,6 +271,7 @@ ROUTED=(); SEL=0; TOP=0
 trap 'restore; exit 130' INT
 enter_screen
 reload_state
+check_for_update
 refresh_ips
 
 while :; do
