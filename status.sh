@@ -5,7 +5,17 @@
 #   ./status.sh          (sudo only needed for the per-app exit IP)
 set -uo pipefail
 
-DIR="$(cd "$(dirname "$0")" && pwd)"
+# Resolve through symlinks so this works when installed on PATH (Homebrew
+# links bin/vpnonly to libexec, and $0 would otherwise point at the link).
+SELF="$0"
+while [ -L "$SELF" ]; do
+    LINK=$(readlink "$SELF")
+    case "$LINK" in
+        /*) SELF="$LINK" ;;
+        *)  SELF="$(dirname "$SELF")/$LINK" ;;
+    esac
+done
+DIR="$(cd "$(dirname "$SELF")" && pwd)"
 # Under sudo, $HOME is root's. Read the invoking user's config either way.
 RUSER="${SUDO_USER:-$USER}"
 RHOME=$(dscl . -read "/Users/$RUSER" NFSHomeDirectory 2>/dev/null | awk '{print $2}')

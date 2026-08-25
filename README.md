@@ -36,6 +36,26 @@ own server): download a `.conf` from them. Nothing to copy by hand.
 
 ## Using it
 
+One command does everything:
+
+```sh
+sudo ./vpnonly
+```
+
+That shows what's connected and which apps are inside the tunnel, and lets you
+switch any app in or out with the arrow keys. Connect with `c`, disconnect with
+`d`, quit with `q`.
+
+If you'd rather type `vpnonly` from anywhere:
+
+```sh
+sudo ln -s "$PWD/vpnonly" /usr/local/bin/vpnonly
+```
+
+### The individual commands
+
+`vpnonly` is a front end over these, and they all still work on their own:
+
 ```sh
 sudo ./up.sh                                  # NordVPN, Singapore by default
 sudo COUNTRY=us ./up.sh                       # or pick a country

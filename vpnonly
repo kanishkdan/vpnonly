@@ -1,0 +1,205 @@
+#!/bin/bash
+# vpnonly — one command for the whole thing.
+#
+#   ./vpnonly            what's running, and switch apps in and out
+#
+# Everything it does is up.sh, run.sh, status.sh and down.sh underneath; this is
+# just a front end so you don't have to remember which is which.
+set -uo pipefail
+
+# Resolve through symlinks so this works when installed on PATH (Homebrew
+# links bin/vpnonly to libexec, and $0 would otherwise point at the link).
+SELF="$0"
+while [ -L "$SELF" ]; do
+    LINK=$(readlink "$SELF")
+    case "$LINK" in
+        /*) SELF="$LINK" ;;
+        *)  SELF="$(dirname "$SELF")/$LINK" ;;
+    esac
+done
+DIR="$(cd "$(dirname "$SELF")" && pwd)"
+SELF="$DIR/$(basename "$SELF")"
+# sudo resets PATH, so re-exec by absolute path. "$0" would be a bare
+# "vpnonly" when run from PATH, and sudo would not find it.
+[ "$(id -u)" = 0 ] || exec sudo -- "$SELF" "$@"
+RUSER="${SUDO_USER:?run from your normal account, not as root}"
+RHOME=$(dscl . -read "/Users/$RUSER" NFSHomeDirectory 2>/dev/null | awk '{print $2}')
+CONF="${RHOME:-$HOME}/.config/vpnonly"
+
+MYIP=""; VPNIP=""
+
+cannot_route() {
+    case "$(basename "$1")" in
+        Safari.app|"Safari Technology Preview.app") return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+list_apps() {
+    for d in /Applications "$RHOME/Applications" /Applications/Utilities; do
+        [ -d "$d" ] || continue
+        for app in "$d"/*.app; do
+            [ -d "$app" ] || continue
+            cannot_route "$app" && continue
+            printf '%s\n' "$app"
+        done
+    done | sort -f -t/ -k99
+}
+
+tunnel_if() { cat "$CONF/tunnel-if" 2>/dev/null || true; }
+
+tunnel_up() {
+    local i; i=$(tunnel_if)
+    [ -n "$i" ] && ifconfig "$i" >/dev/null 2>&1
+}
+
+vpn_gid() { dscl . -read /Groups/vpnonly PrimaryGroupID 2>/dev/null | awk '{print $2}'; }
+
+# Which .app bundles currently have a process running inside the group.
+routed_apps() {
+    local g; g=$(vpn_gid); [ -n "$g" ] || return 0
+    ps -axo rgid=,comm= 2>/dev/null | awk -v g="$g" '$1 == g {
+        sub(/^[0-9]+[ \t]+/, "")
+        if (match($0, /\.app\//)) print substr($0, 1, RSTART + 3)
+    }' | sort -u
+}
+
+pids_for_app() {
+    local g app; g=$(vpn_gid); app="$1"; [ -n "$g" ] || return 0
+    ps -axo pid=,rgid=,comm= 2>/dev/null | awk -v g="$g" -v a="$app/Contents/MacOS/" \
+        '$2 == g && index($0, a) { print $1 }'
+}
+
+refresh_ips() {
+    MYIP=$(curl -s --max-time 6 https://api.ipify.org 2>/dev/null || echo "?")
+    if tunnel_up; then
+        VPNIP=$("$DIR/vpnrun" "$RUSER" /usr/bin/curl -s --max-time 8 https://api.ipify.org 2>/dev/null || echo "?")
+    else
+        VPNIP=""
+    fi
+}
+
+# Leave the alternate screen so a command's own output is visible, then come
+# back. Anything that asks the user a question has to be run through this.
+run_visible() {
+    printf '\e[?25h\e[?1049l'
+    echo
+    "$@"
+    local rc=$?
+    echo
+    printf 'press enter to continue '
+    read -r _ </dev/tty
+    printf '\e[?1049h\e[?25l'
+    return $rc
+}
+
+restore() { printf '\e[?25h\e[?1049l'; }
+
+draw() {
+    local rows view i name marker state
+    rows=$(tput lines 2>/dev/null || echo 24)
+    view=$((rows - 9)); [ "$view" -lt 3 ] && view=3
+    [ "${#APPS[@]}" -lt "$view" ] && view=${#APPS[@]}
+    [ "$SEL" -lt "$TOP" ] && TOP=$SEL
+    [ "$SEL" -ge $((TOP + view)) ] && TOP=$((SEL - view + 1))
+
+    printf '\e[H\e[J'
+    printf '  \e[1mvpnonly\e[0m\n\n'
+    if tunnel_up; then
+        printf '  tunnel    \e[32mconnected\e[0m on %s\n' "$(tunnel_if)"
+        printf '  exit IP   %s\n' "${VPNIP:-checking…}"
+    else
+        printf '  tunnel    \e[2mnot connected\e[0m\n'
+        printf '  exit IP   \e[2m—\e[0m\n'
+    fi
+    printf '  your IP   %s\n' "${MYIP:-checking…}"
+    printf '  in VPN    %d app%s\n\n' "${#ROUTED[@]}" "$([ ${#ROUTED[@]} -eq 1 ] || echo s)"
+
+    i=$TOP
+    while [ "$i" -lt $((TOP + view)) ] && [ "$i" -lt "${#APPS[@]}" ]; do
+        name=$(basename "${APPS[$i]}" .app)
+        state="        "
+        for r in ${ROUTED[@]+"${ROUTED[@]}"}; do
+            [ "$r" = "${APPS[$i]}" ] && state=$'\e[32min VPN\e[0m'
+        done
+        if [ "$i" -eq "$SEL" ]; then
+            printf '\e[7m> %-28s\e[0m %b\n' "$name" "$state"
+        else
+            printf '  %-28s %b\n' "$name" "$state"
+        fi
+        i=$((i + 1))
+    done
+    printf '\n  \e[2menter toggle · c connect · d disconnect · r refresh · q quit\e[0m'
+}
+
+reload_state() {
+    ROUTED=()
+    IFS=$'\n' read -r -d '' -a ROUTED < <(routed_apps && printf '\0') || true
+}
+
+turn_on() {
+    local app="$1"
+    if ! tunnel_up; then
+        run_visible "$DIR/up.sh" || return 1
+    fi
+    run_visible "$DIR/run.sh" "$app"
+}
+
+turn_off() {
+    local app="$1" name; name=$(basename "$app" .app)
+    printf '\e[?25h\e[?1049l'
+    echo
+    echo "Quitting $name so it can rejoin your normal connection…"
+    osascript -e "quit app \"$name\"" 2>/dev/null || true
+    for _ in $(seq 1 40); do
+        [ -z "$(pids_for_app "$app")" ] && break
+        sleep 0.25
+    done
+    if [ -n "$(pids_for_app "$app")" ]; then
+        echo "$name didn't quit. Close it yourself, then press enter."
+    else
+        sudo -u "$RUSER" open -a "$app" 2>/dev/null &&
+            echo "$name reopened on your normal connection." ||
+            echo "$name is closed. Open it yourself when you want it back."
+    fi
+    echo
+    printf 'press enter to continue '
+    read -r _ </dev/tty
+    printf '\e[?1049h\e[?25l'
+}
+
+IFS=$'\n' read -r -d '' -a APPS < <(list_apps && printf '\0') || true
+[ "${#APPS[@]}" -gt 0 ] || { echo "no apps found in /Applications"; exit 1; }
+ROUTED=(); SEL=0; TOP=0
+
+trap 'restore; exit 130' INT
+printf '\e[?1049h\e[?25l'
+reload_state
+refresh_ips
+
+while :; do
+    draw
+    IFS= read -rsn1 key </dev/tty || { restore; exit 1; }
+    case "$key" in
+        $'\e')
+            # bash 3.2 rejects a fractional read timeout, so read the two bytes
+            # after ESC unconditionally. An arrow always sends all three.
+            IFS= read -rsn2 rest </dev/tty || rest=""
+            case "$rest" in
+                '[A') [ "$SEL" -gt 0 ] && SEL=$((SEL - 1)) ;;
+                '[B') [ "$SEL" -lt $((${#APPS[@]} - 1)) ] && SEL=$((SEL + 1)) ;;
+            esac ;;
+        k) [ "$SEL" -gt 0 ] && SEL=$((SEL - 1)) ;;
+        j) [ "$SEL" -lt $((${#APPS[@]} - 1)) ] && SEL=$((SEL + 1)) ;;
+        "")
+            app="${APPS[$SEL]}"
+            on=0
+            for r in ${ROUTED[@]+"${ROUTED[@]}"}; do [ "$r" = "$app" ] && on=1; done
+            if [ "$on" -eq 1 ]; then turn_off "$app"; else turn_on "$app"; fi
+            reload_state; refresh_ips ;;
+        c) tunnel_up || { run_visible "$DIR/up.sh"; reload_state; refresh_ips; } ;;
+        d) run_visible "$DIR/down.sh"; reload_state; refresh_ips ;;
+        r) reload_state; refresh_ips ;;
+        q|Q) restore; exit 0 ;;
+    esac
+done

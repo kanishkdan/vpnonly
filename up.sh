@@ -25,7 +25,17 @@ WG_GO=/opt/homebrew/bin/wireguard-go
 RUSER="${SUDO_USER:?run via sudo from your normal user}"
 RHOME=$(dscl . -read "/Users/$RUSER" NFSHomeDirectory | awk '{print $2}')
 CONF="$RHOME/.config/vpnonly"
-DIR="$(cd "$(dirname "$0")" && pwd)"
+# Resolve through symlinks so this works when installed on PATH (Homebrew
+# links bin/vpnonly to libexec, and $0 would otherwise point at the link).
+SELF="$0"
+while [ -L "$SELF" ]; do
+    LINK=$(readlink "$SELF")
+    case "$LINK" in
+        /*) SELF="$LINK" ;;
+        *)  SELF="$(dirname "$SELF")/$LINK" ;;
+    esac
+done
+DIR="$(cd "$(dirname "$SELF")" && pwd)"
 KEYFILE="$CONF/wg.key"
 mkdir -p "$CONF"; chown "$RUSER" "$CONF"
 
