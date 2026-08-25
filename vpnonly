@@ -59,7 +59,7 @@ vpn_gid() { dscl . -read /Groups/vpnonly PrimaryGroupID 2>/dev/null | awk '{prin
 routed_apps() {
     local g; g=$(vpn_gid); [ -n "$g" ] || return 0
     ps -axo rgid=,comm= 2>/dev/null | awk -v g="$g" '$1 == g {
-        sub(/^[0-9]+[ \t]+/, "")
+        sub(/^[ \t]*[0-9]+[ \t]+/, "")   # ps pads the gid with leading spaces
         if (match($0, /\.app\//)) print substr($0, 1, RSTART + 3)
     }' | sort -u
 }
