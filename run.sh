@@ -172,32 +172,30 @@ running_count() {
 # the only way, so say so rather than launching something that does nothing.
 if [ -d "$TARGET" ] && [[ "$TARGET" == *.app ]] && [ "$(running_count)" -gt 0 ]; then
     if [ "$(tagged_count)" -gt 0 ]; then
-        echo "$NAME is already running inside the tunnel."
+        printf '  \e[32m✓\e[0m %s is already in the tunnel.\n' "$NAME"
         exit 0
     fi
-    echo "$NAME is already open, outside the tunnel."
-    echo
-    echo "macOS fixes an app's group when it starts, so a copy that is already"
-    echo "running can't be moved in. It has to be quit and reopened."
-    echo
+    printf '  \e[33m%s is open, outside the tunnel.\e[0m\n\n' "$NAME"
+    printf '  \e[2mmacOS fixes an app'"'"'s group when it starts, so a running copy can'"'"'t be\n'
+    printf '  moved in. It has to be quit and reopened.\e[0m\n\n'
     if [ ! -t 0 ]; then
-        echo "Quit $NAME, then run this again."
+        printf '  Quit %s, then run this again.\n' "$NAME"
         exit 1
     fi
-    printf 'Quit %s and reopen it in the VPN? [y/N] ' "$NAME"
+    printf '  \e[1mQuit and reopen %s in the VPN?\e[0m [y/N] ' "$NAME"
     read -r reply
     case "$reply" in
         y|Y|yes|YES) ;;
-        *) echo "Left $NAME alone. It is still on your normal connection."; exit 1 ;;
+        *) printf '  left %s alone, still on your normal connection.\n' "$NAME"; exit 1 ;;
     esac
-    echo "Quitting $NAME…"
+    printf '  quitting %s…\n' "$NAME"
     osascript -e "quit app \"$NAME\"" 2>/dev/null || true
     for _ in $(seq 1 40); do
         [ "$(running_count)" -eq 0 ] && break
         sleep 0.25
     done
     if [ "$(running_count)" -gt 0 ]; then
-        echo "$NAME didn't quit. Close it yourself, then run this again."
+        printf '  \e[31m✗\e[0m %s did not quit. Close it yourself, then try again.\n' "$NAME"
         exit 1
     fi
 fi
@@ -212,13 +210,11 @@ if [ -d "$TARGET" ] && [[ "$TARGET" == *.app ]]; then
         sleep 0.25
     done
     if [ "$(tagged_count)" -gt 0 ]; then
-        echo "$NAME is in the tunnel."
-        echo "check it with: sudo $DIR/status.sh"
+        printf '  \e[32m✓\e[0m %s is in the tunnel.\n' "$NAME"
     else
-        echo "$NAME started, but nothing is carrying VPNonly's group, so it is"
-        echo "NOT in the tunnel. That usually means another copy was already"
-        echo "running and this one handed off to it. Quit $NAME completely and"
-        echo "try again."
+        printf '  \e[31m✗\e[0m %s started but is \e[1mnot\e[0m in the tunnel.\n' "$NAME"
+        printf '  \e[2manother copy was already running and this one handed off to it.\n'
+        printf '  quit %s completely, then try again.\e[0m\n' "$NAME"
         exit 1
     fi
 else

@@ -181,6 +181,5 @@ echo
 echo -n "your normal IP:     "
 curl -s --max-time 10 https://api.ipify.org; echo
 echo
-echo "Tunnel up, but nothing is routed through it yet."
-echo "Put an app inside it:  sudo $DIR/run.sh          (pick from a list)"
-echo "                       sudo $DIR/run.sh CapCut   (or name it)"
+printf '  \e[2mTunnel up. Nothing is routed through it yet.\n'
+printf '  Run \e[0mvpnonly\e[2m to put an app inside it.\e[0m\n' 
