@@ -1,14 +1,14 @@
 #!/bin/bash
 # vpnonly — one command for the whole thing.
 #
-#   ./vpnonly            what's running, and switch apps in and out
+#   vpnonly              pick an app, see what's true of it, turn it on or off
 #
 # Everything it does is up.sh, run.sh, status.sh and down.sh underneath; this is
 # just a front end so you don't have to remember which is which.
 set -uo pipefail
 
-# Resolve through symlinks so this works when installed on PATH (Homebrew
-# links bin/vpnonly to libexec, and $0 would otherwise point at the link).
+# Resolve through symlinks so this works when installed on PATH (Homebrew links
+# bin/vpnonly to libexec via two relative hops, and $0 points at the first).
 SELF="$0"
 while [ -L "$SELF" ]; do
     LINK=$(readlink "$SELF")
@@ -26,7 +26,7 @@ RUSER="${SUDO_USER:?run from your normal account, not as root}"
 RHOME=$(dscl . -read "/Users/$RUSER" NFSHomeDirectory 2>/dev/null | awk '{print $2}')
 CONF="${RHOME:-$HOME}/.config/vpnonly"
 
-MYIP=""; VPNIP=""
+MYIP=""; VPNIP=""; SCREEN="list"; NOTE=""; ROWS=24
 
 cannot_route() {
     case "$(basename "$1")" in
@@ -55,7 +55,6 @@ tunnel_up() {
 
 vpn_gid() { dscl . -read /Groups/vpnonly PrimaryGroupID 2>/dev/null | awk '{print $2}'; }
 
-# Which .app bundles currently have a process running inside the group.
 routed_apps() {
     local g; g=$(vpn_gid); [ -n "$g" ] || return 0
     ps -axo rgid=,comm= 2>/dev/null | awk -v g="$g" '$1 == g {
@@ -70,6 +69,12 @@ pids_for_app() {
         '$2 == g && index($0, a) { print $1 }'
 }
 
+is_on() {
+    local r
+    for r in ${ROUTED[@]+"${ROUTED[@]}"}; do [ "$r" = "$1" ] && return 0; done
+    return 1
+}
+
 refresh_ips() {
     MYIP=$(curl -s --max-time 6 https://api.ipify.org 2>/dev/null || echo "?")
     if tunnel_up; then
@@ -79,67 +84,78 @@ refresh_ips() {
     fi
 }
 
+reload_state() {
+    ROUTED=()
+    IFS=$'\n' read -r -d '' -a ROUTED < <(routed_apps && printf '\0') || true
+}
+
+enter_screen() { printf '\e[?1049h\e[?25l'; }
+restore()      { printf '\e[?25h\e[?1049l'; }
+
 # Leave the alternate screen so a command's own output is visible, then come
-# back. Anything that asks the user a question has to be run through this.
+# back to a clean frame.
 run_visible() {
-    printf '\e[?25h\e[?1049l'
+    local rc
+    restore
     echo
     "$@"
-    local rc=$?
+    rc=$?
     echo
     printf 'press enter to continue '
     read -r _ </dev/tty
-    printf '\e[?1049h\e[?25l\e[H\e[2J'
+    enter_screen
     return $rc
 }
 
-restore() { printf '\e[?25h\e[?1049l'; }
+banner() {
+    # Only when there's room. On a short window the app list matters more.
+    [ "$ROWS" -ge 26 ] || { printf '  \e[1;36mVPNonly\e[0m\n\n'; return; }
+    printf '  \e[36m%s\e[0m\n' \
+        '▗▖  ▗▖▗▄▄▖ ▗▖  ▗▖ ▗▄▖ ▗▖  ▗▖▗▖ ▗▖  ▗▖' \
+        '▐▌  ▐▌▐▌ ▐▌▐▛▚▖▐▌▐▌ ▐▌▐▛▚▖▐▌▐▌  ▝▚▞▘ ' \
+        '▐▌  ▐▌▐▛▀▘ ▐▌ ▝▜▌▐▌ ▐▌▐▌ ▝▜▌▐▌   ▐▌  ' \
+        ' ▝▚▞▘ ▐▌   ▐▌  ▐▌▝▚▄▞▘▐▌  ▐▌▐▙▄▄▖▐▌  '
+    printf '\n  \e[2mone app on the VPN, not your whole Mac\e[0m\n\n'
+}
 
-draw() {
-    local rows view i name state dot line label
-    rows=$(tput lines 2>/dev/null || echo 24)
-    view=$((rows - 10)); [ "$view" -lt 3 ] && view=3
+connection_line() {
+    if tunnel_up; then
+        printf '  \e[32m●\e[0m connected\e[2m ·\e[0m %s' "$(tunnel_if)"
+        [ -n "$VPNIP" ] && [ "$VPNIP" != "?" ] &&
+            printf '\e[2m ·\e[0m exit \e[32m%s\e[0m' "$VPNIP"
+        printf '\n'
+    else
+        printf '  \e[2m○ not connected\e[0m'
+        if [ "${#ROUTED[@]}" -gt 0 ]; then
+            # Tagged apps with no tunnel are refused, not leaking. Say that,
+            # rather than calling them protected.
+            printf '\e[2m ·\e[0m \e[33m%d app%s blocked by the kill switch\e[0m' \
+                "${#ROUTED[@]}" "$([ "${#ROUTED[@]}" -eq 1 ] || echo s)"
+        fi
+        printf '\n'
+    fi
+}
+
+draw_list() {
+    local view i name state
+    if [ "$ROWS" -ge 26 ]; then view=$((ROWS - 13)); else view=$((ROWS - 8)); fi
+    [ "$view" -lt 3 ] && view=3
     [ "${#APPS[@]}" -lt "$view" ] && view=${#APPS[@]}
     [ "$SEL" -lt "$TOP" ] && TOP=$SEL
     [ "$SEL" -ge $((TOP + view)) ] && TOP=$((SEL - view + 1))
 
-    # Home, clear to end, and clear scrollback. Some terminals keep the old
-    # frame around without the third one.
-    printf '\e[H\e[2J\e[3J'
-
-    printf '  \e[1;36mVPNonly\e[0m  \e[2mone app on the VPN, not your whole Mac\e[0m\n\n'
-
-    if tunnel_up; then
-        printf '  \e[32m●\e[0m connected\e[2m ·\e[0m %s\n' "$(tunnel_if)"
-        if [ -n "$VPNIP" ] && [ "$VPNIP" != "?" ]; then
-            printf '    \e[32m%s\e[0m through the VPN\e[2m ·\e[0m %s normally\n' \
-                "$VPNIP" "${MYIP:-?}"
-        else
-            printf '    \e[2mchecking the exit address…\e[0m\n'
-        fi
-    else
-        printf '  \e[2m○ not connected\e[0m\n'
-        if [ "${#ROUTED[@]}" -gt 0 ]; then
-            # Tagged apps with no tunnel are refused, not leaking. Say that,
-            # rather than calling them protected.
-            printf '    \e[33m%d app%s blocked until you connect\e[0m\e[2m · this is the kill switch\e[0m\n' \
-                "${#ROUTED[@]}" "$([ ${#ROUTED[@]} -eq 1 ] || echo s)"
-        else
-            printf '    \e[2myour IP is %s\e[0m\n' "${MYIP:-?}"
-        fi
-    fi
-    printf '\n'
+    banner
+    connection_line
+    printf '  \e[2myour address is %s\e[0m\n\n' "${MYIP:-?}"
 
     i=$TOP
     while [ "$i" -lt $((TOP + view)) ] && [ "$i" -lt "${#APPS[@]}" ]; do
         name=$(basename "${APPS[$i]}" .app)
         state=""
-        for r in ${ROUTED[@]+"${ROUTED[@]}"}; do
-            if [ "$r" = "${APPS[$i]}" ]; then
-                if tunnel_up; then state=$'\e[32m● in VPN\e[0m'
-                else state=$'\e[33m● blocked\e[0m'; fi
-            fi
-        done
+        if is_on "${APPS[$i]}"; then
+            if tunnel_up; then state=$'\e[32m● in VPN\e[0m'
+            else state=$'\e[33m● blocked\e[0m'; fi
+        fi
         if [ "$i" -eq "$SEL" ]; then
             printf '\e[36m▶\e[0m \e[1m%-30s\e[0m %b\n' "$name" "$state"
         else
@@ -148,25 +164,55 @@ draw() {
         i=$((i + 1))
     done
 
-    printf '\n  \e[2m↑↓\e[0m  \e[2m|\e[0m  \e[2mEnter\e[0m toggle  \e[2m|\e[0m  \e[2mC\e[0m connect  \e[2m|\e[0m  \e[2mD\e[0m disconnect  \e[2m|\e[0m  \e[2mR\e[0m refresh  \e[2m|\e[0m  \e[2mQ\e[0m quit'
+    printf '\n  \e[2m↑↓  |  Enter\e[0m open  \e[2m|  D\e[0m disconnect  \e[2m|  R\e[0m refresh  \e[2m|  Q\e[0m quit'
 }
 
-reload_state() {
-    ROUTED=()
-    IFS=$'\n' read -r -d '' -a ROUTED < <(routed_apps && printf '\0') || true
+draw_app() {
+    local app name
+    app="${APPS[$SEL]}"; name=$(basename "$app" .app)
+
+    printf '  \e[1;36m%s\e[0m\n\n' "$name"
+
+    if is_on "$app"; then
+        if tunnel_up; then
+            printf '  in the VPN      \e[32myes\e[0m\e[2m, through %s\e[0m\n' "$(tunnel_if)"
+            printf '  its address     \e[32m%s\e[0m\n' "${VPNIP:-checking…}"
+        else
+            printf '  in the VPN      \e[33mheld offline\e[0m\n'
+            printf '  \e[2m                the tunnel is down, so it is refused rather\n'
+            printf '                  than quietly using your normal connection\e[0m\n'
+        fi
+    else
+        printf '  in the VPN      \e[2mno\e[0m\n'
+        printf '  its address     \e[2m%s, same as the rest of your Mac\e[0m\n' "${MYIP:-?}"
+    fi
+    printf '  your address    %s\n\n' "${MYIP:-?}"
+
+    if is_on "$app"; then
+        printf '  \e[36m▶\e[0m \e[1mTurn off\e[0m\n'
+        printf '    \e[2mQuits %s and reopens it on your normal connection.\e[0m\n' "$name"
+    else
+        printf '  \e[36m▶\e[0m \e[1mTurn on\e[0m\n'
+        if tunnel_up; then
+            printf '    \e[2mReopens %s inside the tunnel. Nothing else moves.\e[0m\n' "$name"
+        else
+            printf '    \e[2mConnects the tunnel, then reopens %s inside it.\e[0m\n' "$name"
+        fi
+    fi
+
+    [ -n "$NOTE" ] && printf '\n  \e[33m%s\e[0m\n' "$NOTE"
+    printf '\n  \e[2mEnter\e[0m do it  \e[2m|  Esc\e[0m back  \e[2m|  Q\e[0m quit'
 }
 
 turn_on() {
     local app="$1"
-    if ! tunnel_up; then
-        run_visible "$DIR/up.sh" || return 1
-    fi
+    tunnel_up || run_visible "$DIR/up.sh" || return 1
     run_visible "$DIR/run.sh" "$app"
 }
 
 turn_off() {
     local app="$1" name; name=$(basename "$app" .app)
-    printf '\e[?25h\e[?1049l'
+    restore
     echo
     echo "Quitting $name so it can rejoin your normal connection…"
     osascript -e "quit app \"$name\"" 2>/dev/null || true
@@ -179,12 +225,12 @@ turn_off() {
     else
         sudo -u "$RUSER" open -a "$app" 2>/dev/null &&
             echo "$name reopened on your normal connection." ||
-            echo "$name is closed. Open it yourself when you want it back."
+            echo "$name is closed. Open it when you want it back."
     fi
     echo
     printf 'press enter to continue '
     read -r _ </dev/tty
-    printf '\e[?1049h\e[?25l\e[H\e[2J'
+    enter_screen
 }
 
 IFS=$'\n' read -r -d '' -a APPS < <(list_apps && printf '\0') || true
@@ -192,13 +238,37 @@ IFS=$'\n' read -r -d '' -a APPS < <(list_apps && printf '\0') || true
 ROUTED=(); SEL=0; TOP=0
 
 trap 'restore; exit 130' INT
-printf '\e[?1049h\e[?25l'
+enter_screen
 reload_state
 refresh_ips
 
 while :; do
-    draw
+    ROWS=$(tput lines 2>/dev/null || echo 24)
+    printf '\e[H\e[2J\e[3J'
+    if [ "$SCREEN" = "list" ]; then draw_list; else draw_app; fi
+
     IFS= read -rsn1 key </dev/tty || { restore; exit 1; }
+
+    if [ "$SCREEN" = "app" ]; then
+        # No arrows on this screen, so a bare Esc means back and needs no
+        # follow-up read — which bash 3.2 cannot do without a timeout.
+        case "$key" in
+            $'\e') SCREEN="list"; NOTE="" ;;
+            q|Q)   restore; exit 0 ;;
+            "")
+                app="${APPS[$SEL]}"; NOTE=""
+                if is_on "$app"; then
+                    turn_off "$app"
+                else
+                    turn_on "$app" || NOTE="That didn't finish. The message above says why."
+                fi
+                reload_state; refresh_ips
+                [ -z "$NOTE" ] && SCREEN="list"
+                ;;
+        esac
+        continue
+    fi
+
     case "$key" in
         $'\e')
             # bash 3.2 rejects a fractional read timeout, so read the two bytes
@@ -210,15 +280,9 @@ while :; do
             esac ;;
         k) [ "$SEL" -gt 0 ] && SEL=$((SEL - 1)) ;;
         j) [ "$SEL" -lt $((${#APPS[@]} - 1)) ] && SEL=$((SEL + 1)) ;;
-        "")
-            app="${APPS[$SEL]}"
-            on=0
-            for r in ${ROUTED[@]+"${ROUTED[@]}"}; do [ "$r" = "$app" ] && on=1; done
-            if [ "$on" -eq 1 ]; then turn_off "$app"; else turn_on "$app"; fi
-            reload_state; refresh_ips ;;
-        c) tunnel_up || { run_visible "$DIR/up.sh"; reload_state; refresh_ips; } ;;
-        d) run_visible "$DIR/down.sh"; reload_state; refresh_ips ;;
-        r) reload_state; refresh_ips ;;
+        "") SCREEN="app"; NOTE="" ;;
+        d|D) run_visible "$DIR/down.sh"; reload_state; refresh_ips ;;
+        r|R) reload_state; refresh_ips ;;
         q|Q) restore; exit 0 ;;
     esac
 done
