@@ -7,13 +7,25 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.9.15</title>
+      <pubDate>Tue, 25 Aug 2026 17:18:19 +0530</pubDate>
+      <sparkle:version>1.9.15</sparkle:version>
+      <sparkle:shortVersionString>1.9.15</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Turning an app off no longer asks to quit it, because it never needed to be quit.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.9.15.zip"
+                 sparkle:edSignature="QGrMdFTbtEvIkiFDjF14+Kx1MyvVSD1aX02T4v3JsMAa5F0WMW8kc+eLNFz4n2dFvUo9A51OU0Q5cJ829AlEAw=="
+                 length="3156594"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.9.14</title>
       <pubDate>Mon, 24 Aug 2026 18:29:00 +0530</pubDate>
       <sparkle:version>1.9.14</sparkle:version>
       <sparkle:shortVersionString>1.9.14</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>The status no longer shows a problem while VPNonly is still working — a normal connect briefly looked like an error.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.9.14.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.9.14/VPNonly-1.9.14.zip"
                  sparkle:edSignature="5sZosd3uaPCwOZZcwF2FoYCcZ6rWBoYaWa/SpyLTygV1K68b0knBy8ype3j4ijSGqoM4AzO88Wb7yjX3ipNODw=="
                  length="3148813"
                  type="application/octet-stream" />
