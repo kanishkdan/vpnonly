@@ -46,9 +46,19 @@ if [ -z "${1:-}" ] && [ ! -f "$KEYFILE" ]; then
     exit 1
 fi
 
-if [ -s "$CONF/tunnel-if" ] && ifconfig "$(cat "$CONF/tunnel-if")" >/dev/null 2>&1; then
-    echo "a vpnonly tunnel is already up on $(cat "$CONF/tunnel-if") — run down.sh first"
-    exit 1
+# "Already up" only counts if the process we recorded is still our own
+# wireguard-go. The interface name alone proves nothing: after a crash or a
+# reboot the kernel hands utunN to whoever asks next (Tailscale took utun7
+# here), and a stale state file would then refuse to start forever.
+if [ -s "$CONF/tunnel-if" ]; then
+    OLD_IF=$(cat "$CONF/tunnel-if")
+    OLD_PID=$(cat "$CONF/tunnel-pid" 2>/dev/null || true)
+    if [ -n "$OLD_PID" ] && ps -p "$OLD_PID" -o comm= 2>/dev/null | grep -q 'wireguard-go' \
+        && ifconfig "$OLD_IF" >/dev/null 2>&1; then
+        echo "a vpnonly tunnel is already up on $OLD_IF — run down.sh first"
+        exit 1
+    fi
+    rm -f "$CONF/tunnel-if" "$CONF/tunnel-ip" "$CONF/tunnel-pid"
 fi
 
 # PF evaluates anchors nested under com.apple/*, which is where our rules go.
@@ -154,7 +164,7 @@ chown "$RUSER" "$CONF/tunnel-if" "$CONF/tunnel-ip" "$CONF/tunnel-pid"
 # blocked app fails immediately instead of hanging until it times out.
 PFRULES=$(mktemp)
 {
-    printf 'nat on %s inet from any to any -> %s\n' "$IF" "$CLIENT_IP"
+    # No nat rule: PF can't translate a packet it route-to's on macOS. See README.
     printf 'pass out quick on ! lo0 route-to (%s %s) inet proto { tcp udp } from any to any group vpnonly keep state\n' "$IF" "$CLIENT_IP"
     printf 'block return out quick on ! lo0 from any to any group vpnonly\n'
 } > "$PFRULES"

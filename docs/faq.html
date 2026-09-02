@@ -53,7 +53,7 @@
 <details class="qsec" open>
 <summary><h2>Which VPNs work?</h2></summary>
 <p><strong>NordVPN</strong> is the easiest. Paste an access token once, and the app fetches your WireGuard key and picks servers for you, with a country menu.</p>
-<p><strong>Everyone else</strong> (Mullvad, Proton, IVPN, AirVPN, or a server you run yourself) works by importing a WireGuard config. Download the <code>.conf</code> from your provider, one per server, import as many as you want, and switch between them from the same menu. If your provider gives you a WireGuard config, it works here.</p>
+<p><strong>Everyone else</strong> (Mullvad, Proton, IVPN, AirVPN, or a server you run yourself) works by importing a WireGuard config. Download the <code>.conf</code> files from your provider &mdash; one, several, or the whole zip they offer &mdash; and import them. A zip with every server in it becomes a single entry with a country picker, the way NordVPN works. Import as many providers as you want and switch between them from the menu at the bottom. If your provider gives you a WireGuard config, it works here.</p>
 </details>
 
 <details class="qsec" open>
@@ -69,7 +69,7 @@
 
 <details class="qsec" open>
 <summary><h2>Does my app restart every time I toggle it?</h2></summary>
-<p>Not every time, but more than once. macOS fixes how an app connects at the moment it opens, and the firewall matches on that, so an app has to be relaunched to get into the tunnel. While it stays open, switching it in and out is instant and it keeps running. Quit it and open it again yourself and it's outside the tunnel, so VPNonly relaunches it once to put it back. In practice: a restart the first time you add it, and one more whenever you reopen the app from scratch. Open connections do drop when the exit IP changes, but most apps reconnect by themselves.</p>
+<p>Not every time, but more than once. macOS fixes how an app connects at the moment it opens, and the firewall matches on that, so an app has to be relaunched to get into the tunnel. While it stays open, switching it in and out is instant and it keeps running. Quit it and open it again yourself and it's outside the tunnel, so VPNonly relaunches it once to put it back. In practice: a restart the first time you add it, and one more whenever you reopen the app from scratch. Open connections do drop when the exit IP changes, but most apps reconnect by themselves. Chrome and other browsers reopen without your tabs; press <kbd>&#8679;&#8984;T</kbd> to bring the last window back, or set the browser to reopen tabs on launch (Chrome: Settings &rarr; On startup &rarr; Continue where you left off). With more than one Chrome profile, choose yours first, then <kbd>&#8679;&#8984;T</kbd>.</p>
 </details>
 
 <details class="qsec" open>

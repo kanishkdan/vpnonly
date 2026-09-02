@@ -644,7 +644,13 @@ NAME_TMP=$(mktemp "$STATE_DIR/.interface-name.XXXXXX")
 chmod 600 "$NAME_TMP"
 chown root:wheel "$NAME_TMP"
 MANAGING_NEW=1
-WG_TUN_NAME_FILE="$NAME_TMP" /usr/bin/nohup "$WG_GO" -f utun \
+# WG_NAT_SOURCE makes the bundled wireguard-go rewrite each packet's inner
+# IPv4 source to the tunnel address. PF cannot do this itself: macOS
+# evaluates translation rules against the interface the OS originally chose,
+# so a route-to'd packet skips them and arrives with the LAN source, which
+# providers that enforce cryptokey routing (Mullvad, Proton, stock servers)
+# silently drop. NordLynx NATs any inner source, which hid this for months.
+WG_TUN_NAME_FILE="$NAME_TMP" WG_NAT_SOURCE="$CLIENT_IP" /usr/bin/nohup "$WG_GO" -f utun \
     </dev/null >/dev/null 2>&1 &
 NEW_PID=$!
 write_setup_state setup-pid "$NEW_PID"

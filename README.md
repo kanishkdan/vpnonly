@@ -62,6 +62,14 @@ then run `fetch-creds.sh` from the install directory
 **Anything else that speaks WireGuard** (Mullvad, Proton, IVPN, AirVPN, your
 own server): download a `.conf` from them. Nothing to copy by hand.
 
+One honest caveat for the CLI: it runs the stock `wireguard-go` from Homebrew,
+which sends packets into the tunnel with your LAN address as the inner source.
+NordVPN's servers accept that; providers that enforce cryptokey routing
+(Mullvad, Proton, most self-hosted servers) silently drop it. The Mac app
+bundles a patched `wireguard-go` that rewrites the inner source, so those work
+there. The CLI catches up when the formula builds the same patch; until then
+the CLI is NordVPN-only in practice. Details under *How it works*.
+
 ### Or from source
 
 ```sh
@@ -149,14 +157,22 @@ match by *unix group*. That's the entire trick.
 1. **`up.sh`** starts a userspace WireGuard interface, asking the kernel for a
    free `utunN` rather than claiming a fixed name, and brings it up **without
    installing a default route** so nothing uses it by default. It creates a
-   group called `vpnonly` and loads three rules into VPNonly's own PF anchor:
+   group called `vpnonly` and loads two rules into VPNonly's own PF anchor:
 
    ```
-   nat on utun7 inet from any to any -> 10.5.0.2
    pass out quick on ! lo0 route-to (utun7 10.5.0.2) inet proto { tcp udp } \
        from any to any group vpnonly keep state
    block return out quick on ! lo0 from any to any group vpnonly
    ```
+
+   There is deliberately no `nat` rule. macOS evaluates PF translation against
+   the interface the OS originally routed to, so a `route-to`'d packet never
+   reaches a rule keyed to the tunnel (measured: 0 matches in 32,000
+   evaluations), and keying it to `en0` instead makes the translated packet
+   leave via `en0`. PF cannot both translate and redirect one packet. The
+   inner source is therefore rewritten inside `wireguard-go` in the Mac app
+   (`app-engine/wireguard-go-nat.patch`, tests included); the CLI's stock
+   `wireguard-go` doesn't yet, see the caveat under *Install*.
 
    The `block` rule is the kill switch. If the tunnel goes down, group traffic
    is refused rather than leaking to your ISP, and `return` means the app fails
@@ -184,11 +200,16 @@ just that anchor and stops just the process it started.
   they never carry the group and PF has nothing to match. Proton VPN's macOS
   split tunneling documents the same limitation. Chrome, Firefox, Arc and Brave
   are fine.
-- **DNS queries are not tunneled.** Apps resolve via the system resolver, which
+- **DNS queries are not tunneled.** Apps resolve through mDNSResponder, which
   runs outside the group, so lookups still exit over your normal connection
-  even though the connections themselves are tunneled. If your threat model is
-  "hide which hosts I talk to from my ISP", this matters. If it's "give one app
-  a different exit IP", it mostly doesn't.
+  even though the connections themselves are tunneled. Two consequences. Your
+  ISP can still see which hosts you look up. And a geo-aware DNS answer can
+  hand an app a local endpoint even though its traffic is leaving through the
+  tunnel correctly, so a different exit IP is not on its own a guarantee of
+  appearing to be somewhere else. That second one hasn't broken CapCut in
+  testing, which appears to gate on the source IP rather than on which edge you
+  reach, but that is luck rather than design. Doing it properly needs a DNS
+  proxy network extension.
 - IPv6 is blocked for grouped apps rather than tunneled. No leak, but no v6.
 - No automatic reconnect if the server drops. `down.sh` then `up.sh`.
 - Don't run your provider's own app *connected* at the same time. `up.sh`

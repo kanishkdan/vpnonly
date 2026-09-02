@@ -250,9 +250,12 @@ fi
 
 PFCONF=$(/usr/bin/mktemp /var/run/vpnonly-pf.XXXXXX) || die "cannot create PF rules file"
 
-if [ "$ROUTE_THROUGH" -eq 1 ]; then
-    printf 'nat on %s inet from any to any -> %s\n' "$IFACE" "$CLIENT_IP" >> "$PFCONF"
-fi
+# No nat rule on purpose. macOS PF evaluates translation against the
+# interface the OS originally routed to, so a rule keyed to the tunnel never
+# matches a route-to'd packet (measured live: 0 matches in 32k evaluations).
+# The bundled wireguard-go rewrites the inner source instead — see
+# wireguard-go-nat.patch. NordLynx tolerated the wrong source; Mullvad-class
+# servers enforcing cryptokey routing were silently dropping everything.
 if [ "$NVPNG" -gt 0 ]; then
     for group in "${ROUTE_GROUPS[@]}"; do
         if [ "$ROUTE_THROUGH" -eq 1 ]; then

@@ -1,0 +1,618 @@
+--- a/main.go	2026-09-01 00:02:09
++++ b/main.go	2026-09-01 00:02:09
+@@ -222,7 +222,7 @@
+ 		return
+ 	}
+ 
+-	device := device.NewDevice(tdev, conn.NewDefaultBind(), logger)
++	device := device.NewDevice(maybeNAT(tdev, logger), conn.NewDefaultBind(), logger)
+ 
+ 	logger.Verbosef("Device started")
+ 
+--- /dev/null	2026-09-02 11:10:28
++++ b/source_nat.go	2026-09-02 11:10:27
+@@ -0,0 +1,311 @@
++/* SPDX-License-Identifier: MIT
++ *
++ * VPNonly addition: rewrite the inner IPv4 source of packets entering the
++ * tunnel to the tunnel's own address, and reverse the rewrite on replies.
++ *
++ * Why this exists: VPNonly steers selected apps into this tunnel with PF
++ * route-to. On macOS, PF evaluates translation rules against the interface
++ * the OS originally routed to, and a route-to'd packet skips them, so
++ * packets arrive here still carrying the LAN source address. Servers that
++ * enforce WireGuard cryptokey routing (Mullvad, Proton, stock wg servers)
++ * silently drop those. NordLynx NATs any inner source, which is why the
++ * problem stayed invisible until a strict provider was tried.
++ *
++ * Enabled only when WG_NAT_SOURCE is set to the tunnel's IPv4 address.
++ * Unset, this file changes nothing. On any packet it cannot safely parse,
++ * it passes the packet through untouched rather than risk corrupting it.
++ */
++
++package main
++
++import (
++	"encoding/binary"
++	"net"
++	"os"
++	"sync"
++	"time"
++
++	"golang.zx2c4.com/wireguard/device"
++	"golang.zx2c4.com/wireguard/tun"
++)
++
++// maybeNAT wraps the tun device when WG_NAT_SOURCE names a valid IPv4
++// address, and returns it unchanged otherwise.
++func maybeNAT(tdev tun.Device, logger *device.Logger) tun.Device {
++	env := os.Getenv("WG_NAT_SOURCE")
++	if env == "" {
++		return tdev
++	}
++	v4 := net.ParseIP(env).To4()
++	if v4 == nil {
++		logger.Errorf("WG_NAT_SOURCE %q is not an IPv4 address; source rewriting disabled", env)
++		return tdev
++	}
++	var ip [4]byte
++	copy(ip[:], v4)
++	logger.Verbosef("Rewriting inner IPv4 source to %s", v4)
++	return newNATDevice(tdev, ip)
++}
++
++// newNATDevice is the single place the tables are built, so production and
++// tests can never disagree about which maps exist.
++func newNATDevice(tdev tun.Device, natIP [4]byte) *natDevice {
++	return &natDevice{
++		Device:   tdev,
++		natIP:    natIP,
++		flows:    make(map[flowKey][4]byte),
++		seen:     make(map[flowKey]int64),
++		frags:    make(map[fragKey][4]byte),
++		fragSeen: make(map[fragKey]int64),
++	}
++}
++
++// One tracked connection. The source port is left untouched by the rewrite,
++// so together with the remote address it identifies the flow both ways.
++type flowKey struct {
++	proto      byte
++	localPort  uint16 // original source port (or ICMP echo id)
++	remoteIP   [4]byte
++	remotePort uint16 // zero for ICMP
++}
++
++// A fragmented reply only carries ports in its first fragment. The rest are
++// matched to it by (source, IP id), so every piece gets the same destination
++// and the kernel can reassemble.
++type fragKey struct {
++	src [4]byte
++	id  uint16
++}
++
++type natDevice struct {
++	tun.Device
++	natIP [4]byte
++
++	mu       sync.Mutex
++	flows    map[flowKey][4]byte // flow -> original source address
++	seen     map[flowKey]int64   // flow -> unix seconds of last egress packet
++	frags    map[fragKey][4]byte // in-flight fragmented reply -> original destination
++	fragSeen map[fragKey]int64
++	inserts  int
++}
++
++const (
++	flowLimit  = 65536 // hard cap on tracked flows
++	flowIdle   = 600   // seconds before an idle flow may be dropped
++	sweepEvery = 4096  // inserts between opportunistic sweeps
++	fragLimit  = 4096  // fragmented datagrams remembered at once
++	fragIdle   = 30    // seconds a datagram's fragments may keep arriving
++)
++
++// Read is the egress path: packets from the OS on their way to the tunnel.
++func (d *natDevice) Read(bufs [][]byte, sizes []int, offset int) (int, error) {
++	n, err := d.Device.Read(bufs, sizes, offset)
++	for i := 0; i < n; i++ {
++		if sizes[i] > 0 && offset+sizes[i] <= len(bufs[i]) {
++			d.egress(bufs[i][offset : offset+sizes[i]])
++		}
++	}
++	return n, err
++}
++
++// Write is the ingress path: decrypted packets from the tunnel to the OS.
++func (d *natDevice) Write(bufs [][]byte, offset int) (int, error) {
++	for i := range bufs {
++		if offset < len(bufs[i]) {
++			d.ingress(bufs[i][offset:])
++		}
++	}
++	return d.Device.Write(bufs, offset)
++}
++
++// header pulls the pieces of an IPv4 header this file cares about.
++// ok is false for anything that should be passed through untouched.
++func header(p []byte) (ihl int, proto byte, frag bool, ok bool) {
++	if len(p) < 20 || p[0]>>4 != 4 {
++		return 0, 0, false, false
++	}
++	ihl = int(p[0]&0x0f) * 4
++	if ihl < 20 || len(p) < ihl {
++		return 0, 0, false, false
++	}
++	// a nonzero fragment offset means no L4 header in this packet
++	frag = binary.BigEndian.Uint16(p[6:8])&0x1fff != 0
++	return ihl, p[9], frag, true
++}
++
++func (d *natDevice) egress(p []byte) {
++	ihl, proto, frag, ok := header(p)
++	if !ok {
++		return
++	}
++	var src [4]byte
++	copy(src[:], p[12:16])
++	if src == d.natIP {
++		return // already correct (bound sockets, our own traffic)
++	}
++
++	// Identify the flow before rewriting. Fragments past the first carry no
++	// L4 header: rewrite the address, skip the map (the first fragment of
++	// the same flow keyed it).
++	if !frag {
++		key := flowKey{proto: proto}
++		switch proto {
++		case 6, 17: // TCP, UDP
++			if len(p) < ihl+4 {
++				return
++			}
++			key.localPort = binary.BigEndian.Uint16(p[ihl : ihl+2])
++			key.remotePort = binary.BigEndian.Uint16(p[ihl+2 : ihl+4])
++		case 1: // ICMP echo request: the id plays the port's role
++			if len(p) < ihl+8 || p[ihl] != 8 {
++				return
++			}
++			key.localPort = binary.BigEndian.Uint16(p[ihl+4 : ihl+6])
++		default:
++			return // unknown protocol: better to leave it alone
++		}
++		copy(key.remoteIP[:], p[16:20])
++
++		d.mu.Lock()
++		if _, exists := d.flows[key]; !exists && len(d.flows) >= flowLimit {
++			d.sweepLocked(true)
++		}
++		if _, exists := d.flows[key]; exists || len(d.flows) < flowLimit {
++			d.flows[key] = src
++			d.seen[key] = time.Now().Unix()
++			d.inserts++
++			if d.inserts%sweepEvery == 0 {
++				d.sweepLocked(false)
++			}
++		}
++		d.mu.Unlock()
++	}
++
++	rewrite(p, ihl, proto, frag, 12, src, d.natIP)
++}
++
++func (d *natDevice) ingress(p []byte) {
++	ihl, proto, frag, ok := header(p)
++	if !ok {
++		return
++	}
++	var dst [4]byte
++	copy(dst[:], p[16:20])
++	if dst != d.natIP {
++		return // not ours to reverse
++	}
++	var src [4]byte
++	copy(src[:], p[12:16])
++	fk := fragKey{src: src, id: binary.BigEndian.Uint16(p[4:6])}
++
++	if frag {
++		// A later fragment: no L4 header, so find the datagram by its first
++		// fragment. One that arrives before its first stays as it is.
++		d.mu.Lock()
++		orig, exists := d.frags[fk]
++		d.mu.Unlock()
++		if exists {
++			rewrite(p, ihl, proto, true, 16, dst, orig)
++		}
++		return
++	}
++
++	key := flowKey{proto: proto}
++	switch proto {
++	case 6, 17:
++		if len(p) < ihl+4 {
++			return
++		}
++		key.localPort = binary.BigEndian.Uint16(p[ihl+2 : ihl+4]) // reply dst port
++		key.remotePort = binary.BigEndian.Uint16(p[ihl : ihl+2])  // reply src port
++	case 1: // ICMP echo reply
++		if len(p) < ihl+8 || p[ihl] != 0 {
++			return
++		}
++		key.localPort = binary.BigEndian.Uint16(p[ihl+4 : ihl+6])
++	default:
++		return
++	}
++	copy(key.remoteIP[:], p[12:16])
++
++	d.mu.Lock()
++	orig, exists := d.flows[key]
++	if exists && p[6]&0x20 != 0 { // more fragments follow: remember for them
++		if len(d.frags) >= fragLimit {
++			d.sweepLocked(false)
++		}
++		d.frags[fk] = orig
++		d.fragSeen[fk] = time.Now().Unix()
++	}
++	d.mu.Unlock()
++	if !exists {
++		return // addressed to the tunnel itself, or a flow we never saw
++	}
++
++	rewrite(p, ihl, proto, false, 16, dst, orig)
++}
++
++// rewrite replaces the 4-byte address at p[at:at+4] and repairs the IPv4
++// header checksum plus, when an L4 header is present, the TCP or UDP
++// checksum (both cover the address via the pseudo-header). ICMP checksums
++// don't cover addresses, so they need no repair.
++func rewrite(p []byte, ihl int, proto byte, frag bool, at int, old, new [4]byte) {
++	copy(p[at:at+4], new[:])
++	fix(p[10:12], old, new)
++	if frag {
++		return
++	}
++	switch proto {
++	case 6: // TCP checksum at offset 16
++		if len(p) >= ihl+18 {
++			fix(p[ihl+16:ihl+18], old, new)
++		}
++	case 17: // UDP checksum at offset 6; zero means "not used"
++		if len(p) >= ihl+8 && (p[ihl+6] != 0 || p[ihl+7] != 0) {
++			fix(p[ihl+6:ihl+8], old, new)
++			if p[ihl+6] == 0 && p[ihl+7] == 0 {
++				p[ihl+6], p[ihl+7] = 0xff, 0xff // 0 is reserved for "no checksum"
++			}
++		}
++	}
++}
++
++// fix applies RFC 1624 incremental checksum update for a changed address.
++func fix(sum []byte, old, new [4]byte) {
++	s := uint32(^binary.BigEndian.Uint16(sum)) & 0xffff
++	for i := 0; i < 4; i += 2 {
++		o := uint32(old[i])<<8 | uint32(old[i+1])
++		w := uint32(new[i])<<8 | uint32(new[i+1])
++		s += (^o & 0xffff) + w
++	}
++	for s>>16 != 0 {
++		s = (s & 0xffff) + (s >> 16)
++	}
++	binary.BigEndian.PutUint16(sum, ^uint16(s))
++}
++
++// sweepLocked drops idle flows. Under pressure (full=true) it halves the
++// idle threshold until something gives, so a burst of short connections
++// can't pin the table at its cap forever.
++func (d *natDevice) sweepLocked(full bool) {
++	now := time.Now().Unix()
++	for k, t := range d.fragSeen {
++		if now-t > fragIdle {
++			delete(d.frags, k)
++			delete(d.fragSeen, k)
++		}
++	}
++	idle := int64(flowIdle)
++	for {
++		for k, t := range d.seen {
++			if now-t > idle {
++				delete(d.flows, k)
++				delete(d.seen, k)
++			}
++		}
++		if !full || len(d.flows) < flowLimit || idle <= 1 {
++			return
++		}
++		idle /= 2
++	}
++}
+--- /dev/null	2026-09-02 11:10:28
++++ b/source_nat_test.go	2026-09-02 11:10:27
+@@ -0,0 +1,290 @@
++package main
++
++import (
++	"bytes"
++	"encoding/binary"
++	"os"
++	"testing"
++
++	"golang.zx2c4.com/wireguard/tun"
++)
++
++// ── reference checksums, computed from scratch (not the code under test) ──
++func fold(s uint32) uint16 {
++	for s>>16 != 0 {
++		s = s&0xffff + s>>16
++	}
++	return uint16(s)
++}
++func sum(b []byte, s uint32) uint32 {
++	for i := 0; i+1 < len(b); i += 2 {
++		s += uint32(b[i])<<8 | uint32(b[i+1])
++	}
++	if len(b)%2 == 1 {
++		s += uint32(b[len(b)-1]) << 8
++	}
++	return s
++}
++func ipCk(hdr []byte) uint16 {
++	h := append([]byte(nil), hdr...)
++	h[10], h[11] = 0, 0
++	return ^fold(sum(h, 0))
++}
++func l4Ck(proto byte, src, dst, seg []byte) uint16 {
++	s := sum(src, 0)
++	s = sum(dst, s)
++	s += uint32(proto) + uint32(len(seg))
++	c := append([]byte(nil), seg...)
++	off := map[byte]int{6: 16, 17: 6}[proto]
++	c[off], c[off+1] = 0, 0
++	return ^fold(sum(c, s))
++}
++
++// pkt builds ip(+l4) with correct checksums.
++func pkt(proto byte, src, dst [4]byte, sport, dport uint16, fragOff uint16) []byte {
++	l4len := 20
++	if proto == 17 {
++		l4len = 8
++	}
++	if proto == 1 {
++		l4len = 8
++	}
++	p := make([]byte, 20+l4len)
++	p[0] = 0x45
++	binary.BigEndian.PutUint16(p[2:4], uint16(len(p)))
++	binary.BigEndian.PutUint16(p[6:8], fragOff)
++	p[8] = 64
++	p[9] = proto
++	copy(p[12:16], src[:])
++	copy(p[16:20], dst[:])
++	l4 := p[20:]
++	switch proto {
++	case 6, 17:
++		binary.BigEndian.PutUint16(l4[0:2], sport)
++		binary.BigEndian.PutUint16(l4[2:4], dport)
++		if proto == 6 {
++			l4[12] = 5 << 4
++		} else {
++			binary.BigEndian.PutUint16(l4[4:6], uint16(l4len))
++		}
++		if fragOff&0x1fff == 0 {
++			off := map[byte]int{6: 16, 17: 6}[proto]
++			binary.BigEndian.PutUint16(l4[off:off+2], l4Ck(proto, src[:], dst[:], l4))
++		}
++	case 1:
++		l4[0] = byte(sport >> 8) // type smuggled via sport high byte for tests
++		binary.BigEndian.PutUint16(l4[4:6], dport)
++		binary.BigEndian.PutUint16(l4[2:4], ^fold(sum(l4, 0)))
++	}
++	binary.BigEndian.PutUint16(p[10:12], ipCk(p[:20]))
++	return p
++}
++
++// ── minimal fake device ──
++type fake struct {
++	in  [][]byte
++	out [][]byte
++	ev  chan tun.Event
++}
++
++func (f *fake) File() *os.File { return nil }
++func (f *fake) Read(bufs [][]byte, sizes []int, offset int) (int, error) {
++	p := f.in[0]
++	f.in = f.in[1:]
++	copy(bufs[0][offset:], p)
++	sizes[0] = len(p)
++	return 1, nil
++}
++func (f *fake) Write(bufs [][]byte, offset int) (int, error) {
++	for _, b := range bufs {
++		f.out = append(f.out, append([]byte(nil), b[offset:]...))
++	}
++	return len(bufs), nil
++}
++func (f *fake) MTU() (int, error)        { return 1420, nil }
++func (f *fake) Name() (string, error)    { return "utun9", nil }
++func (f *fake) Events() <-chan tun.Event { return f.ev }
++func (f *fake) Close() error             { return nil }
++func (f *fake) BatchSize() int           { return 1 }
++
++var (
++	lan    = [4]byte{192, 168, 1, 13}
++	tunIP  = [4]byte{10, 69, 46, 118}
++	remote = [4]byte{1, 1, 1, 1}
++)
++
++func natted(f *fake) *natDevice { return newNATDevice(f, tunIP) }
++
++func egress1(t *testing.T, d *natDevice, p []byte) []byte {
++	bufs := [][]byte{make([]byte, 2048)}
++	sizes := []int{0}
++	d.Device.(*fake).in = append(d.Device.(*fake).in, p)
++	n, err := d.Read(bufs, sizes, 16)
++	if n != 1 || err != nil {
++		t.Fatalf("read: %v %v", n, err)
++	}
++	return bufs[0][16 : 16+sizes[0]]
++}
++
++func TestTCPEgressAndReply(t *testing.T) {
++	f := &fake{}
++	d := natted(f)
++	out := egress1(t, d, pkt(6, lan, remote, 52000, 443, 0))
++	if !bytes.Equal(out[12:16], tunIP[:]) {
++		t.Fatalf("src not rewritten: %v", out[12:16])
++	}
++	if got, want := binary.BigEndian.Uint16(out[10:12]), ipCk(out[:20]); got != want {
++		t.Fatalf("ip cksum: got %04x want %04x", got, want)
++	}
++	if got, want := binary.BigEndian.Uint16(out[36:38]), l4Ck(6, tunIP[:], remote[:], out[20:]); got != want {
++		t.Fatalf("tcp cksum: got %04x want %04x", got, want)
++	}
++	// reply comes back addressed to the tunnel; must be reversed to the LAN addr
++	reply := pkt(6, remote, tunIP, 443, 52000, 0)
++	if _, err := d.Write([][]byte{reply}, 0); err != nil {
++		t.Fatal(err)
++	}
++	got := f.out[0]
++	if !bytes.Equal(got[16:20], lan[:]) {
++		t.Fatalf("reply dst not reversed: %v", got[16:20])
++	}
++	if w := ipCk(got[:20]); binary.BigEndian.Uint16(got[10:12]) != w {
++		t.Fatal("reply ip cksum wrong")
++	}
++	if w := l4Ck(6, remote[:], lan[:], got[20:]); binary.BigEndian.Uint16(got[36:38]) != w {
++		t.Fatal("reply tcp cksum wrong")
++	}
++}
++
++func TestUDPZeroChecksumStaysZero(t *testing.T) {
++	d := natted(&fake{})
++	p := pkt(17, lan, remote, 5353, 53, 0)
++	p[26], p[27] = 0, 0 // zero UDP checksum = "none"
++	binary.BigEndian.PutUint16(p[10:12], ipCk(p[:20]))
++	out := egress1(t, d, p)
++	if out[26] != 0 || out[27] != 0 {
++		t.Fatalf("zero udp cksum was touched: %x%x", out[26], out[27])
++	}
++	if w := ipCk(out[:20]); binary.BigEndian.Uint16(out[10:12]) != w {
++		t.Fatal("ip cksum wrong")
++	}
++}
++
++func TestFragmentRewritesIPOnly(t *testing.T) {
++	d := natted(&fake{})
++	p := pkt(6, lan, remote, 52001, 443, 0x00c8) // frag offset 200: payload bytes, no L4 header
++	before := append([]byte(nil), p[20:]...)
++	out := egress1(t, d, p)
++	if !bytes.Equal(out[12:16], tunIP[:]) {
++		t.Fatal("frag src not rewritten")
++	}
++	if !bytes.Equal(out[20:], before) {
++		t.Fatal("frag payload was modified")
++	}
++	if w := ipCk(out[:20]); binary.BigEndian.Uint16(out[10:12]) != w {
++		t.Fatal("frag ip cksum wrong")
++	}
++}
++
++func TestICMPEcho(t *testing.T) {
++	f := &fake{}
++	d := natted(f)
++	out := egress1(t, d, pkt(1, lan, remote, 8<<8, 0xBEEF, 0)) // type 8 echo request
++	if !bytes.Equal(out[12:16], tunIP[:]) {
++		t.Fatal("icmp src not rewritten")
++	}
++	reply := pkt(1, remote, tunIP, 0<<8, 0xBEEF, 0) // type 0 echo reply
++	icmpCk := append([]byte(nil), reply[22:24]...)
++	d.Write([][]byte{reply}, 0)
++	got := f.out[0]
++	if !bytes.Equal(got[16:20], lan[:]) {
++		t.Fatal("icmp reply not reversed")
++	}
++	if !bytes.Equal(got[22:24], icmpCk) {
++		t.Fatal("icmp cksum should be untouched")
++	}
++}
++
++func TestPassthroughs(t *testing.T) {
++	f := &fake{}
++	d := natted(f)
++	v6 := make([]byte, 48)
++	v6[0] = 0x60
++	if out := egress1(t, d, v6); out[0] != 0x60 {
++		t.Fatal("v6 touched")
++	}
++	own := pkt(6, tunIP, remote, 52002, 443, 0)
++	want := append([]byte(nil), own...)
++	if out := egress1(t, d, own); !bytes.Equal(out, want) {
++		t.Fatal("already-correct source was modified")
++	}
++	// inbound for an unknown flow (e.g. traffic to the tunnel IP itself)
++	unknown := pkt(6, remote, tunIP, 9999, 52003, 0)
++	want = append([]byte(nil), unknown...)
++	d.Write([][]byte{unknown}, 0)
++	if !bytes.Equal(f.out[len(f.out)-1], want) {
++		t.Fatal("unknown inbound flow was modified")
++	}
++}
++
++func TestSweep(t *testing.T) {
++	d := natted(&fake{})
++	k := flowKey{proto: 6, localPort: 1, remotePort: 2, remoteIP: remote}
++	d.flows[k] = lan
++	d.seen[k] = 1 // long ago
++	d.mu.Lock()
++	d.sweepLocked(false)
++	d.mu.Unlock()
++	if len(d.flows) != 0 {
++		t.Fatal("idle flow not swept")
++	}
++}
++
++func TestFragmentedReplyReversed(t *testing.T) {
++	f := &fake{}
++	d := natted(f)
++	egress1(t, d, pkt(17, lan, remote, 40000, 5000, 0)) // establish the flow
++
++	first := pkt(17, remote, tunIP, 5000, 40000, 0)
++	binary.BigEndian.PutUint16(first[4:6], 0x1234)
++	first[6] |= 0x20 // more fragments
++	binary.BigEndian.PutUint16(first[10:12], ipCk(first[:20]))
++
++	second := make([]byte, 20+32)
++	second[0] = 0x45
++	binary.BigEndian.PutUint16(second[2:4], uint16(len(second)))
++	binary.BigEndian.PutUint16(second[4:6], 0x1234)
++	binary.BigEndian.PutUint16(second[6:8], 185) // offset 1480 bytes
++	second[8], second[9] = 64, 17
++	copy(second[12:16], remote[:])
++	copy(second[16:20], tunIP[:])
++	for i := 20; i < len(second); i++ {
++		second[i] = byte(i)
++	}
++	binary.BigEndian.PutUint16(second[10:12], ipCk(second[:20]))
++	payload := append([]byte(nil), second[20:]...)
++
++	stray := append([]byte(nil), second...) // same shape, unknown id
++	binary.BigEndian.PutUint16(stray[4:6], 0x9999)
++	binary.BigEndian.PutUint16(stray[10:12], ipCk(stray[:20]))
++
++	d.Write([][]byte{first}, 0)
++	d.Write([][]byte{second}, 0)
++	d.Write([][]byte{stray}, 0)
++
++	for i, want := range [][4]byte{lan, lan, tunIP} {
++		got := f.out[i]
++		if !bytes.Equal(got[16:20], want[:]) {
++			t.Fatalf("fragment %d dst = %v, want %v", i, got[16:20], want)
++		}
++		if w := ipCk(got[:20]); binary.BigEndian.Uint16(got[10:12]) != w {
++			t.Fatalf("fragment %d ip cksum wrong", i)
++		}
++	}
++	if !bytes.Equal(f.out[1][20:], payload) {
++		t.Fatal("later fragment payload was modified")
++	}
++	if w := l4Ck(17, remote[:], lan[:], f.out[0][20:]); binary.BigEndian.Uint16(f.out[0][26:28]) != w {
++		t.Fatal("first fragment udp cksum wrong after reversal")
++	}
++}
