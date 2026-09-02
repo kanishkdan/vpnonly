@@ -1,5 +1,5 @@
 {
-  "version": "1.9.15",
+  "version": "1.9.16",
   "url": "https://vpnonly.app/",
-  "notes": "Turning an app off no longer asks to quit it, because it never needed to be quit."
+  "notes": "Any WireGuard provider now works, including ones that enforce strict routing like Mullvad and Proton. Import a provider's whole config zip as one entry with a country picker. The control at the bottom names the provider and place; setup moved under \u22ef. The \"menu bar is full\" note shows once and can be dismissed."
 }
