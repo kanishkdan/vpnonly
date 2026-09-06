@@ -43,8 +43,9 @@
 <p>If your provider gives you a WireGuard config, you can route individual Mac apps through it. Here's the short version for each.</p>
 
 <h2>Mullvad</h2>
-<p>Mullvad's own app has split tunneling built in on macOS, and it's included with your subscription. If Mullvad is the only VPN you use, start there — no reason to pay for anything else.</p>
-<p>Where a separate tool helps is if you also use another provider, or want the opt-in model (your Mac stays on its normal connection, apps join the tunnel) rather than excluding apps from a full tunnel. For that, download a WireGuard config from your Mullvad account and import it.</p>
+<p>Mullvad's own app has split tunneling on macOS, included with your subscription, but it's exclude-only: your whole Mac joins the tunnel and you pick apps to leave out. If that model suits you, start there — no reason to pay for anything else.</p>
+<p>If you want the opposite — your Mac stays on its normal connection and one app joins the tunnel — download the WireGuard configs from your Mullvad account (<em>WireGuard configuration</em>: generate a key, pick countries, download) and import the zip into VPNonly. One key covers every server, so the 500-odd files become a single entry with a country picker.</p>
+<p><strong>Tested</strong> 1 September 2026 with VPNonly 1.9.16: imported the full zip, chose Singapore, and the app's own check showed a Mullvad exit address with the Mac's normal address unchanged. Mullvad's servers enforce cryptokey routing, which is what exposed a long-standing bug in how packets entered the tunnel; VPNonly 1.9.16 or later is required for Mullvad to work at all. <a href="../changelog.html">Changelog.</a></p>
 
 <h2>ProtonVPN</h2>
 <p>Proton added split tunneling to its macOS app, but it's still marked experimental: it only excludes apps from the tunnel, it doesn't work with Safari or anything else built on WebKit, and every excluded app has to be restarted after you connect. If that suits you, use it. Otherwise their WireGuard configs are at <a href="https://account.protonvpn.com/downloads">account.protonvpn.com → Downloads → WireGuard configuration</a>: pick a server, generate, download the <code>.conf</code>.</p>
