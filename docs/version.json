@@ -1,5 +1,5 @@
 {
-  "version": "1.9.16",
+  "version": "1.9.17",
   "url": "https://vpnonly.app/",
-  "notes": "Any WireGuard provider now works, including ones that enforce strict routing like Mullvad and Proton. Import a provider's whole config zip as one entry with a country picker. The control at the bottom names the provider and place; setup moved under \u22ef. The \"menu bar is full\" note shows once and can be dismissed."
+  "notes": "Apps on the VPN can now use the microphone and camera. macOS was blaming VPNonly for those requests and killing the app on the spot \u2014 WhatsApp crashed the instant a call started, and Chrome on a video call would have too. VPNonly now launches apps so they answer for their own privacy prompts, the way Terminal does. Also: automatic reconnection after a network change, with a few attempts over a couple of minutes instead of one; quitting with the VPN down and apps still held offline now asks whether to put them back first; a plain log at ~/Library/Logs/VPNonly."
 }
