@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IVPN split tunneling on Mac</title>
+<meta name="description" content="Route a single Mac app through IVPN with a WireGuard config from their generator.">
+<link rel="canonical" href="https://vpnonly.app/guides/ivpn-split-tunneling-mac.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="VPNonly">
+<meta property="og:url" content="https://vpnonly.app/guides/ivpn-split-tunneling-mac.html">
+<meta property="og:title" content="IVPN split tunneling on Mac">
+<meta property="og:description" content="Route a single Mac app through IVPN with a WireGuard config from their generator.">
+<meta property="og:image" content="https://vpnonly.app/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@kanishkrazdan">
+<meta name="twitter:title" content="IVPN split tunneling on Mac">
+<meta name="twitter:description" content="Route a single Mac app through IVPN with a WireGuard config from their generator.">
+<meta name="twitter:image" content="https://vpnonly.app/og.png">
+<link rel="icon" type="image/png" href="../icon.png">
+<link rel="stylesheet" href="../style.css?v=17">
+<script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "7c46f36f17e44f7693519b06b101987a"}'></script>
+</head>
+<body>
+<div class="shell">
+
+<div class="top">
+  <a class="me" href="../">
+    <svg viewBox="0 0 26 30"><path d="M13 1l11 4v9c0 7.5-4.8 13.6-11 15C6.8 27.6 2 21.5 2 14V5z" fill="none" stroke="#15161a" stroke-width="2.4" stroke-linejoin="round"/><path d="M13 1l-11 4v9c0 7.5 4.8 13.6 11 15z" fill="#15161a"/></svg>
+    <b>VPNonly</b>
+  </a>
+  <a href="../how-it-works.html">how it works</a>
+  <a href="index.html">guides</a>
+  <a href="../faq.html">faq</a>
+  <a href="../install.html">install</a>
+  <a href="https://github.com/kanishkdan/vpnonly">github</a>
+</div>
+
+<div class="solo">
+<h1>IVPN split tunneling on Mac</h1>
+<p>IVPN issues WireGuard configs from your account, so you can put a single Mac app on IVPN while the rest of the machine stays on its normal connection.</p>
+
+<h2>Get a WireGuard config from IVPN</h2>
+<ol>
+  <li>Open IVPN's <a href="https://www.ivpn.net/account/wireguard-config">config file generator</a> and choose <strong>Generate key</strong> (or add one manually).</li>
+  <li>Select single or multi-hop, a port, and the internet protocol.</li>
+  <li>Download the zip and unpack the <code>.conf</code> files.</li>
+</ol>
+<h2>Put one app on it with VPNonly</h2>
+<ol>
+  <li>Install <a href="../">VPNonly</a> and open the <strong>&ctdot;</strong> menu &rarr; <strong>Import WireGuard config…</strong>.</li>
+  <li>Choose a <code>.conf</code>, or the whole zip. Pick the exit country from the menu at the bottom.</li>
+  <li>Search for an app, flip its switch. It relaunches once, then it's on the VPN and nothing else is.</li>
+</ol>
+<p>Documented from IVPN's own WireGuard setup page. Standard configs; not separately tested on our hardware.</p>
+<p style="margin-top:38px;"><a class="btn" href="https://dodo.pe/get-vpnonly">Get VPNonly for Mac — $19</a></p>
+<p style="font-size:15px;">The app’s <a href="https://github.com/kanishkdan/vpnonly/tree/main/app-engine">exact privileged engine source</a> is public and MIT licensed.</p>
+<h2>Other providers</h2>
+<p><a href="nordvpn-split-tunneling-mac.html">NordVPN</a> · <a href="mullvad-split-tunneling-mac.html">Mullvad</a> · <a href="protonvpn-split-tunneling-mac.html">Proton VPN</a> · <a href="surfshark-split-tunneling-mac.html">Surfshark</a> · <a href="expressvpn-split-tunneling-mac.html">ExpressVPN</a> · <a href="mullvad-proton-split-tunneling-mac.html">AirVPN or your own server</a>. Or see <a href="mac-vpn-split-tunneling.html">which Mac VPNs have split tunneling</a>, provider by provider.</p><div class="foot">
+  <span>Made by <a href="https://x.com/kanishkrazdan">@kanishkrazdan</a></span>
+  <a href="../download.html">download</a>
+  <a href="https://customer.dodopayments.com/login/bus_0NlVlYzwOq7gzrk1tWl0u">your purchases</a>
+  <a href="../changelog.html">changelog</a>
+  <a href="../terms.html">terms &amp; privacy</a>
+</div>
+</div>
+
+</div>
+</body>
+</html>

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Split tunneling on Mac with Mullvad, Proton, IVPN or your own server</title>
-<meta name="description" content="How to route individual macOS apps through any WireGuard provider, using a config file you already have.">
+<title>Use any WireGuard VPN for one Mac app: AirVPN, self-hosted, and more</title>
+<meta name="description" content="Route one macOS app through any WireGuard provider or your own server, using a config file you already have.">
 <link rel="canonical" href="https://vpnonly.app/guides/mullvad-proton-split-tunneling-mac.html">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="VPNonly">
@@ -38,20 +38,22 @@
 </div>
 
 <div class="solo">
-<h1>Split tunneling on Mac with Mullvad, Proton, IVPN or your own server</h1>
+<h1>Use any WireGuard VPN for one Mac app</h1>
 
 <p>If your provider gives you a WireGuard config, you can route individual Mac apps through it. Here's the short version for each.</p>
 
-<h2>Mullvad</h2>
-<p>Mullvad's own app has split tunneling on macOS, included with your subscription, but it's exclude-only: your whole Mac joins the tunnel and you pick apps to leave out. If that model suits you, start there — no reason to pay for anything else.</p>
-<p>If you want the opposite — your Mac stays on its normal connection and one app joins the tunnel — download the WireGuard configs from your Mullvad account (<em>WireGuard configuration</em>: generate a key, pick countries, download) and import the zip into VPNonly. One key covers every server, so the 500-odd files become a single entry with a country picker.</p>
-<p><strong>Tested</strong> 1 September 2026 with VPNonly 1.9.16: imported the full zip, chose Singapore, and the app's own check showed a Mullvad exit address with the Mac's normal address unchanged. Mullvad's servers enforce cryptokey routing, which is what exposed a long-standing bug in how packets entered the tunnel; VPNonly 1.9.16 or later is required for Mullvad to work at all. <a href="../changelog.html">Changelog.</a></p>
+<p>If your provider hands you a WireGuard config, VPNonly can route a single app through it. Most providers now have a dedicated walkthrough:</p>
+<ul>
+  <li><a href="nordvpn-split-tunneling-mac.html">NordVPN</a> &mdash; access token, no file needed</li>
+  <li><a href="mullvad-split-tunneling-mac.html">Mullvad</a> &mdash; download the config zip</li>
+  <li><a href="protonvpn-split-tunneling-mac.html">Proton VPN</a></li>
+  <li><a href="surfshark-split-tunneling-mac.html">Surfshark</a></li>
+  <li><a href="ivpn-split-tunneling-mac.html">IVPN</a></li>
+  <li><a href="expressvpn-split-tunneling-mac.html">ExpressVPN</a> &mdash; why it can't be used this way</li>
+</ul>
 
-<h2>ProtonVPN</h2>
-<p>Proton added split tunneling to its macOS app, but it's still marked experimental: it only excludes apps from the tunnel, it doesn't work with Safari or anything else built on WebKit, and every excluded app has to be restarted after you connect. If that suits you, use it. Otherwise their WireGuard configs are at <a href="https://account.protonvpn.com/downloads">account.protonvpn.com → Downloads → WireGuard configuration</a>: pick a server, generate, download the <code>.conf</code>.</p>
-
-<h2>IVPN and AirVPN</h2>
-<p>Both publish WireGuard configs from your account area. AirVPN's include a preshared key, which is handled fine.</p>
+<h2>AirVPN</h2>
+<p>AirVPN's <a href="https://airvpn.org/generator/">config generator</a> (sign in first) builds a WireGuard <code>.conf</code>. Its configs include a preshared key, which VPNonly handles without any extra step.</p>
 
 <h2>Your own WireGuard server</h2>
 <p>A VPS with WireGuard costs a few dollars a month and gives you an exit IP nobody else shares. Use the client config you generated when you set the server up.</p>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ExpressVPN split tunneling on Mac</title>
+<meta name="description" content="ExpressVPN's own app does split tunneling, but it can't be used with a WireGuard per-app tool. Here's why, and what to do.">
+<link rel="canonical" href="https://vpnonly.app/guides/expressvpn-split-tunneling-mac.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="VPNonly">
+<meta property="og:url" content="https://vpnonly.app/guides/expressvpn-split-tunneling-mac.html">
+<meta property="og:title" content="ExpressVPN split tunneling on Mac">
+<meta property="og:description" content="ExpressVPN's own app does split tunneling, but it can't be used with a WireGuard per-app tool. Here's why, and what to do.">
+<meta property="og:image" content="https://vpnonly.app/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@kanishkrazdan">
+<meta name="twitter:title" content="ExpressVPN split tunneling on Mac">
+<meta name="twitter:description" content="ExpressVPN's own app does split tunneling, but it can't be used with a WireGuard per-app tool. Here's why, and what to do.">
+<meta name="twitter:image" content="https://vpnonly.app/og.png">
+<link rel="icon" type="image/png" href="../icon.png">
+<link rel="stylesheet" href="../style.css?v=17">
+<script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "7c46f36f17e44f7693519b06b101987a"}'></script>
+</head>
+<body>
+<div class="shell">
+
+<div class="top">
+  <a class="me" href="../">
+    <svg viewBox="0 0 26 30"><path d="M13 1l11 4v9c0 7.5-4.8 13.6-11 15C6.8 27.6 2 21.5 2 14V5z" fill="none" stroke="#15161a" stroke-width="2.4" stroke-linejoin="round"/><path d="M13 1l-11 4v9c0 7.5 4.8 13.6 11 15z" fill="#15161a"/></svg>
+    <b>VPNonly</b>
+  </a>
+  <a href="../how-it-works.html">how it works</a>
+  <a href="index.html">guides</a>
+  <a href="../faq.html">faq</a>
+  <a href="../install.html">install</a>
+  <a href="https://github.com/kanishkdan/vpnonly">github</a>
+</div>
+
+<div class="solo">
+<h1>ExpressVPN split tunneling on Mac</h1>
+<p>Two things are true and they pull in opposite directions.</p>
+<p><strong>ExpressVPN's own Mac app has split tunneling.</strong> You can pick which apps use the VPN and which don't, in their client. If you're happy in the ExpressVPN app, you already have this.</p>
+<p><strong>But you can't use ExpressVPN with a WireGuard-based per-app tool like VPNonly.</strong> ExpressVPN runs on its own protocol, Lightway, and doesn't hand out WireGuard config files. There's nothing to import. Tools that route by WireGuard need a config, and ExpressVPN doesn't provide one.</p>
+
+<h2>So what are the options</h2>
+<ul>
+  <li><strong>Stay in the ExpressVPN app</strong> and use its built-in split tunneling. It's the exclude model — the Mac is on the VPN, you leave some apps out.</li>
+  <li><strong>Want apps to opt in instead</strong> — nothing on the VPN until you add one app — use a provider that issues WireGuard configs. <a href="mullvad-split-tunneling-mac.html">Mullvad</a>, <a href="protonvpn-split-tunneling-mac.html">Proton</a>, <a href="ivpn-split-tunneling-mac.html">IVPN</a> and <a href="nordvpn-split-tunneling-mac.html">NordVPN</a> all do, and VPNonly works with any of them.</li>
+</ul>
+<p>This isn't a knock on ExpressVPN; Lightway is a reasonable protocol. It just isn't interoperable the way WireGuard is.</p>
+<h2>Other providers</h2>
+<p><a href="nordvpn-split-tunneling-mac.html">NordVPN</a> · <a href="mullvad-split-tunneling-mac.html">Mullvad</a> · <a href="protonvpn-split-tunneling-mac.html">Proton VPN</a> · <a href="surfshark-split-tunneling-mac.html">Surfshark</a> · <a href="ivpn-split-tunneling-mac.html">IVPN</a> · <a href="mullvad-proton-split-tunneling-mac.html">AirVPN or your own server</a>. Or see <a href="mac-vpn-split-tunneling.html">which Mac VPNs have split tunneling</a>, provider by provider.</p><div class="foot">
+  <span>Made by <a href="https://x.com/kanishkrazdan">@kanishkrazdan</a></span>
+  <a href="../download.html">download</a>
+  <a href="https://customer.dodopayments.com/login/bus_0NlVlYzwOq7gzrk1tWl0u">your purchases</a>
+  <a href="../changelog.html">changelog</a>
+  <a href="../terms.html">terms &amp; privacy</a>
+</div>
+</div>
+
+</div>
+</body>
+</html>
