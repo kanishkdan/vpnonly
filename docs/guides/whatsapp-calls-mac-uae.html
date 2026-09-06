@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WhatsApp calls on a Mac in the UAE, without putting your bank on a VPN</title>
+<meta name="description" content="Put only WhatsApp on the VPN and leave everything else on your normal connection. Tested on macOS with the calls actually going through the tunnel.">
+<link rel="canonical" href="https://vpnonly.app/guides/whatsapp-calls-mac-uae.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="VPNonly">
+<meta property="og:url" content="https://vpnonly.app/guides/whatsapp-calls-mac-uae.html">
+<meta property="og:title" content="WhatsApp calls on a Mac in the UAE, without putting your bank on a VPN">
+<meta property="og:description" content="Put only WhatsApp on the VPN and leave everything else on your normal connection. Tested on macOS with the calls actually going through the tunnel.">
+<meta property="og:image" content="https://vpnonly.app/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@kanishkrazdan">
+<meta name="twitter:title" content="WhatsApp calls on a Mac in the UAE, without putting your bank on a VPN">
+<meta name="twitter:description" content="Put only WhatsApp on the VPN and leave everything else on your normal connection. Tested on macOS with the calls actually going through the tunnel.">
+<meta name="twitter:image" content="https://vpnonly.app/og.png">
+<link rel="icon" type="image/png" href="../icon.png">
+<link rel="stylesheet" href="../style.css?v=17">
+<script data-goatcounter="https://vpnonly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "7c46f36f17e44f7693519b06b101987a"}'></script>
+</head>
+<body>
+<div class="shell">
+
+<div class="top">
+  <a class="me" href="../">
+    <svg viewBox="0 0 26 30"><path d="M13 1l11 4v9c0 7.5-4.8 13.6-11 15C6.8 27.6 2 21.5 2 14V5z" fill="none" stroke="#15161a" stroke-width="2.4" stroke-linejoin="round"/><path d="M13 1l-11 4v9c0 7.5 4.8 13.6 11 15z" fill="#15161a"/></svg>
+    <b>VPNonly</b>
+  </a>
+  <a href="../how-it-works.html">how it works</a>
+  <a href="index.html">guides</a>
+  <a href="../faq.html">faq</a>
+  <a href="../install.html">install</a>
+  <a href="https://github.com/kanishkdan/vpnonly">github</a>
+</div>
+
+<div class="solo">
+<h1>WhatsApp calls on a Mac in the UAE, without putting your bank on a VPN</h1>
+
+<p>WhatsApp voice and video calls are restricted in the UAE, and the usual fix is a VPN. The usual problem with that fix is that a VPN moves your <em>whole</em> Mac abroad: your bank's app starts asking security questions, local services stop recognising you, and everything gets slower for the sake of one app.</p>
+
+<p>VPNonly does it the other way round. Your Mac stays exactly where it is, and only WhatsApp goes through the VPN. This page is what that looks like, and what we actually measured.</p>
+
+<h2>What you need</h2>
+<ul>
+  <li>A Mac with Apple silicon.</li>
+  <li>A VPN account that speaks WireGuard. NordVPN works with just an access token; Mullvad, Proton, IVPN, AirVPN or your own server work with the config file they give you. <a href="mullvad-proton-split-tunneling-mac.html">Details per provider.</a></li>
+  <li>WhatsApp for Mac, the native app from the Mac App Store or whatsapp.com, not the web version in a browser tab.</li>
+  <li>VPNonly 1.9.17 or later. Earlier versions crash WhatsApp the moment a call asks for the microphone; that's fixed in 1.9.17.</li>
+</ul>
+
+<h2>Setting it up</h2>
+<ol>
+  <li>Install VPNonly and connect your provider. Pick an exit country where WhatsApp calls work normally.</li>
+  <li>Search for WhatsApp in the list and flip its switch on. WhatsApp closes and reopens once. That's macOS, not a bug: an app's network identity is fixed the moment it opens.</li>
+  <li>The first time you make a call, macOS asks whether WhatsApp can use the microphone. Allow it. That's the normal prompt, and it names WhatsApp, not VPNonly.</li>
+  <li>Make a call.</li>
+</ol>
+
+<p>Everything else on the Mac, including Safari, your bank, and any other app, keeps using your normal connection. Nothing else changes.</p>
+
+<h2>What we measured</h2>
+<p>Claims about VPN routing are easy to make, so here's the test rather than the claim. macOS can label every packet with the process that sent it, so we watched which interface WhatsApp's packets actually used on a Mac running VPNonly 1.9.17 with a Mullvad tunnel, on 6 September 2026:</p>
+
+<table>
+  <thead><tr><th>Activity</th><th>Through the tunnel</th><th>On the normal connection</th></tr></thead>
+  <tbody>
+    <tr><td>Sending messages</td><td>632 packets</td><td>0</td></tr>
+    <tr><td>Placing a call (ringing and setup)</td><td>172 packets</td><td>0</td></tr>
+    <tr><td>A connected voice call</td><td>618 packets</td><td>19, not reproduced in a repeat capture</td></tr>
+  </tbody>
+</table>
+
+<p>The call media went through the tunnel; the relay it connected to was Meta's STUN/TURN server at port 3478, seen inside the tunnel interface. The 19 packets on the normal connection during the first call appeared once and didn't recur when we watched that interface alone for the rest of the call. We're saying so rather than leaving them out.</p>
+
+<h2>What it can't do</h2>
+<ul>
+  <li><strong>FaceTime.</strong> Its audio and video run in a macOS system process, not inside the FaceTime app, so no per-app tool can route it. Same reason Safari can't be routed. WhatsApp does its own networking, which is why it works.</li>
+  <li><strong>WhatsApp's notification and Siri extensions</strong> are launched by macOS outside the app, so they use your normal connection. They handle notification previews and Siri shortcuts, not calls or messages.</li>
+  <li><strong>If the tunnel drops, the call drops.</strong> WhatsApp shows "calling…" until you redial. VPNonly reconnects the tunnel on its own after a network change, but a call in progress doesn't survive it. That's true of any VPN.</li>
+</ul>
+
+<h2>On the rules</h2>
+<p>VoIP restrictions in the UAE are set by the telecoms regulator, and some calling apps are licensed to work without a VPN. This page describes what the software does; whether and how you use it is your call, so know the rules where you are.</p>
+
+<h2>Why this works when the VPN's own app doesn't</h2>
+<p>Most VPN apps for Mac are all or nothing. NordVPN has no split tunnelling on macOS at all. Proton and Mullvad have it, but only as "exclude": your whole Mac joins the VPN and you pick apps to leave out, which is the opposite of what you want here. VPNonly starts from nothing on the VPN and adds one app. <a href="mac-vpn-split-tunneling.html">The comparison, provider by provider.</a></p>
+
+<p>The part of VPNonly that needs admin access is <a href="https://github.com/kanishkdan/vpnonly/tree/main/app-engine">open source</a>, so you can read what it does before trusting it with your firewall.</p>
+</div>
+
+<div class="foot">
+  <span>Made by <a href="https://x.com/kanishkrazdan">@kanishkrazdan</a></span>
+  <a href="../download.html">download</a>
+  <a href="https://customer.dodopayments.com/login/bus_0NlVlYzwOq7gzrk1tWl0u">your purchases</a>
+  <a href="../changelog.html">changelog</a>
+  <a href="../terms.html">terms &amp; privacy</a>
+</div>
+</div>
+
+</div>
+</body>
+</html>

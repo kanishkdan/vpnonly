@@ -178,9 +178,12 @@ match by *unix group*. That's the entire trick.
    is refused rather than leaking to your ISP, and `return` means the app fails
    immediately instead of hanging until it times out.
 
-2. **`vpnrun`** (30 lines of C, run via sudo) launches your app with its group
+2. **`vpnrun`** (a short C file, run via sudo) launches your app with its group
    set to `vpnonly`, then drops privileges back to you. Every helper process
    the app spawns inherits the group, so Chromium-style multi-process apps work.
+   It also makes the app responsible for its own privacy prompts, so when a
+   routed app asks for the microphone or camera, macOS names the app in the
+   dialog rather than blaming the launcher and killing the app outright.
 
 Group membership is fixed when a process starts and can't be changed
 afterwards, which is why an app has to be launched through `run.sh` rather than

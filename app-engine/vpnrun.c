@@ -11,6 +11,15 @@
 #include <pwd.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <spawn.h>
+#include <errno.h>
+
+extern char **environ;
+/* Exported by libSystem since macOS 10.14; declared in a private header, so
+   declare it here. Weak: if a future macOS removes it, the launch still
+   works and only the responsibility attribution falls back to the old way. */
+extern int responsibility_spawnattrs_setdisclaim(posix_spawnattr_t *attrs, int disclaim)
+    __attribute__((weak_import));
 
 int main(int argc, char **argv) {
     if (argc < 4) {
@@ -81,7 +90,22 @@ int main(int argc, char **argv) {
     unsetenv("TMPDIR");
 #endif
 
-    execv(argv[3], &argv[3]);
-    perror("execv");
+    /* Exec in place, but make the program responsible for itself. A plain
+       execv leaves macOS holding whoever launched vpnrun responsible for the
+       app's privacy prompts (microphone, camera, contacts), and TCC's rule for
+       a responsible app that lacks the usage description is to kill the
+       requester on the spot. That is how WhatsApp died the instant a call
+       started. This is what Terminal and open(1) do; nothing else changes. */
+    posix_spawnattr_t attrs;
+    if (posix_spawnattr_init(&attrs) != 0) { perror("posix_spawnattr_init"); return 1; }
+    if (posix_spawnattr_setflags(&attrs, POSIX_SPAWN_SETEXEC) != 0) {
+        perror("posix_spawnattr_setflags");
+        return 1;
+    }
+    if (responsibility_spawnattrs_setdisclaim != NULL)
+        responsibility_spawnattrs_setdisclaim(&attrs, 1);
+    int rc = posix_spawn(NULL, argv[3], NULL, &attrs, &argv[3], environ);
+    /* only reached on failure: with SETEXEC a success never returns */
+    fprintf(stderr, "posix_spawn: %s\n", strerror(rc));
     return 1;
 }

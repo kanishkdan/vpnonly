@@ -9,6 +9,15 @@
 #include <unistd.h>
 #include <grp.h>
 #include <pwd.h>
+#include <spawn.h>
+#include <string.h>
+
+extern char **environ;
+/* Exported by libSystem since macOS 10.14; declared in a private header, so
+   declared here. Weak: if a future macOS drops it, the launch still works and
+   only the responsibility attribution falls back to the old way. */
+extern int responsibility_spawnattrs_setdisclaim(posix_spawnattr_t *attrs, int disclaim)
+    __attribute__((weak_import));
 
 int main(int argc, char **argv) {
     if (argc < 3) {
@@ -25,7 +34,21 @@ int main(int argc, char **argv) {
     if (setgid(g->gr_gid) != 0)  { perror("setgid");    return 1; }
     if (setuid(p->pw_uid) != 0)  { perror("setuid");    return 1; }
 
-    execv(argv[2], &argv[2]);
-    perror("execv");
+    /* Exec in place, but make the program responsible for itself. A plain
+       execv leaves macOS holding whoever launched vpnrun responsible for the
+       app's privacy prompts (microphone, camera, contacts), and TCC's rule for
+       a responsible app without the usage description is to kill the requester
+       on the spot: a routed WhatsApp died the instant a call started. This is
+       what Terminal and open(1) do; the group and privilege drop are unchanged. */
+    posix_spawnattr_t attrs;
+    if (posix_spawnattr_init(&attrs) != 0) { perror("posix_spawnattr_init"); return 1; }
+    if (posix_spawnattr_setflags(&attrs, POSIX_SPAWN_SETEXEC) != 0) {
+        perror("posix_spawnattr_setflags");
+        return 1;
+    }
+    if (responsibility_spawnattrs_setdisclaim != NULL)
+        responsibility_spawnattrs_setdisclaim(&attrs, 1);
+    int rc = posix_spawn(NULL, argv[2], NULL, &attrs, &argv[2], environ);
+    fprintf(stderr, "posix_spawn: %s\n", strerror(rc));   /* only on failure */
     return 1;
 }
