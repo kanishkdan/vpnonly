@@ -121,8 +121,7 @@ h2::before { content: ""; display: inline-block; width: 12px; height: 1px; backg
 .demo { margin: 0 0 42px; }
 .demo .shot { margin-bottom: 12px; }
 .demo figcaption { font-size: 14px; line-height: 1.6; }
-.demo figcaption span, .demo figcaption a { display: block; }
-.demo figcaption a { margin-top: 4px; }
+.demo figcaption a { display: inline-block; }
 #walkthrough { scroll-margin-top: 24px; }
 
 .right ul { list-style: none; max-width: 62ch; }
