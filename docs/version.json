@@ -1,5 +1,5 @@
 {
-  "version": "1.9.18",
+  "version": "1.9.19",
   "url": "https://vpnonly.app/",
-  "notes": "If another VPN app switches off the Mac's firewall, VPNonly now turns it back on and re-applies its rules within a minute; you can also pick a specific server inside a location, and apps installed in folders now show up, with Choose another app\u2026 for the rest."
+  "notes": "Your apps stay pinned at the top, servers can be picked straight from the VPN menu, dialogs open above the popup, the menu bar icon can show status in colour, and apps behind aliases appear once."
 }

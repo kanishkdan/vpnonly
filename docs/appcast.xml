@@ -7,13 +7,25 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.9.19</title>
+      <pubDate>Sat, 26 Sep 2026 00:53:16 +0530</pubDate>
+      <sparkle:version>1.9.19</sparkle:version>
+      <sparkle:shortVersionString>1.9.19</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Your apps stay pinned at the top, servers can be picked straight from the VPN menu, dialogs open above the popup, the menu bar icon can show status in colour, and apps behind aliases appear once.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.9.19.zip"
+                 sparkle:edSignature="gxAguWrfcdEDMv1txA25wh5+GoDva3UNkAYVwiV4qU9L4URzy6w9VIczPzswUGY3TQfaisX/Xzo95SMS3I8/Cw=="
+                 length="3271493"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.9.18</title>
       <pubDate>Thu, 24 Sep 2026 01:33:20 +0530</pubDate>
       <sparkle:version>1.9.18</sparkle:version>
       <sparkle:shortVersionString>1.9.18</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>If another VPN app switches off the Mac&#x27;s firewall, VPNonly now turns it back on and re-applies its rules within a minute; you can also pick a specific server inside a location, and apps installed in folders now show up, with Choose another app… for the rest.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.9.18.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.9.18/VPNonly-1.9.18.zip"
                  sparkle:edSignature="Yn6GZdTwu2ZMKH/IqwIqeoXCkebt/QwxDm1Rvrqwra37Au9MR9qpUj4VAwVgY4QszErQummC+5tUbEC7djtgDA=="
                  length="3231873"
                  type="application/octet-stream" />
