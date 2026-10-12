@@ -29,6 +29,11 @@ IF=$(cat "$CONF/tunnel-if" 2>/dev/null || true)
 if [ -n "$IF" ] && ifconfig "$IF" >/dev/null 2>&1; then
     ADDR=$(ifconfig "$IF" | awk '/inet /{print $2}')
     echo "tunnel:   up on $IF ($ADDR)"
+    HOST=$(cat "$CONF/tunnel-host" 2>/dev/null || true)
+    ENDPOINT=$(cat "$CONF/tunnel-endpoint" 2>/dev/null || true)
+    # These files are display metadata, never evidence of tunnel ownership.
+    [[ "$HOST" =~ ^[A-Za-z0-9.:-]+$ ]] && echo "configured server:   $HOST"
+    [[ "$ENDPOINT" =~ ^[A-Za-z0-9.:-]+$ ]] && echo "configured endpoint: $ENDPOINT"
     # Interface counters only ever climb, so this says whether anything has
     # ever crossed, not whether it's working right now.
     RX=$(netstat -ibn -I "$IF" 2>/dev/null | awk 'NR==2{for(i=1;i<=NF;i++) if($i ~ /^<Link/){j=i+1; if($j ~ /:/) j++; print $(j+2); exit}}')

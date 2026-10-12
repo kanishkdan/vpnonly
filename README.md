@@ -54,11 +54,13 @@ taps, which seems fair for something that asks for root.
 
 Then set up NordVPN, once.
 
-**NordVPN.** There's no config file to download, so fetch a key. Generate an
-access token at
+**NordVPN.** For automatic selection and hostname pinning, fetch a key. Generate an access token at
 [my.nordaccount.com → Manual configuration → Access token](https://my.nordaccount.com/dashboard/nordvpn/manual-configuration/),
 then run `fetch-creds.sh` from the install directory
 (`$(brew --prefix)/opt/vpnonly/libexec/fetch-creds.sh`) and paste it in.
+Alternatively, NordVPN now offers individual WireGuard configs through its
+[manual connection setup](https://support.nordvpn.com/hc/en-us/articles/51499280685457-How-to-set-up-a-manual-NordVPN-connection-on-macOS-using-WireGuard).
+These can be supplied directly to `up.sh` or imported into the Mac app.
 
 **Other WireGuard providers: not yet.** The CLI runs the stock `wireguard-go`
 from Homebrew, which sends packets into the tunnel with your LAN address as the
@@ -71,6 +73,40 @@ try yours.
 The Mac app bundles a patched `wireguard-go` that rewrites the inner source, so
 other providers work there. The CLI catches up when the formula builds the same
 patch. Details under *How it works*.
+
+### Pin a NordVPN server
+
+Automatic country selection remains the default. To compare a specific standard
+NordVPN WireGuard server, start the CLI with `vpnonly --server us1234` (replace
+the example with the server's actual hostname). The full
+`us1234.nordvpn.com` form is also accepted. Disconnect the current CLI tunnel
+before changing this selection.
+
+The choice is saved in `~/.config/vpnonly/nord-pinned.conf`. Later connections
+reuse its fixed IP endpoint and public peer key, including after a restart;
+they do not ask the recommendation API for another server. `vpnonly --auto`
+explicitly removes the pin and returns to automatic country selection.
+The lower-level `up.sh` accepts the same two options.
+
+In the Mac app, choose **Pin NordVPN server…** from the VPN menu. It saves a
+separate profile using the existing config picker. Selecting a pin never falls
+back to another server if that connection fails. Choose **NordVPN** in the
+menu to return to automatic selection; the saved pin remains available.
+
+Both clients resolve the exact hostname against NordVPN's public catalog and
+require one online WireGuard server. The initial lookup can take longer than a
+country recommendation because it downloads the catalog. Reconnects are local.
+No access token or private key is sent by this lookup. Saved `.conf` files contain
+your private key: keep them private, including when copying a pin between clients.
+A removed server or changed peer key requires an explicit new selection.
+
+The Mac app displays the running peer's endpoint. CLI status labels its saved
+values **configured server** and **configured endpoint**: interface existence
+alone does not prove a recent handshake or working traffic. Check the exit probe
+as well. Pinning enables a more controlled comparison; it is not a speed fix.
+Use the same server, endpoint, WireGuard protocol, test destination and time
+window when comparing clients. The app and CLI still use different WireGuard
+builds and local-network policies, as described below.
 
 ### Or from source
 
