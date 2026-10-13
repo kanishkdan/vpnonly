@@ -108,7 +108,7 @@ else
 fi
 [ -n "$IF" ] && rm -f "/var/run/wireguard/$IF.sock" 2>/dev/null
 
-rm -f "$CONF/tunnel-if" "$CONF/tunnel-ip" "$CONF/tunnel-pid" 2>/dev/null
+rm -f "$CONF/tunnel-if" "$CONF/tunnel-ip" "$CONF/tunnel-pid" "$CONF/tunnel-host" "$CONF/tunnel-endpoint" 2>/dev/null
 
 if [ -n "$HELD" ]; then
     echo

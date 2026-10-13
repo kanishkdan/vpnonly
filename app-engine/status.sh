@@ -107,13 +107,13 @@ unavailable() {
 # A truly absent root-owned record means down. Anything present but unsafe,
 # partial, stale, or inconsistent is unknown rather than a false disconnect.
 if [ ! -e "$STATE_ROOT" ] && [ ! -L "$STATE_ROOT" ]; then
-    echo "STATUS tunnel=0 interface=none latest_handshake=0 $FILTER"
+    echo "STATUS tunnel=0 interface=none latest_handshake=0 $FILTER host=none endpoint=none"
     exit 0
 fi
 safe_root_dir "$STATE_ROOT" || unavailable
 
 if [ ! -e "$STATE_DIR" ] && [ ! -L "$STATE_DIR" ]; then
-    echo "STATUS tunnel=0 interface=none latest_handshake=0 $FILTER"
+    echo "STATUS tunnel=0 interface=none latest_handshake=0 $FILTER host=none endpoint=none"
     exit 0
 fi
 safe_root_dir "$STATE_DIR" || unavailable
@@ -138,7 +138,7 @@ case "$HOST" in ''|*[[:space:]]*) unavailable ;; esac
 # crashed process left stale state behind. If the name was reused, ifconfig
 # succeeds and the stricter process/socket checks below still return unknown.
 if ! ifconfig "$IF" >/dev/null 2>&1; then
-    echo "STATUS tunnel=0 interface=none latest_handshake=0 $FILTER"
+    echo "STATUS tunnel=0 interface=none latest_handshake=0 $FILTER host=none endpoint=none"
     exit 0
 fi
 process_is_ours "$PID" || unavailable
@@ -159,4 +159,14 @@ LATEST=$(printf '%s\n' "$RAW" | /usr/bin/awk '
 ') || unavailable
 case "$LATEST" in ''|*[!0-9]*) unavailable ;; esac
 
-echo "STATUS tunnel=1 interface=$IF latest_handshake=$LATEST $FILTER"
+# Only the public endpoint is exposed; never use `wg show ... dump` (private key).
+ENDPOINT=$("$WG" show "$IF" endpoints 2>/dev/null | awk '
+    NF == 0 { next }
+    NF != 2 { bad=1; next }
+    { n++; endpoint=$2 }
+    END { if (!bad && n == 1) print endpoint; else exit 1 }
+') || unavailable
+case "$ENDPOINT" in ''|*[!A-Za-z0-9.:[\]-]*) unavailable ;; esac
+[ "${#ENDPOINT}" -le 260 ] || unavailable
+case "$HOST" in *[!A-Za-z0-9.:[\]-]*) unavailable ;; esac
+echo "STATUS tunnel=1 interface=$IF latest_handshake=$LATEST $FILTER host=$HOST endpoint=$ENDPOINT"

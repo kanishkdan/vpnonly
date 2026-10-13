@@ -7,6 +7,15 @@
 # just a front end so you don't have to remember which is which.
 set -uo pipefail
 
+case "${1:-}" in
+    --help|-h) echo "usage: vpnonly [--server <NordVPN hostname>|--auto]"; exit 0 ;;
+    --server) [ "$#" -eq 2 ] || { echo "usage: vpnonly --server <hostname>"; exit 1; } ;;
+    --auto) [ "$#" -eq 1 ] || { echo "usage: vpnonly --auto"; exit 1; } ;;
+    "") [ "$#" -eq 0 ] || exit 1 ;;
+    *) echo "usage: vpnonly [--server <NordVPN hostname>|--auto]"; exit 1 ;;
+esac
+CONNECT_ARGS=("$@")
+
 # Resolve through symlinks so this works when installed on PATH (Homebrew links
 # bin/vpnonly to libexec via two relative hops, and $0 points at the first).
 SELF="$0"
@@ -211,6 +220,9 @@ connection_line() {
         printf '  \e[32m●\e[0m connected\e[2m ·\e[0m %s' "$(tunnel_if)"
         [ -n "$VPNIP" ] && [ "$VPNIP" != "?" ] &&
             printf '\e[2m ·\e[0m exit \e[32m%s\e[0m' "$VPNIP"
+        local host
+        host=$(cat "$CONF/tunnel-host" 2>/dev/null || true)
+        [[ "$host" =~ ^[A-Za-z0-9.:-]+$ ]] && printf ' · configured %s' "$host"
         printf '\n'
     else
         printf '  \e[2m○ not connected\e[0m'
@@ -310,7 +322,25 @@ draw_app() {
 
 turn_on() {
     local app="$1"
-    tunnel_up || run_visible "$DIR/up.sh" || return 1
+    if ! tunnel_up; then
+        local old_pin new_pin
+        old_pin=absent
+        if [ -e "$CONF/nord-pinned.conf" ] || [ -L "$CONF/nord-pinned.conf" ]; then
+            old_pin=$(stat -f '%d:%i' "$CONF/nord-pinned.conf" 2>/dev/null) || return 1
+        fi
+        if ! run_visible "$DIR/up.sh" ${CONNECT_ARGS[@]+"${CONNECT_ARGS[@]}"}; then
+            # A pin can be saved before tunnel setup fails. Consume that choice
+            # at its atomic file replacement so Retry keeps the saved endpoint.
+            # A failed catalog lookup leaves the old inode and request intact.
+            if [ "${CONNECT_ARGS[0]:-}" = --server ] && [ -f "$CONF/nord-pinned.conf" ] &&
+                new_pin=$(stat -f '%d:%i' "$CONF/nord-pinned.conf" 2>/dev/null) &&
+                [ "$new_pin" != "$old_pin" ]; then
+                CONNECT_ARGS=()
+            fi
+            return 1
+        fi
+        CONNECT_ARGS=()
+    fi
     run_visible "$DIR/run.sh" "$app"
 }
 
@@ -336,6 +366,11 @@ turn_off() {
     read -r _ </dev/tty
     enter_screen
 }
+
+if [ "${#CONNECT_ARGS[@]}" -gt 0 ] && tunnel_up; then
+    echo "Disconnect the current VPNonly tunnel before choosing a server or automatic mode."
+    exit 1
+fi
 
 IFS=$'\n' read -r -d '' -a APPS < <(list_apps && printf '\0') || true
 [ "${#APPS[@]}" -gt 0 ] || { echo "no apps found in /Applications"; exit 1; }

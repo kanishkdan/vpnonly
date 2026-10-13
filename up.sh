@@ -4,10 +4,13 @@
 # never touched, so everything else on the machine keeps its normal path.
 #
 # usage: sudo ./up.sh                       NordVPN, Singapore exit (default)
+#        sudo ./up.sh --server us1234       pin that exact server (saved locally)
+#        sudo ./up.sh --auto                return to automatic country selection
 #        sudo COUNTRY=us ./up.sh            NordVPN, choose exit country
 #        sudo ./up.sh provider.conf         another provider's .conf (NordVPN-only in
 #                                           practice for now, see README)
 set -euo pipefail
+umask 077
 
 CLIENT_IP="${CLIENT_IP:-10.5.0.2}"      # NordLynx always assigns 10.5.0.2
 COUNTRY="${COUNTRY:-sg}"
@@ -38,9 +41,10 @@ while [ -L "$SELF" ]; do
 done
 DIR="$(cd "$(dirname "$SELF")" && pwd)"
 KEYFILE="$CONF/wg.key"
-mkdir -p "$CONF"; chown "$RUSER" "$CONF"
+/usr/bin/sudo -u "$RUSER" /bin/mkdir -p "$CONF"
 
-if [ -z "${1:-}" ] && [ ! -f "$KEYFILE" ]; then
+PINFILE="$CONF/nord-pinned.conf"
+if [ -z "${1:-}" ] && [ ! -f "$PINFILE" ] && [ ! -f "$KEYFILE" ]; then
     echo "no key at $KEYFILE"
     echo "either: ./fetch-creds.sh            (NordVPN)"
     echo "or:     sudo ./up.sh your-provider.conf"
@@ -59,7 +63,7 @@ if [ -s "$CONF/tunnel-if" ]; then
         echo "a vpnonly tunnel is already up on $OLD_IF — run down.sh first"
         exit 1
     fi
-    rm -f "$CONF/tunnel-if" "$CONF/tunnel-ip" "$CONF/tunnel-pid"
+    rm -f "$CONF/tunnel-if" "$CONF/tunnel-ip" "$CONF/tunnel-pid" "$CONF/tunnel-host" "$CONF/tunnel-endpoint"
 fi
 
 # PF evaluates anchors nested under com.apple/*, which is where our rules go.
@@ -77,6 +81,22 @@ pfctl -s rules 2>/dev/null | grep -Eq '^[[:space:]]*anchor "com\.apple/\*" all[[
 # endpoint, the server key and the tunnel address, so nothing has to be typed
 # by hand or guessed at.
 PROVIDER_CONF="${1:-}"
+case "$PROVIDER_CONF" in
+    --server)
+        [ "$#" -eq 2 ] || { echo "usage: up.sh --server <hostname>"; exit 1; }
+        # Resolve once on an explicit choice; reconnects reuse the fixed config.
+        curl -q -fsS --compressed --max-time 30 'https://api.nordvpn.com/v1/servers?limit=0' | \
+            /usr/bin/sudo -u "$RUSER" "$DIR/parse-wg.py" --nord-config "$2" "$KEYFILE" "$PINFILE" || exit 1
+        PROVIDER_CONF="$PINFILE"
+        ;;
+    --auto)
+        [ "$#" -eq 1 ] || { echo "usage: up.sh --auto"; exit 1; }
+        /usr/bin/sudo -u "$RUSER" /bin/rm -f "$PINFILE"
+        PROVIDER_CONF=""
+        ;;
+    "") [ ! -f "$PINFILE" ] || PROVIDER_CONF="$PINFILE" ;;
+    --*) echo "usage: up.sh [--server <hostname>|--auto|provider.conf]"; exit 1 ;;
+esac
 if [ -n "$PROVIDER_CONF" ]; then
     [ -f "$PROVIDER_CONF" ] || { echo "no such file: $PROVIDER_CONF"; exit 1; }
     PARSED=$("$DIR/parse-wg.py" "$PROVIDER_CONF" "$CONF/wg-session.conf") || exit 1
@@ -84,6 +104,8 @@ if [ -n "$PROVIDER_CONF" ]; then
     ENDPOINT=$(echo "$PARSED" | awk '{print $2}')
     STATION="${ENDPOINT%:*}"; PORT="${ENDPOINT##*:}"
     HOST="$STATION"
+    PIN_HOST=$(sed -n 's/^# NordVPN server: //p' "$PROVIDER_CONF" | head -n 1)
+    if [[ "$PIN_HOST" =~ ^[a-z]{2}[0-9]+\.nordvpn\.com$ ]]; then HOST="$PIN_HOST"; fi
     PUBKEY=""            # already in the parsed session file
     FROM_CONF=1
     echo "config: $PROVIDER_CONF  (tunnel address $CLIENT_IP)"
@@ -93,11 +115,11 @@ elif [ -n "${ENDPOINT:-}" ]; then
     HOST="$STATION"
 else
     PORT=51820
-    CID=$(curl -sf https://api.nordvpn.com/v1/servers/countries | python3 -c "
+    CID=$(curl -sf --max-time 15 https://api.nordvpn.com/v1/servers/countries | python3 -c "
 import json,sys
 cs=json.load(sys.stdin)
 print(next(c['id'] for c in cs if c['code'].lower()=='$COUNTRY'.lower()))")
-    read -r HOST STATION PUBKEY <<< "$(curl -sf "https://api.nordvpn.com/v1/servers/recommendations?filters\[country_id\]=$CID&filters\[servers_technologies\]\[identifier\]=wireguard_udp&limit=1" | python3 -c "
+    read -r HOST STATION PUBKEY <<< "$(curl -sf --max-time 15 "https://api.nordvpn.com/v1/servers/recommendations?filters\[country_id\]=$CID&filters\[servers_technologies\]\[identifier\]=wireguard_udp&limit=1" | python3 -c "
 import json,sys
 s=json.load(sys.stdin)[0]
 pk=next(m['value'] for t in s['technologies'] if t['identifier']=='wireguard_udp' for m in t.get('metadata',[]))
@@ -153,7 +175,9 @@ ifconfig "$IF" inet "$CLIENT_IP" "$CLIENT_IP" netmask 255.255.255.255 mtu 1420 u
 printf '%s\n' "$IF" > "$CONF/tunnel-if"
 printf '%s\n' "$CLIENT_IP" > "$CONF/tunnel-ip"
 printf '%s\n' "$WG_PID" > "$CONF/tunnel-pid"
-chown "$RUSER" "$CONF/tunnel-if" "$CONF/tunnel-ip" "$CONF/tunnel-pid"
+printf '%s\n' "$HOST" > "$CONF/tunnel-host"
+printf '%s\n' "$STATION:$PORT" > "$CONF/tunnel-endpoint"
+chown "$RUSER" "$CONF/tunnel-if" "$CONF/tunnel-ip" "$CONF/tunnel-pid" "$CONF/tunnel-host" "$CONF/tunnel-endpoint"
 
 # --- PF: steer group traffic into the tunnel ---------------------------------
 # Everything goes in VPNonly's own anchor. /etc/pf.conf is never read, rebuilt

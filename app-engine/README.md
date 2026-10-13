@@ -22,6 +22,20 @@ The engine:
   settings can't be read;
 - tears down only a tunnel that its root-owned state proves VPNonly created.
 
+Engine 18 adds `host=` and `endpoint=` to the existing `STATUS` line. The host
+comes from the owned tunnel record; the endpoint is read from `wg show <owned
+interface> endpoints`, without exposing private keys. Down reports `none` for
+both. Missing, unsafe or ambiguous peer state reports unavailable. The app
+accepts the older six-field status while upgrading, without inventing server
+details.
+
+Explicit NordVPN pins use the existing `profile` mode with a saved numeric
+endpoint and peer public key. The app and CLI validate an exact standard
+hostname in NordVPN's public catalog when a user creates a pin. Profile-mode
+reconnects never call the recommendation API or advance to another candidate;
+an unanswered handshake fails on the sole configured peer. Automatic country
+selection retains its existing recommendation and bounded retry behavior.
+
 The command-line version at the repository root (`vpnonly`, installed with
 Homebrew) is a separate, smaller implementation of the same idea, and it is
 supported. It is not this engine: it loads its own `com.apple/vpnonly-cli` PF
