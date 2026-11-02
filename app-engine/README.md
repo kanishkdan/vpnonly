@@ -25,9 +25,10 @@ The engine:
 The command-line version at the repository root (`vpnonly`, installed with
 Homebrew) is a separate, smaller implementation of the same idea, and it is
 supported. It is not this engine: it loads its own `com.apple/vpnonly-cli` PF
-anchor and runs the stock `wireguard-go`, which is why it works with NordVPN
-only for now. This engine carries the inner-source patch
-(`wireguard-go-nat.patch`) that lets the Mac app use any WireGuard provider.
+anchor and keeps its own state. It does share one file with this engine: the
+inner-source patch (`wireguard-go-nat.patch`), which its Homebrew formula
+builds into `wireguard-go` so the CLI, like the Mac app, works with any
+WireGuard provider.
 
 VPNonly's own source in this directory is MIT licensed. The bundled WireGuard
 programs retain their upstream licences; see `licenses/` and

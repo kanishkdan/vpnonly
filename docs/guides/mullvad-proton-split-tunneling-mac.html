@@ -86,7 +86,7 @@
 
 <h2 id="importing">Importing a config</h2>
 <p>In <a href="../">VPNonly</a>: open the <strong>⋯</strong> menu, choose <strong>Import WireGuard config…</strong>, and pick either a single <code>.conf</code> or the zip Mullvad gives you. The zip becomes one entry &mdash; pick a country from the menu at the bottom, the same way you would with NordVPN. Then flip the switch next to any app.</p>
-<p>The exact privileged engine used by the app is public for inspection. The free command-line version on GitHub is a separate, smaller implementation that works with NordVPN only for now, so for the providers on this page, use the app.</p>
+<p>The exact privileged engine used by the app is public for inspection. If you live in the terminal, the free command-line version on GitHub is a separate, smaller implementation that works with these providers too: install it with Homebrew and run <code>vpnonly import</code> on the config you downloaded.</p>
 
 <h2>Two details worth knowing</h2>
 <p>Providers hand out <em>wg-quick</em> configs, which include <code>Address</code>, <code>DNS</code> and sometimes <code>MTU</code> lines. Plain <code>wg setconf</code> rejects those, so anything importing them has to strip them out and apply the address separately. If you're scripting this yourself, that's the first thing to get right.</p>

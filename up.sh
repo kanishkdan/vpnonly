@@ -3,24 +3,17 @@
 # traffic from unix group "vpnonly" through it. The system default route is
 # never touched, so everything else on the machine keeps its normal path.
 #
-# usage: sudo ./up.sh                       NordVPN, Singapore exit (default)
+# usage: sudo ./up.sh                       the config saved by `vpnonly import`,
+#                                           else NordVPN, Singapore exit
 #        sudo COUNTRY=us ./up.sh            NordVPN, choose exit country
-#        sudo ./up.sh provider.conf         another provider's .conf (NordVPN-only in
-#                                           practice for now, see README)
+#        sudo ./up.sh provider.conf         any provider's WireGuard .conf, this
+#                                           connection only
 set -euo pipefail
 
 CLIENT_IP="${CLIENT_IP:-10.5.0.2}"      # NordLynx always assigns 10.5.0.2
+NORD_ASKED="${COUNTRY:+1}"              # an explicit COUNTRY means NordVPN
 COUNTRY="${COUNTRY:-sg}"
 ANCHOR="com.apple/vpnonly-cli"
-WG=/opt/homebrew/bin/wg
-WG_GO=/opt/homebrew/bin/wireguard-go
-[ -x "$WG" ] || WG=/usr/local/bin/wg
-[ -x "$WG_GO" ] || WG_GO=/usr/local/bin/wireguard-go
-[ -x "$WG" ] && [ -x "$WG_GO" ] || {
-    echo "wireguard-go and wg not found. Install them first:"
-    echo "  brew install wireguard-go wireguard-tools"
-    exit 1
-}
 
 [ "$(id -u)" = 0 ] || { echo "run with sudo"; exit 1; }
 RUSER="${SUDO_USER:?run via sudo from your normal user}"
@@ -40,10 +33,38 @@ DIR="$(cd "$(dirname "$SELF")" && pwd)"
 KEYFILE="$CONF/wg.key"
 mkdir -p "$CONF"; chown "$RUSER" "$CONF"
 
-if [ -z "${1:-}" ] && [ ! -f "$KEYFILE" ]; then
-    echo "no key at $KEYFILE"
-    echo "either: ./fetch-creds.sh            (NordVPN)"
-    echo "or:     sudo ./up.sh your-provider.conf"
+WG=/opt/homebrew/bin/wg
+[ -x "$WG" ] || WG=/usr/local/bin/wg
+# Prefer the patched wireguard-go next to these scripts (the Homebrew formula
+# installs it, build-wireguard-go.sh builds it from source). Every provider
+# except NordVPN needs its inner-source rewrite. Stock wireguard-go from
+# Homebrew is the fallback, and it still works with NordVPN.
+WG_GO="$DIR/wireguard-go"
+PATCHED=1
+if [ ! -x "$WG_GO" ]; then
+    PATCHED=0
+    WG_GO=/opt/homebrew/bin/wireguard-go
+    [ -x "$WG_GO" ] || WG_GO=/usr/local/bin/wireguard-go
+fi
+[ -x "$WG" ] || { echo "wg not found. Install it first:  brew install wireguard-tools"; exit 1; }
+[ -x "$WG_GO" ] || {
+    echo "wireguard-go not found. Build it first:  $DIR/build-wireguard-go.sh"
+    exit 1
+}
+
+# With no argument, a config saved by `vpnonly import` wins over the NordVPN
+# key: importing is the newer choice, and fetch-creds.sh removes the saved
+# config when you switch back to NordVPN. Naming a COUNTRY asks for NordVPN.
+PROVIDER_CONF="${1:-}"
+if [ -z "$PROVIDER_CONF" ] && [ -z "${ENDPOINT:-}" ] && [ -z "$NORD_ASKED" ] &&
+    [ -f "$CONF/provider.conf" ]; then
+    PROVIDER_CONF="$CONF/provider.conf"
+fi
+
+if [ -z "$PROVIDER_CONF" ] && [ ! -f "$KEYFILE" ]; then
+    echo "No VPN set up yet. Either:"
+    echo "  NordVPN:        $DIR/fetch-creds.sh"
+    echo "  any WireGuard:  vpnonly import your-provider.conf"
     exit 1
 fi
 
@@ -76,7 +97,6 @@ pfctl -s rules 2>/dev/null | grep -Eq '^[[:space:]]*anchor "com\.apple/\*" all[[
 # The easy path: a WireGuard .conf from any provider. parse-wg.py pulls out the
 # endpoint, the server key and the tunnel address, so nothing has to be typed
 # by hand or guessed at.
-PROVIDER_CONF="${1:-}"
 if [ -n "$PROVIDER_CONF" ]; then
     [ -f "$PROVIDER_CONF" ] || { echo "no such file: $PROVIDER_CONF"; exit 1; }
     PARSED=$("$DIR/parse-wg.py" "$PROVIDER_CONF" "$CONF/wg-session.conf") || exit 1
@@ -104,6 +124,10 @@ pk=next(m['value'] for t in s['technologies'] if t['identifier']=='wireguard_udp
 print(s['hostname'], s['station'], pk)")"
 fi
 echo "server: $HOST ($STATION:$PORT)"
+if [ "$PATCHED" = 0 ] && { [ -n "$PROVIDER_CONF" ] || [ -n "${ENDPOINT:-}" ]; }; then
+    echo "note: this is Homebrew's stock wireguard-go, so only NordVPN servers will"
+    echo "      pass traffic. Build the patched one with: $DIR/build-wireguard-go.sh"
+fi
 
 # Another full-device VPN holding the default route would carry our own
 # encrypted traffic inside its tunnel, which usually breaks on MTU.
@@ -125,8 +149,13 @@ dseditgroup -o read vpnonly >/dev/null 2>&1 || \
 # Ask the kernel for a free utunN rather than claiming a fixed name. Anything
 # else on this Mac may already hold utun0..utun9, and adopting an interface we
 # do not own means reporting a connection that isn't ours.
+#
+# WG_NAT_SOURCE makes the patched wireguard-go rewrite each packet's inner
+# IPv4 source to the tunnel address, which PF cannot do (see below). Stock
+# wireguard-go ignores it.
 NAMEFILE=$(mktemp)
-WG_TUN_NAME_FILE="$NAMEFILE" nohup "$WG_GO" -f utun </dev/null >/dev/null 2>&1 &
+WG_TUN_NAME_FILE="$NAMEFILE" WG_NAT_SOURCE="$CLIENT_IP" \
+    nohup "$WG_GO" -f utun </dev/null >/dev/null 2>&1 &
 WG_PID=$!
 for _ in $(seq 1 50); do [ -s "$NAMEFILE" ] && break; sleep 0.1; done
 IF=$(cat "$NAMEFILE" 2>/dev/null || true); rm -f "$NAMEFILE"
@@ -165,7 +194,8 @@ chown "$RUSER" "$CONF/tunnel-if" "$CONF/tunnel-ip" "$CONF/tunnel-pid"
 # blocked app fails immediately instead of hanging until it times out.
 PFRULES=$(mktemp)
 {
-    # No nat rule: PF can't translate a packet it route-to's on macOS. See README.
+    # No nat rule: PF can't translate a packet it route-to's on macOS, so
+    # wireguard-go rewrites the source instead (WG_NAT_SOURCE above). See README.
     printf 'pass out quick on ! lo0 route-to (%s %s) inet proto { tcp udp } from any to any group vpnonly keep state\n' "$IF" "$CLIENT_IP"
     printf 'block return out quick on ! lo0 from any to any group vpnonly\n'
 } > "$PFRULES"

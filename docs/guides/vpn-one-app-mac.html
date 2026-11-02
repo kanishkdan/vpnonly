@@ -79,7 +79,7 @@
 
 <h2>3. Understand the PF and WireGuard approach</h2>
 <p>macOS ships with PF, a packet filter that can't match traffic by application but <em>can</em> match by unix group. A per-app VPN can launch an app under a private group and route that group's traffic into an owned WireGuard tunnel.</p>
-<p>VPNonly's <a href="https://github.com/kanishkdan/vpnonly/tree/main/app-engine">current privileged engine source</a> is public for inspection. The same repository has a free command-line version you can install with Homebrew. It's a separate, smaller implementation that works with NordVPN only for now; the app works with any WireGuard provider.</p>
+<p>VPNonly's <a href="https://github.com/kanishkdan/vpnonly/tree/main/app-engine">current privileged engine source</a> is public for inspection. The same repository has a free command-line version you can install with Homebrew. It's a separate, smaller implementation, and like the app it works with any WireGuard provider.</p>
 <p>The <a href="../how-it-works.html">how it works</a> page explains the current app's safer ownership and firewall model.</p>
 
 <h2>Which one to pick</h2>

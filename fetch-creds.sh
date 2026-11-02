@@ -5,8 +5,8 @@
 #   -> Access token tab -> Generate new token
 # Run as your normal user (NOT sudo).
 #
-# Using a different provider? Skip this script and drop your WireGuard private
-# key into ~/.config/vpnonly/wg.key instead (see README, "Other providers").
+# Using a different provider? Skip this script and import the WireGuard config
+# your provider gives you instead:  vpnonly import your-provider.conf
 set -euo pipefail
 
 CONF="$HOME/.config/vpnonly"
@@ -27,4 +27,10 @@ KEY=$(printf '%s' "$RESP" | python3 -c 'import json,sys; print(json.load(sys.std
 umask 077
 printf '%s\n' "$KEY" > "$CONF/wg.key"
 echo "OK: WireGuard private key saved to $CONF/wg.key (mode 600)."
+# A config saved by `vpnonly import` would otherwise keep winning over this
+# key. Setting up NordVPN is the newer choice, so it takes over.
+if [ -f "$CONF/provider.conf" ]; then
+    rm -f "$CONF/provider.conf"
+    echo "Removed the config saved by vpnonly import, so vpnonly uses NordVPN now."
+fi
 echo "You can revoke the access token anytime from your Nord account dashboard."
