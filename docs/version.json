@@ -1,5 +1,5 @@
 {
-  "version": "1.9.28",
+  "version": "1.9.29",
   "url": "https://vpnonly.app/",
-  "notes": "Stops a menu bar icon redraw loop that could pin a CPU core, and catches every launch of a switched-on app."
+  "notes": "Sizes every TCP connection for the tunnel, so apps like ChatGPT no longer stall or crawl through the VPN."
 }
