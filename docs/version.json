@@ -1,5 +1,5 @@
 {
-  "version": "1.9.27",
+  "version": "1.9.28",
   "url": "https://vpnonly.app/",
-  "notes": "Fixes misleading licence connection errors, prevents false firewall-hook failures, and corrects connection tracking and network-error handling in the VPN engine."
+  "notes": "Stops a menu bar icon redraw loop that could pin a CPU core, and catches every launch of a switched-on app."
 }
