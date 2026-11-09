@@ -99,6 +99,13 @@ env GOOS=darwin GOARCH=arm64 CGO_ENABLED=1 GOTOOLCHAIN=local \
     exit 1
 }
 
+env GOOS=darwin GOARCH=arm64 CGO_ENABLED=1 GOTOOLCHAIN=local \
+    GOCACHE="$BUILD_DIR/gocache" GOMODCACHE="$BUILD_DIR/gomodcache" \
+    "$GO_BIN" -C "$SOURCE" test -run TestBindDoesNotWakeFromSleep ./conn >/dev/null || {
+    echo "wireguard-go no-wake test failed" >&2
+    exit 1
+}
+
 "$BUILD_DIR/wireguard-go" --version 2>&1 | \
     /usr/bin/grep -Fq "wireguard-go v$VERSION" || {
         echo "wireguard-go reported an unexpected version" >&2

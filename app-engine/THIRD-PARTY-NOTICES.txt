@@ -33,8 +33,9 @@ wireguard-go with one small published patch) and the Sparkle update framework.
    one patch applied, wireguard-go-nat.patch, published with VPNonly's engine
    source at https://github.com/kanishkdan/vpnonly/tree/main/app-engine. It
    rewrites the inner source address of packets entering the tunnel to the
-   tunnel's own address, so that every provider accepts them, and clamps the
-   TCP segment size that connections announce to what the tunnel carries.
+   tunnel's own address, so that every provider accepts them, clamps the
+   TCP segment size that connections announce to what the tunnel carries, and
+   stops the tunnel's traffic from waking the Mac while it sleeps.
 
 -----------------------------------------------------------------------------
 3. Sparkle                            version 2.9.6

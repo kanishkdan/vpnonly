@@ -1155,3 +1155,115 @@
 +		checkTCP(t, out, tunIP, remote)
 +	}
 +}
+--- /dev/null
++++ b/conn/nowake_darwin.go
+@@ -0,0 +1,35 @@
++/* SPDX-License-Identifier: MIT
++ *
++ * VPNonly addition: keep tunnel traffic from waking a sleeping Mac.
++ *
++ * While a Mac sleeps, its Wi-Fi chip wakes it for any packet sent to a local
++ * port that has an open socket, unless that socket opted out with
++ * SO_NOWAKEFROMSLEEP (XNU, bsd/netinet/in_pcblist.c). Every packet for every
++ * app on the VPN arrives on this one UDP port, so a closed lid with a busy
++ * app on the VPN woke the Mac again and again, all night, until the battery
++ * ran out. With the option set, the Wi-Fi chip drops those packets while the
++ * Mac sleeps, and TCP sends them again once it's awake.
++ */
++
++package conn
++
++import (
++	"syscall"
++
++	"golang.org/x/sys/unix"
++)
++
++// soNoWakeFromSleep is SO_NOWAKEFROMSLEEP from XNU's sys/socket_private.h.
++// The public headers and x/sys/unix leave it out.
++const soNoWakeFromSleep = 0x10000
++
++func init() {
++	controlFns = append(controlFns,
++		func(network, address string, c syscall.RawConn) error {
++			// Best effort, like the buffer sizes: the tunnel works without it.
++			return c.Control(func(fd uintptr) {
++				_ = unix.SetsockoptInt(int(fd), unix.SOL_SOCKET, soNoWakeFromSleep, 1)
++			})
++		},
++	)
++}
+--- /dev/null
++++ b/conn/nowake_darwin_test.go
+@@ -0,0 +1,71 @@
++/* SPDX-License-Identifier: MIT
++ *
++ * VPNonly addition: tests for nowake_darwin.go.
++ */
++
++package conn
++
++import (
++	"net"
++	"testing"
++
++	"golang.org/x/sys/unix"
++)
++
++// wakeListHas reports whether port is on the list of UDP and TCP ports the
++// interface wakes the Mac for, as the kernel hands it to the Wi-Fi driver.
++func wakeListHas(t *testing.T, ifindex, port int) bool {
++	t.Helper()
++	// Arguments: interface index, any protocol family, and
++	// IFNET_GET_LOCAL_PORTS_WILDCARDOK, since the bind listens on every address.
++	bits, err := unix.SysctlRaw("net.link.generic.system.get_ports_used", ifindex, 0, 1)
++	if err != nil {
++		t.Fatalf("reading the wake list: %v", err)
++	}
++	return bits[port/8]&(1<<(port%8)) != 0
++}
++
++func TestBindDoesNotWakeFromSleep(t *testing.T) {
++	bind := NewStdNetBind().(*StdNetBind)
++	_, port, err := bind.Open(0)
++	if err != nil {
++		t.Fatal(err)
++	}
++	defer bind.Close()
++
++	for name, c := range map[string]*net.UDPConn{"ipv4": bind.ipv4, "ipv6": bind.ipv6} {
++		if c == nil {
++			continue // no IPv6 on this machine
++		}
++		raw, err := c.SyscallConn()
++		if err != nil {
++			t.Fatal(err)
++		}
++		var got int
++		var gerr error
++		raw.Control(func(fd uintptr) {
++			got, gerr = unix.GetsockoptInt(int(fd), unix.SOL_SOCKET, soNoWakeFromSleep)
++		})
++		if gerr != nil || got == 0 {
++			t.Fatalf("%s socket: SO_NOWAKEFROMSLEEP = %d, %v", name, got, gerr)
++		}
++	}
++
++	// The option is only worth having if the port leaves the wake list.
++	// A plain socket on the same interface is the control.
++	en0, err := net.InterfaceByName("en0")
++	if err != nil {
++		t.Skip("no en0 to read a wake list from")
++	}
++	plain, err := net.ListenUDP("udp4", &net.UDPAddr{})
++	if err != nil {
++		t.Fatal(err)
++	}
++	defer plain.Close()
++	if !wakeListHas(t, en0.Index, plain.LocalAddr().(*net.UDPAddr).Port) {
++		t.Skip("this Mac's wake list doesn't include plain sockets")
++	}
++	if wakeListHas(t, en0.Index, int(port)) {
++		t.Fatalf("tunnel port %d is still on en0's wake list", port)
++	}
++}

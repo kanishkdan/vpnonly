@@ -7,13 +7,25 @@
     <language>en</language>
 
     <item>
+      <title>Version 1.9.30</title>
+      <pubDate>Mon, 09 Nov 2026 13:15:27 +0530</pubDate>
+      <sparkle:version>1.9.30</sparkle:version>
+      <sparkle:shortVersionString>1.9.30</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Stops VPN traffic from waking your Mac while it&#x27;s asleep, which could run the battery down overnight with the lid closed.</p>]]></description>
+      <enclosure url="https://vpnonly.app/VPNonly-1.9.30.zip"
+                 sparkle:edSignature="+CasH2l5Yls+drIlPCuqJ3iCnDyRH7JDNwkBZ+s1dGWno3qGLmXCnxgkT2Jqz6cW5Ks25w0YVkMHwKoUlpxgAQ=="
+                 length="3413678"
+                 type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 1.9.29</title>
       <pubDate>Tue, 03 Nov 2026 18:22:53 +0530</pubDate>
       <sparkle:version>1.9.29</sparkle:version>
       <sparkle:shortVersionString>1.9.29</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[<p>Sizes every TCP connection for the tunnel, so apps like ChatGPT no longer stall or crawl through the VPN.</p>]]></description>
-      <enclosure url="https://vpnonly.app/VPNonly-1.9.29.zip"
+      <enclosure url="https://github.com/kanishkdan/vpnonly/releases/download/v1.9.29/VPNonly-1.9.29.zip"
                  sparkle:edSignature="ApReRrmOP3iz0aK+qql6oaiznGwPJGO90UKYhsG45GbeA7mYEpmD2wl7f1hfOS1/gYWAg24cAUH54opfIGibBg=="
                  length="3413447"
                  type="application/octet-stream" />

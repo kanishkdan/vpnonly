@@ -1,5 +1,5 @@
 {
-  "version": "1.9.29",
+  "version": "1.9.30",
   "url": "https://vpnonly.app/",
-  "notes": "Sizes every TCP connection for the tunnel, so apps like ChatGPT no longer stall or crawl through the VPN."
+  "notes": "Stops VPN traffic from waking your Mac while it's asleep, which could run the battery down overnight with the lid closed."
 }
