@@ -4,18 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Proton VPN split tunneling on Mac</title>
-<meta name="description" content="Route one Mac app through Proton VPN and leave everything else alone, using a WireGuard config.">
+<meta name="description" content="Route one Mac app through Proton VPN and leave everything else alone, using a WireGuard config. Works on Proton's free plan too.">
 <link rel="canonical" href="https://vpnonly.app/guides/protonvpn-split-tunneling-mac.html">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="VPNonly">
 <meta property="og:url" content="https://vpnonly.app/guides/protonvpn-split-tunneling-mac.html">
 <meta property="og:title" content="Proton VPN split tunneling on Mac">
-<meta property="og:description" content="Route one Mac app through Proton VPN and leave everything else alone, using a WireGuard config.">
+<meta property="og:description" content="Route one Mac app through Proton VPN and leave everything else alone, using a WireGuard config. Works on Proton's free plan too.">
 <meta property="og:image" content="https://vpnonly.app/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@kanishkrazdan">
 <meta name="twitter:title" content="Proton VPN split tunneling on Mac">
-<meta name="twitter:description" content="Route one Mac app through Proton VPN and leave everything else alone, using a WireGuard config.">
+<meta name="twitter:description" content="Route one Mac app through Proton VPN and leave everything else alone, using a WireGuard config. Works on Proton's free plan too.">
 <meta name="twitter:image" content="https://vpnonly.app/og.png">
 <link rel="icon" type="image/png" href="../icon.png">
 <link rel="stylesheet" href="../site.css">
@@ -69,6 +69,7 @@
   <li>Name the config, pick a server, and generate it.</li>
   <li>Download the <code>.conf</code> file.</li>
 </ol>
+<p><strong>This works on Proton's free plan.</strong> Free accounts can create WireGuard configs in the same place; Proton's <a href="https://protonvpn.com/support/wireguard-configurations">setup page</a> notes that VPN Accelerator is the only option the free plan offers (checked 12 November 2026). So a free Proton account plus VPNonly is a per-app VPN for $19, once.</p>
 <h2>Put one app on it with VPNonly</h2>
 <ol>
   <li>Install <a href="../">VPNonly</a> and open the <strong>&ctdot;</strong> menu &rarr; <strong>Import WireGuard config…</strong>.</li>
@@ -77,7 +78,7 @@
 </ol>
 <p>Documented from Proton's own setup pages. Proton issues standard WireGuard configs, which is exactly what the import takes; the exit was not separately tested on our hardware.</p>
 <p class="cta"><a class="btn" href="https://dodo.pe/get-vpnonly" data-goatcounter-click="buy-protonvpn-split-tunneling-mac">Get VPNonly for Mac — $19</a></p>
-<p class="note">The app’s <a href="https://github.com/kanishkdan/vpnonly/tree/main/app-engine">exact privileged engine source</a> is public and MIT licensed.</p>
+<p class="note">The app’s <a href="https://github.com/kanishkdan/vpnonly/tree/main/app-engine">exact privileged engine source</a> is public and MIT licensed. Prefer the terminal? The <a href="https://github.com/kanishkdan/vpnonly#install">free command-line version</a> works with Proton too, free plan included: install it with Homebrew and run <code>vpnonly import</code> on the <code>.conf</code>.</p>
 <h2>Other providers</h2>
 <p><a href="nordvpn-split-tunneling-mac.html">NordVPN</a> · <a href="mullvad-split-tunneling-mac.html">Mullvad</a> · <a href="surfshark-split-tunneling-mac.html">Surfshark</a> · <a href="ivpn-split-tunneling-mac.html">IVPN</a> · <a href="airvpn-split-tunneling-mac.html">AirVPN</a> · <a href="windscribe-split-tunneling-mac.html">Windscribe</a> · <a href="torguard-split-tunneling-mac.html">TorGuard</a> · <a href="azirevpn-split-tunneling-mac.html">AzireVPN</a> · <a href="ovpn-split-tunneling-mac.html">OVPN</a> · <a href="expressvpn-split-tunneling-mac.html">ExpressVPN</a> · <a href="mullvad-proton-split-tunneling-mac.html">your own server</a>. Or see <a href="mac-vpn-split-tunneling.html">which Mac VPNs have split tunneling</a>, provider by provider.</p>
 </div>

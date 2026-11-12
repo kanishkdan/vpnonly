@@ -4,18 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mullvad split tunneling on Mac</title>
-<meta name="description" content="Put only one Mac app on Mullvad, the rest on your normal connection. Tested with the exit IP verified.">
+<meta name="description" content="Mullvad's Mac app can only exclude apps. Put just one app on Mullvad instead (inverse split tunneling), with the rest of the Mac on its normal connection. Tested.">
 <link rel="canonical" href="https://vpnonly.app/guides/mullvad-split-tunneling-mac.html">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="VPNonly">
 <meta property="og:url" content="https://vpnonly.app/guides/mullvad-split-tunneling-mac.html">
 <meta property="og:title" content="Mullvad split tunneling on Mac">
-<meta property="og:description" content="Put only one Mac app on Mullvad, the rest on your normal connection. Tested with the exit IP verified.">
+<meta property="og:description" content="Mullvad's Mac app can only exclude apps. Put just one app on Mullvad instead (inverse split tunneling), with the rest of the Mac on its normal connection. Tested.">
 <meta property="og:image" content="https://vpnonly.app/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@kanishkrazdan">
 <meta name="twitter:title" content="Mullvad split tunneling on Mac">
-<meta name="twitter:description" content="Put only one Mac app on Mullvad, the rest on your normal connection. Tested with the exit IP verified.">
+<meta name="twitter:description" content="Mullvad's Mac app can only exclude apps. Put just one app on Mullvad instead (inverse split tunneling), with the rest of the Mac on its normal connection. Tested.">
 <meta name="twitter:image" content="https://vpnonly.app/og.png">
 <link rel="icon" type="image/png" href="../icon.png">
 <link rel="stylesheet" href="../site.css">
@@ -62,6 +62,7 @@
 <h1>Mullvad split tunneling on Mac</h1>
 <p>Mullvad's own macOS app has split tunneling, but it's <em>exclude-only</em>: your whole Mac joins the VPN and you pick apps to leave out. If that's the model you want, it's included with your subscription — use it.</p>
 <p>If you want the opposite — your Mac stays on its normal connection and one app joins the tunnel — Mullvad hands out standard WireGuard configs you can point a per-app tool at.</p>
+<p>Don't wait for Mullvad to add that mode, sometimes called inverse split tunneling. Its <a href="https://mullvad.net/en/help/split-tunneling-with-the-mullvad-app">own help page</a> says: “We are not planning to add this currently because we believe that a VPN should be used by default and not by exception.” (Checked 12 November 2026.)</p>
 
 <h2>Get a WireGuard config from Mullvad</h2>
 <ol>
@@ -78,7 +79,7 @@
 <p><strong>If Mullvad's own app is installed too:</strong> disconnect and quit it before you switch apps on in VPNonly, or uninstall it. Its background service keeps running after the app quits, and when Mullvad disconnects it can turn off the Mac's packet filter, which holds VPNonly's rules as well. VPNonly notices within a minute, turns it back on and re-applies its rules, but a whole-Mac VPN and a per-app one taking turns with the same firewall is not worth the surprise. The config file you imported works without the app.</p>
 <p><strong>Tested</strong> 1 September 2026: imported the full zip, chose Singapore, and VPNonly's own check showed a Mullvad exit address with the Mac's normal address unchanged. Mullvad enforces strict cryptokey routing, which needs VPNonly 1.9.16 or later — earlier versions connect but carry no traffic.</p>
 <p class="cta"><a class="btn" href="https://dodo.pe/get-vpnonly" data-goatcounter-click="buy-mullvad-split-tunneling-mac">Get VPNonly for Mac — $19</a></p>
-<p class="note">The app’s <a href="https://github.com/kanishkdan/vpnonly/tree/main/app-engine">exact privileged engine source</a> is public and MIT licensed.</p>
+<p class="note">The app’s <a href="https://github.com/kanishkdan/vpnonly/tree/main/app-engine">exact privileged engine source</a> is public and MIT licensed. Prefer the terminal? The <a href="https://github.com/kanishkdan/vpnonly#install">free command-line version</a> works with Mullvad too: install it with Homebrew and run <code>vpnonly import</code> on one <code>.conf</code> from the zip.</p>
 <h2>Other providers</h2>
 <p><a href="nordvpn-split-tunneling-mac.html">NordVPN</a> · <a href="protonvpn-split-tunneling-mac.html">Proton VPN</a> · <a href="surfshark-split-tunneling-mac.html">Surfshark</a> · <a href="ivpn-split-tunneling-mac.html">IVPN</a> · <a href="airvpn-split-tunneling-mac.html">AirVPN</a> · <a href="windscribe-split-tunneling-mac.html">Windscribe</a> · <a href="torguard-split-tunneling-mac.html">TorGuard</a> · <a href="azirevpn-split-tunneling-mac.html">AzireVPN</a> · <a href="ovpn-split-tunneling-mac.html">OVPN</a> · <a href="expressvpn-split-tunneling-mac.html">ExpressVPN</a> · <a href="mullvad-proton-split-tunneling-mac.html">your own server</a>. Or see <a href="mac-vpn-split-tunneling.html">which Mac VPNs have split tunneling</a>, provider by provider.</p>
 </div>
