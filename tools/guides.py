@@ -40,6 +40,8 @@ GLYPHS = {
 GUIDES = {
     "mac-vpn-split-tunneling.html": ("glyph:table", "Which Mac VPNs have split tunneling?",
         "Checked against each provider's own docs: who supports it on macOS, who doesn't, and the limits."),
+    "split-tunneling-apps-mac.html": ("glyph:table", "Split tunneling apps for Mac, compared",
+        "VPNonly, SplitTunnel and AppLanes side by side: price, how each routes apps, and which fits your setup."),
     "vpn-one-app-mac.html": ("img:google-chrome", "How to use a VPN for only one app on Mac",
         "Three approaches compared: per-app tools, a virtual machine, or PF and WireGuard yourself.",
         "Just your browser",
@@ -86,6 +88,11 @@ GUIDES = {
         "qBittorrent or Transmission goes through the VPN and is blocked if the tunnel drops. The rest of your Mac keeps its full speed."),
 }
 
+# Guides that never take the homepage's "newest" slot. A comparison sends
+# readers to competitors, which is fine on the guides page but not as the
+# first thing a buyer sees.
+HOME_SKIP = {"split-tunneling-apps-mac.html"}
+
 # After the newest guide, the homepage shows these, in this order.
 PINNED = ["torrent-vpn-only-mac.html", "vpn-one-app-mac.html", "whatsapp-calls-mac-uae.html",
           "nordvpn-split-tunneling-mac.html", "mullvad-proton-split-tunneling-mac.html", "whole-mac-on-vpn.html"]
@@ -125,9 +132,9 @@ def icon(spec, prefix):
             f'stroke-linecap="round" stroke-linejoin="round">{GLYPHS[name]}</svg>')
 
 
-def new_tag(g, all_guides):
+def new_tag(g, newest):
     age = (datetime.date.today() - datetime.date.fromisoformat(g["date"])).days
-    return ' <i class="tag">New</i>' if g is all_guides[0] and age <= NEW_FOR_DAYS else ""
+    return ' <i class="tag">New</i>' if g is newest and age <= NEW_FOR_DAYS else ""
 
 
 def replace_between(path, start, end, body):
@@ -142,18 +149,19 @@ def main():
     all_guides = guides()
 
     by_href = {g["href"]: g for g in all_guides}
-    picks = [all_guides[0]] + [by_href[h] for h in PINNED if h in by_href and h != all_guides[0]["href"]]
+    newest = next(g for g in all_guides if g["href"] not in HOME_SKIP)
+    picks = [newest] + [by_href[h] for h in PINNED if h in by_href and h != newest["href"]]
     cards = "".join(
         f'      <a class="case" href="guides/{g["href"]}">\n'
         f'        <span class="ic">{icon(g["icon"], "")}</span>\n'
-        f'        <span><b>{g["home_title"]}{new_tag(g, all_guides)}</b><span>{g["home_blurb"]}</span><em>{g["title"]}</em></span>\n'
+        f'        <span><b>{g["home_title"]}{new_tag(g, newest)}</b><span>{g["home_blurb"]}</span><em>{g["title"]}</em></span>\n'
         f'      </a>\n' for g in picks[:HOME_COUNT])
     replace_between(os.path.join(DOCS, "index.html"), "<!--HOME-GUIDES-->", "<!--/HOME-GUIDES-->", "\n" + cards)
 
     rows = "".join(
         f'  <a class="entry" href="{g["href"]}">\n'
         f'    <span class="ic">{icon(g["icon"], "../")}</span>\n'
-        f'    <span><b>{g["title"]}{new_tag(g, all_guides)}</b><span class="bl">{g["blurb"]}</span>'
+        f'    <span><b>{g["title"]}{new_tag(g, all_guides[0])}</b><span class="bl">{g["blurb"]}</span>'
         f'<time datetime="{g["date"]}">{datetime.date.fromisoformat(g["date"]).strftime("%-d %b %Y")}</time></span>\n'
         f'  </a>\n' for g in all_guides)
     replace_between(os.path.join(DOCS, "guides", "index.html"), "<!--GUIDES-->", "<!--/GUIDES-->",

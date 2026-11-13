@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Split tunneling apps for Mac, compared</title>
+<meta name="description" content="VPNonly, SplitTunnel and AppLanes side by side: price, how each routes apps, and which fits a work VPN, NordVPN or Safari. Checked against each product’s own site.">
+<link rel="canonical" href="https://vpnonly.app/guides/split-tunneling-apps-mac.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="VPNonly">
+<meta property="og:url" content="https://vpnonly.app/guides/split-tunneling-apps-mac.html">
+<meta property="og:title" content="Split tunneling apps for Mac, compared">
+<meta property="og:description" content="VPNonly, SplitTunnel and AppLanes side by side: price, how each routes apps, and which fits a work VPN, NordVPN or Safari. Checked against each product’s own site.">
+<meta property="og:image" content="https://vpnonly.app/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@kanishkrazdan">
+<meta name="twitter:title" content="Split tunneling apps for Mac, compared">
+<meta name="twitter:description" content="VPNonly, SplitTunnel and AppLanes side by side: price, how each routes apps, and which fits a work VPN, NordVPN or Safari. Checked against each product’s own site.">
+<meta name="twitter:image" content="https://vpnonly.app/og.png">
+<link rel="icon" type="image/png" href="../icon.png">
+<link rel="stylesheet" href="../site.css">
+<script>
+  // Count visits on the real site only, never on a local preview.
+  if (location.hostname === "vpnonly.app") {
+    const gc = document.createElement("script");
+    gc.async = true;
+    gc.src = "//gc.zgo.at/count.js";
+    gc.dataset.goatcounter = "https://vpnonly.goatcounter.com/count";
+    document.head.appendChild(gc);
+    const cf = document.createElement("script");
+    cf.defer = true;
+    cf.src = "https://static.cloudflareinsights.com/beacon.min.js";
+    cf.dataset.cfBeacon = '{"token": "7c46f36f17e44f7693519b06b101987a"}';
+    document.head.appendChild(cf);
+  }
+</script>
+<script type="speculationrules">
+{"prefetch": [{"where": {"and": [{"href_matches": "/*"}, {"not": {"href_matches": "/*.zip"}}]}, "eagerness": "moderate"}]}
+</script>
+<script src="../site.js" defer></script>
+</head>
+<body>
+<div class="shell">
+
+<header class="wrap nav">
+  <a class="brand" href="../">
+    <svg viewBox="0 0 26 30" aria-hidden="true"><path d="M13 1l11 4v9c0 7.5-4.8 13.6-11 15C6.8 27.6 2 21.5 2 14V5z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M13 1l-11 4v9c0 7.5 4.8 13.6 11 15z" fill="currentColor"/></svg>
+    VPNonly
+  </a>
+  <nav aria-label="Site">
+    <a href="../how-it-works.html">How it works</a>
+    <a href="./" aria-current="page">Guides</a>
+    <a href="../faq.html">FAQ</a>
+    <a href="../install.html">Install</a>
+    <a href="https://github.com/kanishkdan/vpnonly">GitHub</a>
+  </nav>
+  <a class="nav-buy" href="https://dodo.pe/get-vpnonly" data-goatcounter-click="buy-nav-split-tunneling-apps-mac">Buy · $19</a>
+</header>
+
+<div class="solo">
+<p class="crumb"><a href="./">Guides</a></p>
+<h1>Split tunneling apps for Mac, compared</h1>
+<p>macOS can't send one app through a VPN on its own, so a few small apps fill the gap. They come in two shapes. SplitTunnel and AppLanes sit alongside the VPN app you already run and decide, app by app, whether traffic goes through it, around it, or nowhere. VPNonly replaces the VPN app: it connects to your provider itself, and only the apps you switch on ever use the tunnel.</p>
+<p>I make VPNonly, so read this with that in mind. Everything below about the other two comes from their own websites, checked on 13 November 2026.</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th></th><th>VPNonly</th><th>SplitTunnel</th><th>AppLanes</th></tr></thead>
+<tbody>
+<tr><td>Price</td><td>$19 once, for 2 Macs</td><td>$4.99 a month or $49 a year</td><td>$2.99 a month or $19.99 a year</td></tr>
+<tr><td>Trial</td><td>None; 14-day refund</td><td>7 days</td><td>3 days</td></tr>
+<tr><td>Where you get it</td><td>vpnonly.app</td><td>splittunnel.app</td><td>Mac App Store</td></tr>
+<tr><td>Your VPN app</td><td>Not needed; it connects to the provider itself</td><td>Runs alongside it</td><td>Runs alongside it</td></tr>
+<tr><td>Choices per app</td><td>On the VPN, or not</td><td>VPN, direct or blocked</td><td>VPN, direct or blocked</td></tr>
+<tr><td>Works with</td><td>NordVPN (access token) or any WireGuard config</td><td>Any VPN client, including work ones</td><td>Any VPN, including WireGuard, OpenVPN and providers&#39; apps</td></tr>
+<tr><td>macOS</td><td>13 or later, Apple Silicon</td><td>13.5 or later</td><td>13 or later</td></tr>
+<tr><td>Safari</td><td>Can&#39;t be routed</td><td>Not stated</td><td>Appears in its examples</td></tr>
+<tr><td>Source code</td><td>Root engine and free CLI published (MIT)</td><td>Not stated</td><td>Not stated</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Which one fits</h2>
+<ul>
+  <li><strong>You use a work VPN</strong> such as GlobalProtect or Cisco AnyConnect: SplitTunnel or AppLanes. They work with the client your company gave you. VPNonly needs a WireGuard config or a NordVPN token, and it won&#39;t run alongside a VPN that covers the whole Mac.</li>
+  <li><strong>You need Safari on the VPN:</strong> VPNonly can&#39;t do it, because WebKit hands its connections to system processes that don&#39;t carry Safari&#39;s identity. Check with the others before you pay.</li>
+  <li><strong>You&#39;d rather not subscribe:</strong> VPNonly is $19 once. Over two years at their yearly prices, SplitTunnel comes to $98 and AppLanes to $39.98.</li>
+  <li><strong>You&#39;re on NordVPN:</strong> Nord&#39;s Mac app has no split tunneling at all. VPNonly signs in with an access token and gives you every Nord country, with Nord&#39;s app closed. <a href="nordvpn-split-tunneling-mac.html">How that works</a>.</li>
+  <li><strong>You want to read the code that runs as root:</strong> VPNonly&#39;s <a href="https://github.com/kanishkdan/vpnonly/tree/main/app-engine">privileged engine</a> is published, and the <a href="https://github.com/kanishkdan/vpnonly#install">command-line version</a> is free and MIT licensed.</li>
+  <li><strong>You want something Apple has reviewed:</strong> AppLanes is on the Mac App Store. VPNonly isn&#39;t signed by Apple yet, so macOS asks you to allow it once in System Settings.</li>
+</ul>
+
+<h2>What about your VPN&#39;s own app?</h2>
+<p>Several providers now build split tunneling into their Mac apps, but most can only leave apps out of a full tunnel, and NordVPN&#39;s can&#39;t do either. If leaving apps out is what you want, use the one you already pay for. <a href="mac-vpn-split-tunneling.html">Which Mac VPNs have split tunneling</a> goes provider by provider.</p>
+
+<h2>What VPNonly can&#39;t do</h2>
+<p>Besides Safari: DNS lookups go through your normal resolver, not the tunnel, so your ISP can still see which sites you look up. An app relaunches once when it joins the VPN, because what VPNonly routes by is fixed when an app starts. And there&#39;s no Windows version.</p>
+
+<p class="note">Sources: <a href="https://www.splittunnel.app/">splittunnel.app</a> and <a href="https://www.getapplanes.com/">getapplanes.com</a>, checked 13 November 2026. Prices change; if something here is out of date, tell me and I&#39;ll fix it.</p>
+<p class="cta"><a class="btn" href="https://dodo.pe/get-vpnonly" data-goatcounter-click="buy-split-tunneling-apps-mac">Get VPNonly for Mac — $19</a></p>
+<p class="note">The app’s <a href="https://github.com/kanishkdan/vpnonly/tree/main/app-engine">exact privileged engine source</a> is public and MIT licensed.</p>
+<h2>More guides</h2>
+<p><a href="vpn-one-app-mac.html">How to use a VPN for only one app on Mac</a> · <a href="mac-vpn-split-tunneling.html">Which Mac VPNs have split tunneling</a> · <a href="nordvpn-split-tunneling-mac.html">NordVPN</a> · <a href="mullvad-split-tunneling-mac.html">Mullvad</a> · <a href="protonvpn-split-tunneling-mac.html">Proton VPN</a></p>
+</div>
+
+</div>
+<footer class="wrap foot">
+  <span class="me">Made by <a href="https://x.com/kanishkrazdan">Kanishk</a></span>
+  <a href="./">Guides</a>
+  <a href="../download.html">Download</a>
+  <a href="https://customer.dodopayments.com/login/bus_0NlVlYzwOq7gzrk1tWl0u">Your purchases</a>
+  <a href="../changelog.html">Changelog</a>
+  <a href="../terms.html">Terms &amp; privacy</a>
+</footer>
+<div class="buybar" hidden>
+  <span><b>VPNonly</b> · $19 once, for Mac</span>
+  <a class="btn" href="https://dodo.pe/get-vpnonly" data-goatcounter-click="buy-bar-split-tunneling-apps-mac">Get it</a>
+</div>
+</body>
+</html>
