@@ -452,7 +452,7 @@ figure.trypop { margin: 26px 0 30px; display: grid; justify-items: center; gap: 
 
 /* the maker: one small card that rises, straightens and settles in the
    middle as it scrolls into view */
-.quotes { margin-top: 30px; display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+.quotes { margin-top: 30px; display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); }
 .quote { margin: 0; padding: 22px 22px 20px; border-radius: 18px; background: var(--card); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 14px; }
 .quote blockquote { margin: 0; font-size: 16.5px; line-height: 1.6; color: var(--text); text-wrap: pretty; }
 .quote figcaption { margin-top: auto; font-size: 14px; font-weight: 600; color: var(--muted); }
